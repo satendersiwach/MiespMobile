@@ -5,14 +5,14 @@ import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/element_button.dart';
 
-class SupervisorScreen extends StatefulWidget {
-  const SupervisorScreen({super.key});
+class UserAppScreen extends StatefulWidget {
+  const UserAppScreen({super.key});
 
   @override
-  State<SupervisorScreen> createState() => _SupervisorScreenState();
+  State<UserAppScreen> createState() => _UserAppScreenState();
 }
 
-class _SupervisorScreenState extends State<SupervisorScreen> {
+class _UserAppScreenState extends State<UserAppScreen> {
   PackageInfo? packageInfo;
 
   @override
@@ -43,18 +43,16 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                 SizedBox(
                   height: Get.height / 8,
                 ),
-                _assignPickListButton(),
-                const SizedBox(
-                  height: 16,
-                ),
-                _assignedPickListButton(),
-                const SizedBox(
-                  height: 16,
-                ),
                 _outboundDeliveryButton(),
                 const SizedBox(
                   height: 16,
                 ),
+                _physicalEntryButton(),
+                const SizedBox(
+                  height: 16,
+                ),
+
+
                 _signOutButton()
               ],
             ),
@@ -79,29 +77,19 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
     return Align(
       alignment: Alignment.centerLeft,
       child: getPoppinsText(
-          text: 'Welcome, supervisor',
+          text: 'Welcome, HHT1',
           fontWeight: FontWeight.w700,
           fontSize: 20),
     );
   }
 
-  Widget _assignPickListButton() {
-    return SizedBox(
-      width: Get.width,
-      child: loadingButton(
-        isLoading: false,
-        btnText: 'Assign Pick List',
-        onPress: () {},
-      ),
-    );
-  }
 
-  Widget _assignedPickListButton() {
+  Widget _physicalEntryButton() {
     return SizedBox(
       width: Get.width,
       child: loadingButton(
         isLoading: false,
-        btnText: 'Assigned Pick List',
+        btnText: 'Physical Entry',
         onPress: () {},
       ),
     );

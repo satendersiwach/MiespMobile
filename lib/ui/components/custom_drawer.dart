@@ -7,6 +7,7 @@ import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/supervisor_screen.dart';
+import 'package:scanner/ui/user_app/user_app_screen.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -49,6 +50,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 const Icon(Icons.keyboard_arrow_right, color: Colors.white),
             onTap: () {
               Get.to(() => const SupervisorScreen());
+            },
+          ),
+          ListTile(
+            title: const Text(
+              'User App Window',
+              style: TextStyle(color: Colors.white),
+            ),
+            trailing:
+                const Icon(Icons.keyboard_arrow_right, color: Colors.white),
+            onTap: () {
+              Get.to(() => const UserAppScreen());
             },
           ),
           InkWell(

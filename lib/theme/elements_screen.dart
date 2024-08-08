@@ -31,7 +31,7 @@ Widget screenWithAppBar(
           icon: const Icon(
             Icons.arrow_back,
             size: 25,
-            color: buttonColor,
+            color: Colors.white,
           ),
           onPressed: () {
             if (onBackPressed != null) {
