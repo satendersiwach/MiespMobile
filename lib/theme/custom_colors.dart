@@ -9,5 +9,5 @@ const fillColor = white;
 const imageContainerColor = Color(0XFFF4F6F9);
 const suggestionContainerColor = Color(0XFFE6EFF4);
 const suggestionContainerRatingCountColor = Color(0XFF8BA488);
-const buttonColor = Color(0XFF143C4C);
+const buttonColor = appPrimary;
 var headColor = const Color(0XFFFFAA14);

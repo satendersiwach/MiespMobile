@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:scanner/common/app_assets.dart';
-import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/theme/custom_colors.dart';
-import 'package:scanner/ui/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/ui/login_screen.dart';
+import 'package:scanner/ui/supervisor/supervisor_screen.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -30,22 +30,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.white)),
             currentAccountPicture: ClipRRect(
-                borderRadius: BorderRadius.circular(15.0),
-                child:const  FlutterLogo(
-                  size: 100,
-                ),
-                // child: Image.asset(logoPath),
+              borderRadius: BorderRadius.circular(15.0),
+              child: const FlutterLogo(
+                size: 100,
+              ),
+              // child: Image.asset(logoPath),
             ),
             decoration: const BoxDecoration(
               color: appPrimary,
             ),
           ),
-          const ListTile(
-            title: Text(
-              'Menu',
+          ListTile(
+            title: const Text(
+              'Supervisor Window',
               style: TextStyle(color: Colors.white),
             ),
-            trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white),
+            trailing:
+                const Icon(Icons.keyboard_arrow_right, color: Colors.white),
+            onTap: () {
+              Get.to(() => const SupervisorScreen());
+            },
           ),
           InkWell(
             onTap: () async {

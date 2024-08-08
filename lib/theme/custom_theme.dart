@@ -55,6 +55,17 @@ class AppTheme {
         shadowColor: Colors.white,
         brightness: Brightness.light,
         canvasColor: Colors.white,
+        appBarTheme:const  AppBarTheme(
+          backgroundColor: appPrimary,
+            iconTheme: IconThemeData(
+              color: Colors.white, //change your color here
+            ),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600
+          )
+        ),
         // backgroundColor: ThemeColors.primary,
         dialogBackgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
