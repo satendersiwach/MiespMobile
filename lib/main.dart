@@ -1,5 +1,5 @@
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/om_soft_bill.dart';
+import 'package:scanner/scanner_app.dart';
 import 'package:scanner/theme/custom_theme.dart';
 import 'package:scanner/translations/custom_locale.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ Future<void> main() async {
   init();
 
   runApp(GetMaterialApp(
-    home: const OmSoftBill(),
+    home: const ScannerApp(),
     debugShowCheckedModeBanner: false,
     theme: AppTheme.createLightTheme(),
     darkTheme: AppTheme.createLightTheme(),

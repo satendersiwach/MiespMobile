@@ -13,7 +13,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
-        title: 'Om Soft Bill',
+        title: 'Scanner App',
         drawer: CustomDrawer(),
         body: const SingleChildScrollView(
           child: Column(

@@ -10,10 +10,10 @@ import 'package:scanner/ui/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class OmSoftBill extends StatefulWidget {
-  static _OmSoftBillState? _state;
+class ScannerApp extends StatefulWidget {
+  static _ScannerAppState? _state;
 
-  const OmSoftBill({Key? key}) : super(key: key);
+  const ScannerApp({Key? key}) : super(key: key);
 
   static void buildTheme(BuildContext context, bool? flagDarkTheme) async {
     _state?.buildTheme(flagDarkTheme);
@@ -24,10 +24,10 @@ class OmSoftBill extends StatefulWidget {
   }
 
   @override
-  State<OmSoftBill> createState() => _OmSoftBillState();
+  State<ScannerApp> createState() => _ScannerAppState();
 }
 
-class _OmSoftBillState extends State<OmSoftBill> {
+class _ScannerAppState extends State<ScannerApp> {
   @override
   void initState() {
     super.initState();

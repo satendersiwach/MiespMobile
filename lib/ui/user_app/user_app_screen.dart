@@ -5,6 +5,7 @@ import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/user_app/outbound_delivery_window.dart';
+import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
 
 class UserAppScreen extends StatefulWidget {
   const UserAppScreen({super.key});
@@ -91,7 +92,9 @@ class _UserAppScreenState extends State<UserAppScreen> {
       child: loadingButton(
         isLoading: false,
         btnText: 'Physical Entry',
-        onPress: () {},
+        onPress: () {
+          Get.to(()=>const PhysicalInventoryScreen());
+        },
       ),
     );
   }
