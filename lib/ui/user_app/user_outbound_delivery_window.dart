@@ -33,13 +33,15 @@ class _UserOutboundDeliveryWindowState
 
   Widget _assignCountContainer() {
     return Align(
-      alignment: Alignment.centerLeft,
+      alignment: Alignment.center,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: getPoppinsText(
             text: 'You have 19 Pick List assigned',
-            fontWeight: FontWeight.w700,
-            fontSize: 20),
+            decoration: TextDecoration.underline,
+            color: Colors.deepPurpleAccent,
+            fontWeight: FontWeight.bold,
+            fontSize: 14),
       ),
     );
   }
@@ -66,106 +68,120 @@ class _UserOutboundDeliveryWindowState
             ),
             margin: const EdgeInsets.all(15),
             width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Pick List id'),
+                                  getPoppinsTextSpanDetails(text: '1'),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(text: 'Item Code'),
+                                  getPoppinsTextSpanDetails(text: 'FGOM0002'),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(text: 'SO Id'),
+                                  getPoppinsTextSpanDetails(text: '1'),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Item Description'),
+                                  getPoppinsTextSpanDetails(
+                                      text:
+                                          'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )),
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
                           child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Pick List id'),
-                                getPoppinsTextSpanDetails(text: '1'),
-                              ],
-                            ),
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'WHSE Code'),
+                                    getPoppinsTextSpanDetails(text: 'B02'),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Batch No.'),
+                                    getPoppinsTextSpanDetails(
+                                        text: 'WR21011B41150005'),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Release Qty'),
+                                    getPoppinsTextSpanDetails(text: '0.0'),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Picked Status'),
+                                    getPoppinsTextSpanDetails(
+                                        text: 'Not Picked'),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Item Code'),
-                                getPoppinsTextSpanDetails(text: 'FGOM0002'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'SO Id'),
-                                getPoppinsTextSpanDetails(text: '1'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Item Description'),
-                                getPoppinsTextSpanDetails(
-                                    text:
-                                        'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'WHSE Code'),
-                                getPoppinsTextSpanDetails(text: 'B02'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Batch No.'),
-                                getPoppinsTextSpanDetails(
-                                    text: 'WR21011B41150005'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Release Qty'),
-                                getPoppinsTextSpanDetails(text: '0.0'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Picked Status'),
-                                getPoppinsTextSpanDetails(text: 'Not Picked'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                    ],
+                        )),
+                      ],
+                    ),
                   ),
-                ),
-                const Divider(
-                  thickness: 1.5,
-                  color: Colors.grey,
-                ),
-                _buttonContainer(),
-              ],
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  _buttonContainer(),
+                ],
+              ),
             ),
           ),
         );
@@ -181,21 +197,25 @@ class _UserOutboundDeliveryWindowState
 
   Widget _buttonContainer() {
     return SizedBox(
-      height: 35,
+      height: 30,
       child: Row(
         children: [
           Expanded(
-              child: TextButton(
-            onPressed: () {},
+              child: InkWell(
+            onTap: () {},
             child: getPoppinsText(
                 text: 'Manual',
                 color: appPrimary,
                 fontSize: 13,
                 fontWeight: FontWeight.bold),
           )),
+          const VerticalDivider(
+            color: Colors.grey,
+            thickness: 1,
+          ),
           Expanded(
-              child: TextButton(
-            onPressed: () {
+              child: InkWell(
+            onTap: () {
               ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
                 if (!mounted) return;
                 String barCode = scanResult;

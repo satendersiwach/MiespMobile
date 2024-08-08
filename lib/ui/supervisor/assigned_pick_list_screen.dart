@@ -124,26 +124,34 @@ class _AssignedPickListScreenState extends State<AssignedPickListScreen> {
                     color: Colors.grey,
                     thickness: 1,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                          child: InkWell(
-                        child: getPoppinsText(
-                            text: 'Remove',
-                            color: appPrimary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold),
-                      )),
-                      Expanded(
-                          child: InkWell(
-                        child: getPoppinsText(
-                            text: 'Update',
-                            color: appPrimary,
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold),
-                      )),
-                    ],
+                  SizedBox(
+                    height: 28,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: InkWell(
+                              onTap: (){},
+                          child: getPoppinsText(
+                              text: 'Remove',
+                              color: Colors.red,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                        )),
+                        const VerticalDivider(
+                          color: Colors.grey,
+                          thickness: 1,
+                        ),
+                        Expanded(
+                            child: InkWell(
+                              onTap: (){},
+                          child: getPoppinsText(
+                              text: 'Update',
+                              color: appPrimary,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold),
+                        )),
+                      ],
+                    ),
                   )
                 ],
               ),
