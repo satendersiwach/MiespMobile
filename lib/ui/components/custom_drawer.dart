@@ -1,44 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/ui/login_screen.dart';
-import 'package:scanner/ui/supervisor/supervisor_screen.dart';
-import 'package:scanner/ui/user_app/user_app_screen.dart';
+import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
+import 'package:scanner/ui/user_app/user_outbound_delivery_window.dart';
 
 class CustomDrawer extends StatefulWidget {
+  const CustomDrawer({super.key});
+
   @override
-  _CustomDrawerState createState() => _CustomDrawerState();
+  CustomDrawerState createState() => CustomDrawerState();
 }
 
-class _CustomDrawerState extends State<CustomDrawer> {
+class CustomDrawerState extends State<CustomDrawer> {
+  String? userType;
+
+  @override
+  void initState() {
+    super.initState();
+    setVersion();
+  }
+
+  setVersion() async {
+    userType = LocalStorage.getString(key: keyUserType);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      // backgroundColor: appPrimary,
       child: ListView(
         children: [
-          // UserAccountsDrawerHeader(
-          //   accountName: const Text(
-          //     'User name',
-          //     style:
-          //         TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          //   ),
-          //   accountEmail: const Text('email@gmail.com',
-          //       style: TextStyle(
-          //           fontWeight: FontWeight.bold, color: Colors.white)),
-          //   currentAccountPicture: ClipRRect(
-          //     borderRadius: BorderRadius.circular(15.0),
-          //     child: const FlutterLogo(
-          //       size: 100,
-          //     ),
-          //     // child: Image.asset(logoPath),
-          //   ),
-          //   decoration: const BoxDecoration(
-          //     color: appPrimary,
-          //   ),
-          // ),
           Container(
             height: Get.height / 7,
             padding: EdgeInsets.zero,
@@ -65,28 +60,76 @@ class _CustomDrawerState extends State<CustomDrawer> {
           const SizedBox(
             height: 20,
           ),
-          ListTile(
-            title: getPoppinsText(
-                text: 'Supervisor Window',
-                textAlign: TextAlign.start,
-                color: appPrimary,
-                fontWeight: FontWeight.bold),
-            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-            onTap: () {
-              Get.to(() => const SupervisorScreen());
-            },
-          ),
-          ListTile(
-            title: getPoppinsText(
-                text: 'User App Window',
-                textAlign: TextAlign.start,
-                color: appPrimary,
-                fontWeight: FontWeight.bold),
-            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-            onTap: () {
-              Get.to(() => const UserAppScreen());
-            },
-          ),
+          if (userType != null && userType == 'Supervisor') ...[
+            ListTile(
+              title: getPoppinsText(
+                  text: 'Assign Pick List',
+                  textAlign: TextAlign.start,
+                  color: appPrimary,
+                  fontWeight: FontWeight.bold),
+              trailing:
+                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+              onTap: () {},
+            ),
+            ListTile(
+              title: getPoppinsText(
+                  text: 'Outbound Delivery',
+                  textAlign: TextAlign.start,
+                  color: appPrimary,
+                  fontWeight: FontWeight.bold),
+              trailing:
+                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+              onTap: () {},
+            ),
+          ],
+          if (userType != null && userType == 'User') ...[
+            ListTile(
+              title: getPoppinsText(
+                  text: 'Outbound Delivery',
+                  textAlign: TextAlign.start,
+                  color: appPrimary,
+                  fontWeight: FontWeight.bold),
+              trailing:
+                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+              onTap: () {
+                Get.to(() => const UserOutboundDeliveryWindow());
+              },
+            ),
+            ListTile(
+              title: getPoppinsText(
+                  text: 'Physical Inventory',
+                  textAlign: TextAlign.start,
+                  color: appPrimary,
+                  fontWeight: FontWeight.bold),
+              trailing:
+                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+              onTap: () {
+                Get.to(() => const PhysicalInventoryScreen());
+              },
+            ),
+          ],
+          // ListTile(
+          //   title: getPoppinsText(
+          //       text: 'Supervisor Window',
+          //       textAlign: TextAlign.start,
+          //       color: appPrimary,
+          //       fontWeight: FontWeight.bold),
+          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+          //   onTap: () {
+          //     Get.to(() => const SupervisorScreen());
+          //   },
+          // ),
+          // ListTile(
+          //   title: getPoppinsText(
+          //       text: 'User App Window',
+          //       textAlign: TextAlign.start,
+          //       color: appPrimary,
+          //       fontWeight: FontWeight.bold),
+          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+          //   onTap: () {
+          //     Get.to(() => const UserAppScreen());
+          //   },
+          // ),
           ListTile(
             title: getPoppinsText(
                 text: 'Logout',

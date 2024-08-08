@@ -26,7 +26,7 @@ class _DashboardState extends State<Dashboard> {
 
   setVersion() async {
     packageInfo = await PackageInfo.fromPlatform();
-    userType=LocalStorage.getString(key: keyUserType);
+    userType = LocalStorage.getString(key: keyUserType);
     setState(() {});
   }
 
@@ -34,7 +34,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return screenWithAppBar(
         title: 'Scanner App',
-        drawer: CustomDrawer(),
+        drawer: const CustomDrawer(),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -60,14 +60,18 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ],
-              if(userType!=null && userType=='Supervisor')...[
-
-                getPoppinsText(text: userType),
+              if (userType != null && userType == 'Supervisor') ...[
+                getPoppinsText(
+                    text: 'Welcome, Supervisor',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20)
               ],
-              if(userType!=null && userType=='User')...[
-                getPoppinsText(text: userType),
+              if (userType != null && userType == 'User') ...[
+                getPoppinsText(
+                    text: 'Welcome, HHT1',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20)
               ]
-
             ],
           ),
         ));

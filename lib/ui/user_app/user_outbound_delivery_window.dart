@@ -5,14 +5,14 @@ import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 
-class OutboundDeliveryWindow extends StatefulWidget {
-  const OutboundDeliveryWindow({super.key});
+class UserOutboundDeliveryWindow extends StatefulWidget {
+  const UserOutboundDeliveryWindow({super.key});
 
   @override
-  State<OutboundDeliveryWindow> createState() => _OutboundDeliveryWindowState();
+  State<UserOutboundDeliveryWindow> createState() => _UserOutboundDeliveryWindowState();
 }
 
-class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
+class _UserOutboundDeliveryWindowState extends State<UserOutboundDeliveryWindow> {
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
