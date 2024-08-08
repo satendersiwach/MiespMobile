@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const white = Colors.white;
 const black = Colors.black;
 const red = Colors.red;
-const appPrimary = Color(0XFF143C4C);
+const appPrimary = Color(0XFFA97346);
 const appAccent = Colors.blue;
 const fillColor = white;
 const imageContainerColor = Color(0XFFF4F6F9);

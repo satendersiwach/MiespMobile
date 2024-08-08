@@ -54,6 +54,7 @@ Widget getTextField(
     double paddingBottom = 6.0,
     double paddingLeft = 8,
     double paddingRight = 8,
+      InputBorder? disabledBorder,
     List<BoxShadow>? boxShadow = const [
       BoxShadow(
         color: Colors.black26,
@@ -116,21 +117,21 @@ Widget getTextField(
           prefixIcon: prefixIcon,
           contentPadding: contentPadding,
           fillColor: fillColor,
-          disabledBorder: OutlineInputBorder(
+          disabledBorder: disabledBorder??OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: fillColor, width: 1),
+            borderSide: const BorderSide(color: Colors.black, width: 0.1),
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: disabledBorder??OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: fillColor, width: 1),
+            borderSide: const BorderSide(color: Colors.black, width: 0.1),
           ),
-          border: OutlineInputBorder(
+          border:disabledBorder?? OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: fillColor, width: 1),
+            borderSide: const BorderSide(color: Colors.black, width: 0.1),
           ),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: disabledBorder??OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: fillColor, width: 1),
+            borderSide:const  BorderSide(color: Colors.black, width: 0.1),
           ),
           //fillColor: Colors.green
         ),

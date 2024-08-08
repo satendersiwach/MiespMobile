@@ -1,17 +1,14 @@
 import 'dart:convert';
 
-import 'package:scanner/common/app_assets.dart';
-import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/theme/custom_colors.dart';
-import 'package:scanner/theme/custom_font.dart';
-import 'package:scanner/theme/custom_snack_bar.dart';
-import 'package:scanner/theme/custom_text_widgets.dart';
-import 'package:scanner/theme/get_text_field.dart';
-import 'package:scanner/ui/components/check_keyboard_visibility.dart';
-import 'package:scanner/ui/dashboard.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
+import 'package:scanner/theme/get_text_field.dart';
+import 'package:scanner/ui/components/check_keyboard_visibility.dart';
+import 'package:scanner/ui/dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -29,7 +26,6 @@ class LoginPageState extends State<LoginPage> {
   bool isLoading = false;
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
-
 
   @override
   void initState() {
@@ -66,56 +62,42 @@ class LoginPageState extends State<LoginPage> {
                       // width: MediaQuery.of(context).size.width/3,
                       // height: MediaQuery.of(context).size.height/15,
                       color: appPrimary,
-                      child: Image.asset(
-                        logoPath,
-                        fit: BoxFit.cover,
+                      child: const FlutterLogo(
+                        size: 100,
                       ),
+                      // child: Image.asset(
+                      //   logoPath,
+                      //   fit: BoxFit.cover,
+                      // ),
                     ),
                   ),
                 ),
               ),
-              const Divider(
-                color: Colors.grey,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Center(
-                  child: Container(
-                    color: Colors.white,
-                    child: const Text(
-                      "Welcome!",
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: CustomFont.customFont),
-                    ),
-                  ),
-                ),
-              ),
-              Center(
-                child: Container(
-                  color: Colors.white,
-                  child: const Text(
-                    "Please enter username and password!",
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: CustomFont.customFont),
-                  ),
-                ),
+              const SizedBox(
+                height: 50,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8),
                 child: getTextField(
                   controller: username,
                   labelText: 'Username',
+                  labelFontSize: 18,
+                  labelColor: Colors.grey,
+                  borderRadius: const BorderRadius.all(Radius.zero),
+                  boxShadow: [],
+                  disabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 1),
+                  ),
                 ),
               ),
+              const SizedBox(height: 20,),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8),
                 child: getTextField(
                     labelText: 'Password',
                     controller: password,
+                    labelFontSize: 18,
+                    labelColor: Colors.grey,
                     maxLines: 1,
                     suffixIcon: IconButton(
                         onPressed: () {
@@ -126,21 +108,12 @@ class LoginPageState extends State<LoginPage> {
                         icon: Icon(obscurePassword
                             ? Icons.visibility
                             : Icons.visibility_off)),
+                    borderRadius: const BorderRadius.all(Radius.zero),
+                    boxShadow: [],
+                    disabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black, width: 1),
+                    ),
                     obscureText: obscurePassword),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  getHeadingText(text: 'Click here to ', fontSize: 15),
-                  TextButton(
-                    child: getHeadingText(
-                        text: 'Reset password',
-                        fontSize: 15,
-                        decoration: TextDecoration.underline,
-                        color: Colors.black),
-                    onPressed: () {},
-                  ),
-                ],
               ),
               if (keyboardIsVisible(
                   context: context, scrollController: _scrollController)) ...[

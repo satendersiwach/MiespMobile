@@ -31,7 +31,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     fontWeight: FontWeight.bold, color: Colors.white)),
             currentAccountPicture: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
-                child: Image.asset(logoPath)),
+                child:const  FlutterLogo(
+                  size: 100,
+                ),
+                // child: Image.asset(logoPath),
+            ),
             decoration: const BoxDecoration(
               color: appPrimary,
             ),
