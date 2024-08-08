@@ -15,27 +15,13 @@ class AssignedPickListScreen extends StatefulWidget {
 class _AssignedPickListScreenState extends State<AssignedPickListScreen> {
   @override
   Widget build(BuildContext context) {
-    return screenWithAppBar(
-        title: "Assigned Pick List",
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ))
+    return  SingleChildScrollView(
+      child: Column(
+        children: [
+          _list(),
         ],
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _list(),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: _buttonContainer(),
-        ));
+      ),
+    );
   }
 
   Widget _list() {
@@ -179,6 +165,6 @@ class _AssignedPickListScreenState extends State<AssignedPickListScreen> {
         isLoading: false,
         btnText: 'Submit',
         onPress: () {},
-        backColor: submitButtonColor);
+        backColor: appPrimary);
   }
 }

@@ -15,29 +15,18 @@ class UserOutboundDeliveryWindow extends StatefulWidget {
 class _UserOutboundDeliveryWindowState extends State<UserOutboundDeliveryWindow> {
   @override
   Widget build(BuildContext context) {
-    return screenWithAppBar(
-      title: "Outbound Delivery",
-      actions: [
-        IconButton(
-            onPressed: () {},
-            icon: Icon(
-              MdiIcons.refresh,
-              color: Colors.white,
-            ))
-      ],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            _assignCountContainer(),
-            const SizedBox(
-              height: 10,
-            ),
-            _list(),
-          ],
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          _assignCountContainer(),
+          const SizedBox(
+            height: 10,
+          ),
+          _list(),
+        ],
       ),
     );
   }

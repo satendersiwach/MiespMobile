@@ -167,6 +167,6 @@ class _AssignPickListScreenState extends State<AssignPickListScreen> {
 
   Widget _buttonContainer() {
     return loadingButton(isLoading: false, btnText: 'Submit', onPress: () {},
-    backColor: submitButtonColor);
+    backColor: appPrimary);
   }
 }

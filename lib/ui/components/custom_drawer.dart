@@ -5,8 +5,8 @@ import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/ui/login_screen.dart';
+import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
 import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
-import 'package:scanner/ui/user_app/user_outbound_delivery_window.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -69,20 +69,10 @@ class CustomDrawerState extends State<CustomDrawer> {
                   fontWeight: FontWeight.bold),
               trailing:
                   const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-              onTap: () {},
+              onTap: () {
+                Get.to(() => const AssignPickListScreen());
+              },
             ),
-            ListTile(
-              title: getPoppinsText(
-                  text: 'Outbound Delivery',
-                  textAlign: TextAlign.start,
-                  color: appPrimary,
-                  fontWeight: FontWeight.bold),
-              trailing:
-                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-              onTap: () {},
-            ),
-          ],
-          if (userType != null && userType == 'User') ...[
             ListTile(
               title: getPoppinsText(
                   text: 'Outbound Delivery',
@@ -92,9 +82,11 @@ class CustomDrawerState extends State<CustomDrawer> {
               trailing:
                   const Icon(Icons.keyboard_arrow_right, color: appPrimary),
               onTap: () {
-                Get.to(() => const UserOutboundDeliveryWindow());
+                Get.to(() => const PhysicalInventoryScreen());
               },
             ),
+          ],
+          if (userType != null && userType == 'User') ...[
             ListTile(
               title: getPoppinsText(
                   text: 'Physical Inventory',

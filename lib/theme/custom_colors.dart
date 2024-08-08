@@ -10,5 +10,5 @@ const imageContainerColor = Color(0XFFF4F6F9);
 const suggestionContainerColor = Color(0XFFE6EFF4);
 const suggestionContainerRatingCountColor = Color(0XFF8BA488);
 const buttonColor = appPrimary;
-const submitButtonColor = Color(0XFF46519D);
+
 var headColor = const Color(0XFFFFAA14);

@@ -6,6 +6,9 @@ import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/custom_drawer.dart';
+import 'package:scanner/ui/components/element_button.dart';
+import 'package:scanner/ui/supervisor/assigned_pick_list_screen.dart';
+import 'package:scanner/ui/user_app/user_outbound_delivery_window.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -64,16 +67,45 @@ class _DashboardState extends State<Dashboard> {
                 getPoppinsText(
                     text: 'Welcome, Supervisor',
                     fontWeight: FontWeight.w700,
-                    fontSize: 20)
+                    fontSize: 20),
+                //todo: implement search
+                const AssignedPickListScreen(),
               ],
               if (userType != null && userType == 'User') ...[
                 getPoppinsText(
                     text: 'Welcome, HHT1',
                     fontWeight: FontWeight.w700,
-                    fontSize: 20)
+                    fontSize: 20),
+                //todo: implement refresh
+                //IconButton(
+                //             onPressed: () {},
+                //             icon: Icon(
+                //               MdiIcons.refresh,
+                //               color: Colors.white,
+                //             ))
+                const UserOutboundDeliveryWindow(),
               ]
             ],
           ),
-        ));
+        ),
+        bottomNavigationBar: _buttonContainer());
+  }
+
+  Widget _buttonContainer() {
+    if (userType != null && userType == 'Supervisor') {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: loadingButton(
+            isLoading: false,
+            btnText: 'Submit',
+            onPress: () {},
+            backColor: appPrimary),
+      );
+    } else {
+      return const SizedBox(
+        height: 0,
+        width: 0,
+      );
+    }
   }
 }
