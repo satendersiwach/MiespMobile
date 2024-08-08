@@ -1,0 +1,31 @@
+import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/om_soft_bill.dart';
+import 'package:scanner/theme/custom_theme.dart';
+import 'package:scanner/translations/custom_locale.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+
+Future<void> main() async {
+  init();
+
+  runApp(GetMaterialApp(
+    home: const OmSoftBill(),
+    debugShowCheckedModeBanner: false,
+    theme: AppTheme.createLightTheme(),
+    darkTheme: AppTheme.createLightTheme(),
+    translations: CustomLocale(),
+    supportedLocales: CustomLocale.locales,
+    locale: Get.locale,
+    localizationsDelegates: const [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate
+    ],
+  ));
+}
+
+Future<void> init() async {
+  await CustomLocale.init();
+  await LocalStorage.getInstance()?.initLocalStorage();
+}
