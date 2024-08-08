@@ -14,6 +14,7 @@ import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/check_keyboard_visibility.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/dashboard.dart';
+import 'package:scanner/ui/user_selection.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -220,25 +221,6 @@ class LoginPageState extends State<LoginPage> {
                     },
                     backColor: Colors.white,
                     textColor: appPrimary)
-            // MaterialButton(
-            //         onPressed: () {
-            //           try {
-            //             _onLogin();
-            //           } catch (e) {
-            //             CustomSnackBar.errorSnackBar('Something went wrong');
-            //           }
-            //         },
-            //         color: Colors.white,
-            //         minWidth: MediaQuery.of(context).size.width,
-            //         child: const Text(
-            //           "Log In",
-            //           textAlign: TextAlign.center,
-            //           style: TextStyle(
-            //               color: appPrimary,
-            //               fontWeight: FontWeight.bold,
-            //               fontSize: 20.0),
-            //         ),
-            //       ),
             ),
       ),
     );
@@ -246,6 +228,6 @@ class LoginPageState extends State<LoginPage> {
 
   _onLogin() {
     LocalStorage.setLoginData();
-    Get.to(() => const Dashboard());
+    Get.to(() => const UserSelection());
   }
 }

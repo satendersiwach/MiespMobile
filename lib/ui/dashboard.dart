@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:scanner/common/keys.dart';
+import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -14,6 +16,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   PackageInfo? packageInfo;
+  String? userType;
 
   @override
   void initState() {
@@ -23,6 +26,7 @@ class _DashboardState extends State<Dashboard> {
 
   setVersion() async {
     packageInfo = await PackageInfo.fromPlatform();
+    userType=LocalStorage.getString(key: keyUserType);
     setState(() {});
   }
 
@@ -56,6 +60,14 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ],
+              if(userType!=null && userType=='Supervisor')...[
+
+                getPoppinsText(text: userType),
+              ],
+              if(userType!=null && userType=='User')...[
+                getPoppinsText(text: userType),
+              ]
+
             ],
           ),
         ));
