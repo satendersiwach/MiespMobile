@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_text.dart';
@@ -146,16 +147,18 @@ Icon getIcon(IconData? icon, {Color? iconColor, double iconSize = 22.0}) {
   );
 }
 
-// SvgPicture getSVGIconButton({required String path}) {
-//   return SvgPicture.asset(path);
-// }
-//
-// SvgPicture getSVGIcon({required String path, Color? color}) {
-//   return SvgPicture.asset(
-//     path,
-//     color: color,
-//   );
-// }
+SvgPicture getSVGIconButton({required String path}) {
+  return SvgPicture.asset(path);
+}
+
+SvgPicture getSVGIcon({required String path, Color? color}) {
+  return SvgPicture.asset(
+    path,
+    height: 10,
+    width: 10,
+    color: color,
+  );
+}
 
 Widget getDrawerItemButton(
     {IconData? leadingIcon,

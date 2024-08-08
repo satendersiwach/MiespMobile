@@ -46,9 +46,10 @@ Widget getTextField(
       bottomRight: Radius.circular(8),
       bottomLeft: Radius.circular(8),
     ),
-    double labelFontSize = 12,
+    double labelFontSize = 16,
     FontWeight labelFontWeight = FontWeight.w500,
     Color labelColor = Colors.black,
+    Color textColor = Colors.black,
     List<TextInputFormatter>? inputFormatters,
     double? height = 43,
     double paddingBottom = 6.0,
@@ -89,6 +90,7 @@ Widget getTextField(
       ),
       child: TextFormField(
         controller: controller,
+        cursorColor: cursorColor,
         key: key,
         onChanged: (val) {
           if (onChanged != null) {
@@ -102,7 +104,7 @@ Widget getTextField(
         inputFormatters: inputFormatters,
 
         decoration: InputDecoration(
-          labelStyle: GoogleFonts.redHatDisplay(
+          labelStyle: GoogleFonts.poppins(
               fontSize: labelFontSize,
               fontWeight: labelFontWeight,
               color: labelColor),
@@ -138,8 +140,8 @@ Widget getTextField(
         maxLines: maxLines,
         keyboardType: keyboardType,
         autofocus: false,
-        style: GoogleFonts.redHatDisplay(
-            fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
+        style: GoogleFonts.poppins(
+            fontSize: 16, fontWeight: FontWeight.w500, color: textColor),
       ),
     ),
   );
