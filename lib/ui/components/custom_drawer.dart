@@ -1,10 +1,8 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/supervisor_screen.dart';
 import 'package:scanner/ui/user_app/user_app_screen.dart';
@@ -18,61 +16,91 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: appPrimary,
+      // backgroundColor: appPrimary,
       child: ListView(
         children: [
-          UserAccountsDrawerHeader(
-            accountName: const Text(
-              'User name',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            accountEmail: const Text('email@gmail.com',
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.white)),
-            currentAccountPicture: ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: const FlutterLogo(
-                size: 100,
+          // UserAccountsDrawerHeader(
+          //   accountName: const Text(
+          //     'User name',
+          //     style:
+          //         TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          //   ),
+          //   accountEmail: const Text('email@gmail.com',
+          //       style: TextStyle(
+          //           fontWeight: FontWeight.bold, color: Colors.white)),
+          //   currentAccountPicture: ClipRRect(
+          //     borderRadius: BorderRadius.circular(15.0),
+          //     child: const FlutterLogo(
+          //       size: 100,
+          //     ),
+          //     // child: Image.asset(logoPath),
+          //   ),
+          //   decoration: const BoxDecoration(
+          //     color: appPrimary,
+          //   ),
+          // ),
+          Container(
+            height: Get.height / 7,
+            padding: EdgeInsets.zero,
+            color: appPrimary,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  getHeadingText(
+                      text: 'Hi, Username',
+                      textAlign: TextAlign.start,
+                      fontSize: 22,
+                      color: Colors.white),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
-              // child: Image.asset(logoPath),
-            ),
-            decoration: const BoxDecoration(
-              color: appPrimary,
             ),
           ),
+          const SizedBox(
+            height: 20,
+          ),
           ListTile(
-            title: const Text(
-              'Supervisor Window',
-              style: TextStyle(color: Colors.white),
-            ),
-            trailing:
-                const Icon(Icons.keyboard_arrow_right, color: Colors.white),
+            title: getPoppinsText(
+                text: 'Supervisor Window',
+                textAlign: TextAlign.start,
+                color: appPrimary,
+                fontWeight: FontWeight.bold),
+            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
             onTap: () {
               Get.to(() => const SupervisorScreen());
             },
           ),
           ListTile(
-            title: const Text(
-              'User App Window',
-              style: TextStyle(color: Colors.white),
-            ),
-            trailing:
-                const Icon(Icons.keyboard_arrow_right, color: Colors.white),
+            title: getPoppinsText(
+                text: 'User App Window',
+                textAlign: TextAlign.start,
+                color: appPrimary,
+                fontWeight: FontWeight.bold),
+            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
             onTap: () {
               Get.to(() => const UserAppScreen());
             },
           ),
-          InkWell(
-            onTap: () async {
+          ListTile(
+            title: getPoppinsText(
+                text: 'Logout',
+                textAlign: TextAlign.start,
+                color: Colors.red,
+                fontWeight: FontWeight.bold),
+            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+            onTap: () {
               List<Widget> titleRowWidgets = [
-                const Text(
-                  "Logout",
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                )
+                getPoppinsText(
+                    text: 'Logout',
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
               ];
               List<Widget> actions = [
                 Container(
@@ -89,58 +117,65 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             LocalStorage.logout();
                             Get.offAll(() => const LoginPage());
                           },
-                          child: const Text(
-                            "Logout",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
+                          child: getPoppinsText(
+                              text: 'Logout',
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text(
-                            "No",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
+                          child: getPoppinsText(
+                              text: 'No',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: appPrimary),
                         ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     LocalStorage.logout();
+                        //     Get.offAll(() => const LoginPage());
+                        //   },
+                        //   child: const Text(
+                        //     "Logout",
+                        //     style: TextStyle(
+                        //         color: Colors.red,
+                        //         fontWeight: FontWeight.bold,
+                        //         fontSize: 16),
+                        //   ),
+                        // ),
+                        // TextButton(
+                        //   onPressed: () {
+                        //     Navigator.pop(context);
+                        //   },
+                        //   child: const Text(
+                        //     "No",
+                        //     style: TextStyle(
+                        //         fontWeight: FontWeight.bold, fontSize: 16),
+                        //   ),
+                        // ),
                       ],
                     )),
               ];
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  if (Platform.isIOS) {
-                    return CupertinoAlertDialog(
-                      title: Row(
-                        children: titleRowWidgets,
-                      ),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: actions,
-                    );
-                  } else {
-                    return AlertDialog(
-                      title: Row(
-                        children: titleRowWidgets,
-                      ),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: actions,
-                    );
-                  }
+                  return AlertDialog(
+                    title: Row(
+                      children: titleRowWidgets,
+                    ),
+                    content: getPoppinsText(
+                        text: 'Are you sure you want to logout?',
+                        textAlign: TextAlign.start,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500),
+                    actions: actions,
+                  );
                 },
               );
             },
-            child: const ListTile(
-              title: Text(
-                'Logout',
-                style: TextStyle(color: white),
-              ),
-              leading: Icon(Icons.logout, color: Colors.white),
-              trailing: Icon(Icons.keyboard_arrow_right, color: Colors.white),
-            ),
           ),
         ],
       ),
