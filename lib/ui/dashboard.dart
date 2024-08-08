@@ -43,13 +43,14 @@ class _DashboardState extends State<Dashboard> {
             children: [
               if (packageInfo != null) ...[
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0, bottom: 8),
+                  padding: const EdgeInsets.only(top: 5.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       getPoppinsText(
                           text: 'Current app version',
                           color: appPrimary,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold),
                       Padding(
                         padding: const EdgeInsets.only(left: 4),
@@ -57,11 +58,14 @@ class _DashboardState extends State<Dashboard> {
                             text:
                                 ' - ${packageInfo?.version ?? ''}(${packageInfo?.buildNumber ?? ''})',
                             color: Colors.red,
-                            fontWeight: FontWeight.w500),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                 ),
+                const Divider(thickness: 1,color: Colors.grey,),
+                const SizedBox(height: 10,)
               ],
               if (userType != null && userType == 'Supervisor') ...[
                 getPoppinsText(

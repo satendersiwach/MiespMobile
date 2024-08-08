@@ -19,7 +19,7 @@ class _UserOutboundDeliveryWindowState
       child: Column(
         children: [
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           _assignCountContainer(),
           const SizedBox(
@@ -35,11 +35,11 @@ class _UserOutboundDeliveryWindowState
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: getPoppinsText(
             text: 'You have 19 Pick List assigned',
             decoration: TextDecoration.underline,
-            color: Colors.deepPurpleAccent,
+            color: Colors.red,
             fontWeight: FontWeight.bold,
             fontSize: 14),
       ),
