@@ -13,7 +13,6 @@ import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/check_keyboard_visibility.dart';
 import 'package:scanner/ui/components/element_button.dart';
-import 'package:scanner/ui/dashboard.dart';
 import 'package:scanner/ui/user_selection.dart';
 
 class LoginPage extends StatefulWidget {
@@ -162,8 +161,8 @@ class LoginPageState extends State<LoginPage> {
               _buttonContainer(),
               if (keyboardIsVisible(
                   context: context, scrollController: _scrollController)) ...[
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom,
                 ),
               ],
             ],
@@ -220,8 +219,7 @@ class LoginPageState extends State<LoginPage> {
                       }
                     },
                     backColor: Colors.white,
-                    textColor: appPrimary)
-            ),
+                    textColor: appPrimary)),
       ),
     );
   }
