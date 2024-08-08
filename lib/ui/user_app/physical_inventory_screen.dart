@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 
@@ -44,6 +45,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
           children: [
             Expanded(child: Container()),
             Expanded(
+              flex: 2,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Material(
@@ -51,7 +53,22 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                   color: const Color(0XFFba532b),
                   elevation: 0.0,
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ServiceManager.scanQRCode(
+                          onSuccess: (String scanResult) async {
+                        if (!mounted) return;
+                        String barCode = scanResult;
+                        if (barCode != '-1') {
+                          print(barCode);
+                          // if (await ServiceManager.isInternetAvailable()) {
+                          //   ServiceManager.getItemDetails(
+                          //       barCode: barCode,
+                          //       onSuccess: onSuccess,
+                          //       onError: onError);
+                          // }
+                        }
+                      });
+                    },
                     minWidth: MediaQuery.of(context).size.width,
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,

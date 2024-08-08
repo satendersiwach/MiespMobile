@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 
@@ -231,7 +232,22 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
                 color: const Color(0XFFba532b),
                 elevation: 0.0,
                 child: MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ServiceManager.scanQRCode(
+                        onSuccess: (String scanResult) async {
+                      if (!mounted) return;
+                      String barCode = scanResult;
+                      if (barCode != '-1') {
+                        print(barCode);
+                        // if (await ServiceManager.isInternetAvailable()) {
+                        //   ServiceManager.getItemDetails(
+                        //       barCode: barCode,
+                        //       onSuccess: onSuccess,
+                        //       onError: onError);
+                        // }
+                      }
+                    });
+                  },
                   minWidth: MediaQuery.of(context).size.width,
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
