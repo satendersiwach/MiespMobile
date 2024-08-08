@@ -5,6 +5,7 @@ import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
+import 'package:scanner/ui/supervisor/assigned_pick_list_screen.dart';
 
 class SupervisorScreen extends StatefulWidget {
   const SupervisorScreen({super.key});
@@ -105,7 +106,9 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
       child: loadingButton(
         isLoading: false,
         btnText: 'Assigned Pick List',
-        onPress: () {},
+        onPress: () {
+          Get.to(()=>AssignedPickListScreen());
+        },
       ),
     );
   }

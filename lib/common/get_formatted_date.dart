@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-String dateFormat = 'dd-MM-yyyy';
+String dateFormat = 'yyyy-MM-dd';
 
 String getFormattedDate(DateTime? now) {
   if (now == null) {
