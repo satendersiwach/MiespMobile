@@ -11,6 +11,7 @@ import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/get_text_field.dart';
+import 'package:scanner/ui/components/check_keyboard_visibility.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/dashboard.dart';
 
@@ -81,7 +82,9 @@ class LoginPageState extends State<LoginPage> {
                 height: 40,
               ),
               _welcomeContainer(),
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               _loginTextContainer(),
               const SizedBox(
                 height: 20,
@@ -97,7 +100,7 @@ class LoginPageState extends State<LoginPage> {
                     size: 30,
                   ),
                   fillColor: appPrimary,
-                  cursorColor:Colors.white,
+                  cursorColor: Colors.white,
                   textColor: Colors.white,
                   labelFontSize: 18,
                   contentPadding: const EdgeInsets.only(bottom: 12.0, left: 12),
@@ -119,7 +122,7 @@ class LoginPageState extends State<LoginPage> {
                     labelText: 'Password',
                     controller: password,
                     fillColor: appPrimary,
-                    cursorColor:Colors.white,
+                    cursorColor: Colors.white,
                     textColor: Colors.white,
                     height: null,
                     prefixIcon: Padding(
@@ -156,13 +159,12 @@ class LoginPageState extends State<LoginPage> {
                 height: 30,
               ),
               _buttonContainer(),
-              // if (keyboardIsVisible(
-              //     context: context, scrollController: _scrollController)) ...[
-              //   const SizedBox(
-              //     height: 30,
-              //   ),
-              //   _buttonContainer(),
-              // ],
+              if (keyboardIsVisible(
+                  context: context, scrollController: _scrollController)) ...[
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
             ],
           ),
         ),
@@ -180,11 +182,14 @@ class LoginPageState extends State<LoginPage> {
         child:
             getHeadingText(text: 'Welcome', color: Colors.white, fontSize: 30));
   }
+
   Widget _loginTextContainer() {
     return Align(
         alignment: Alignment.center,
-        child:
-            getSubHeadingText(text: 'LOGIN WITH USERNAME AND PASSWORD', color: Colors.white, ));
+        child: getSubHeadingText(
+          text: 'LOGIN WITH USERNAME AND PASSWORD',
+          color: Colors.white,
+        ));
   }
 
   Widget _buttonContainer() {
