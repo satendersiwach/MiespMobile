@@ -23,11 +23,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text(
-              'Ayush',
+              'User name',
               style:
                   TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
             ),
-            accountEmail: const Text('ayush@gmail.com',
+            accountEmail: const Text('email@gmail.com',
                 style: TextStyle(
                     fontWeight: FontWeight.bold, color: Colors.white)),
             currentAccountPicture: ClipRRect(
@@ -65,7 +65,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           InkWell(
             onTap: () async {
-              List<Widget> titleRowWidgets = [const Text("Logout")];
+              List<Widget> titleRowWidgets = [
+                const Text(
+                  "Logout",
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                )
+              ];
               List<Widget> actions = [
                 Container(
                     width: MediaQuery.of(context).size.width,
@@ -83,14 +91,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           },
                           child: const Text(
                             "Logout",
-                            style: TextStyle(color: Colors.red),
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
                           ),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: const Text("No"),
+                          child: const Text(
+                            "No",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
                         ),
                       ],
                     )),
