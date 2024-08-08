@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
-import 'package:scanner/theme/elements_screen.dart';
 
 class UserOutboundDeliveryWindow extends StatefulWidget {
   const UserOutboundDeliveryWindow({super.key});
 
   @override
-  State<UserOutboundDeliveryWindow> createState() => _UserOutboundDeliveryWindowState();
+  State<UserOutboundDeliveryWindow> createState() =>
+      _UserOutboundDeliveryWindowState();
 }
 
-class _UserOutboundDeliveryWindowState extends State<UserOutboundDeliveryWindow> {
+class _UserOutboundDeliveryWindowState
+    extends State<UserOutboundDeliveryWindow> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -160,8 +160,9 @@ class _UserOutboundDeliveryWindowState extends State<UserOutboundDeliveryWindow>
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 8,
+                const Divider(
+                  thickness: 1.5,
+                  color: Colors.grey,
                 ),
                 _buttonContainer(),
               ],
@@ -180,89 +181,126 @@ class _UserOutboundDeliveryWindowState extends State<UserOutboundDeliveryWindow>
 
   Widget _buttonContainer() {
     return SizedBox(
-      height: 60,
+      height: 35,
       child: Row(
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Material(
-                borderRadius: BorderRadius.circular(10.0),
+              child: TextButton(
+            onPressed: () {},
+            child: getPoppinsText(
+                text: 'Manual',
                 color: appPrimary,
-                elevation: 0.0,
-                child: MaterialButton(
-                  onPressed: () {},
-                  minWidth: MediaQuery.of(context).size.width,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.picture_as_pdf, color: Colors.white),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Manual",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+                fontSize: 13,
+                fontWeight: FontWeight.bold),
+          )),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0, bottom: 8, top: 8),
-              child: Material(
-                borderRadius: BorderRadius.circular(10.0),
+              child: TextButton(
+            onPressed: () {
+              ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
+                if (!mounted) return;
+                String barCode = scanResult;
+                if (barCode != '-1') {
+                  print(barCode);
+                  // if (await ServiceManager.isInternetAvailable()) {
+                  //   ServiceManager.getItemDetails(
+                  //       barCode: barCode,
+                  //       onSuccess: onSuccess,
+                  //       onError: onError);
+                  // }
+                }
+              });
+            },
+            child: getPoppinsText(
+                text: 'Scan',
                 color: appPrimary,
-                elevation: 0.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    ServiceManager.scanQRCode(
-                        onSuccess: (String scanResult) async {
-                      if (!mounted) return;
-                      String barCode = scanResult;
-                      if (barCode != '-1') {
-                        print(barCode);
-                        // if (await ServiceManager.isInternetAvailable()) {
-                        //   ServiceManager.getItemDetails(
-                        //       barCode: barCode,
-                        //       onSuccess: onSuccess,
-                        //       onError: onError);
-                        // }
-                      }
-                    });
-                  },
-                  minWidth: MediaQuery.of(context).size.width,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.qr_code_scanner,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "Scan",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+                fontSize: 13,
+                fontWeight: FontWeight.bold),
+          )),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(8.0),
+          //     child: Material(
+          //       borderRadius: BorderRadius.circular(10.0),
+          //       color: appPrimary,
+          //       elevation: 0.0,
+          //       child: MaterialButton(
+          //         onPressed: () {},
+          //         minWidth: MediaQuery.of(context).size.width,
+          //         child: const Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Icon(
+          //               Icons.picture_as_pdf,
+          //               color: Colors.white,
+          //               size: 20,
+          //             ),
+          //             SizedBox(
+          //               width: 10,
+          //             ),
+          //             Text(
+          //               "Manual",
+          //               textAlign: TextAlign.center,
+          //               style: TextStyle(
+          //                   color: Colors.white,
+          //                   fontWeight: FontWeight.bold,
+          //                   fontSize: 20.0),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(right: 8.0, bottom: 8, top: 8),
+          //     child: Material(
+          //       borderRadius: BorderRadius.circular(10.0),
+          //       color: appPrimary,
+          //       elevation: 0.0,
+          //       child: MaterialButton(
+          //         onPressed: () {
+          //           ServiceManager.scanQRCode(
+          //               onSuccess: (String scanResult) async {
+          //             if (!mounted) return;
+          //             String barCode = scanResult;
+          //             if (barCode != '-1') {
+          //               print(barCode);
+          //               // if (await ServiceManager.isInternetAvailable()) {
+          //               //   ServiceManager.getItemDetails(
+          //               //       barCode: barCode,
+          //               //       onSuccess: onSuccess,
+          //               //       onError: onError);
+          //               // }
+          //             }
+          //           });
+          //         },
+          //         minWidth: MediaQuery.of(context).size.width,
+          //         child: const Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             Icon(
+          //               Icons.qr_code_scanner,
+          //               size: 20,
+          //               color: Colors.white,
+          //             ),
+          //             SizedBox(
+          //               width: 10,
+          //             ),
+          //             Text(
+          //               "Scan",
+          //               textAlign: TextAlign.center,
+          //               style: TextStyle(
+          //                   color: Colors.white,
+          //                   fontWeight: FontWeight.bold,
+          //                   fontSize: 20.0),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
