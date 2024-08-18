@@ -6,14 +6,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/common/app_assets.dart';
-import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/check_keyboard_visibility.dart';
 import 'package:scanner/ui/components/element_button.dart';
-import 'package:scanner/ui/user_selection.dart';
+import 'package:scanner/ui/dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -224,8 +225,28 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  _onLogin() {
-    LocalStorage.setLoginData();
-    Get.to(() => const UserSelection());
+  void onSuccess(CustomerModel customerModel) {
+    CustomSnackBar.successSnackBar('Login successful');
+    CustomerModel.setLoginCustomer(customerModel: customerModel);
+    Get.to(() => const Dashboard());
   }
+
+  void onError() {
+    CustomSnackBar.successSnackBar('Invalid credentials');
+  }
+
+  _onLogin() async {
+    if (await ServiceManager.isInternetAvailable()) {
+      ServiceManager.login(
+          UserEmail: username.text,
+          Password: password.text,
+          onSuccess: onSuccess,
+          onError: onError);
+    }
+  }
+
+// _onLogin() {
+//   LocalStorage.setLoginData();
+//   Get.to(() => const UserSelection());
+// }
 }
