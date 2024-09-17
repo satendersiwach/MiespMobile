@@ -47,11 +47,16 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
                       horizontal: 14.0,
                     ),
                     child: getPoppinsText(
-                        text: 'Pick List(19)',
+                        text: 'Pick List (19)',
                         fontSize: 14,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
                   _pickListMultiSelection(),
+                  if (selectedPickList.isEmpty)
+                    SizedBox(
+                      height: Get.height / 12.5,
+                    ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -87,10 +92,15 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
               ),
             ),
             actions: [
-              IconButton(onPressed: (){}, icon: Icon(Icons.refresh,color: Colors.white,))
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                  ))
             ],
             title: getHeadingText(
-                text: "Outbound Delivery", color: headColor, fontSize: 20)),
+                text: "Outbound Delivery", color: Colors.white, fontSize: 20)),
         body: TabBarView(
           children: [
             _unScannedPickList(),
@@ -102,41 +112,43 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
   }
 
   Widget _pickListMultiSelection() {
-    return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, right: 8, top: 8),
+      child: MultiSelectDialogField<PickListModel?>(
+        items: pickLists
+            .map((hotel) => MultiSelectItem<PickListModel?>(
+                hotel, '${hotel.id}-${hotel.itemCode}'))
+            .toList(),
+        dialogHeight: Get.height / 5,
+        selectedColor: appPrimary,
+        decoration: const BoxDecoration(color: Colors.white),
+        initialValue: selectedPickList,
+        chipDisplay: MultiSelectChipDisplay(
+          chipColor: const Color(0xffffe9a8),
+          // icon: const Icon(Icons.check,color: Colors.brown,),
+          textStyle: GoogleFonts.poppins(
+            color: Colors.brown,
+            fontWeight: FontWeight.bold,
+          ),
+          scroll: true,
         ),
-        child: MultiSelectDialogField<PickListModel?>(
-          items: pickLists
-              .map((hotel) => MultiSelectItem<PickListModel?>(
-                  hotel, '${hotel.id}-${hotel.itemCode}'))
-              .toList(),
-          dialogHeight: Get.height / 5,
-          selectedColor: appPrimary,
-          initialValue: selectedPickList,
-          chipDisplay: MultiSelectChipDisplay(
-            textStyle: GoogleFonts.poppins(
-              color: submitButtonColor,
-              fontWeight: FontWeight.w900,
-            ),
-            scroll: true,
-          ),
-          buttonText: getInterText(
-              text: 'Select',
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w400),
-          buttonIcon: const Icon(
-            Icons.arrow_drop_down,
-            color: Colors.white,
-            size: 30,
-          ),
-          onConfirm: (List<PickListModel?> results) {
-            setState(() {
-              selectedPickList = results;
-            });
-          },
-        ));
+        buttonText: getHeadingText(
+            text: 'Select',
+            color: appPrimary,
+            fontSize: 13,
+            fontWeight: FontWeight.bold),
+        buttonIcon: const Icon(
+          Icons.arrow_drop_down,
+          color: Colors.white,
+          size: 30,
+        ),
+        onConfirm: (List<PickListModel?> results) {
+          setState(() {
+            selectedPickList = results;
+          });
+        },
+      ),
+    );
   }
 
   // Widget _dropdownContainer() {
