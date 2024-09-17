@@ -85,63 +85,66 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
         ),
       ),
       bottomNavigationBar: scanOption == ScanOption.none
-          ? SizedBox(
-              height: Get.height / 12,
-              child: Row(
-                children: [
-                  Expanded(child: Container()),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Material(
-                        borderRadius: BorderRadius.circular(10.0),
-                        color: const Color(0XFFba532b),
-                        elevation: 0.0,
-                        child: MaterialButton(
-                          onPressed: () {
-                            ServiceManager.scanQRCode(
-                                onSuccess: (String scanResult) async {
-                              if (!mounted) return;
-                              String barCode = scanResult;
-                              if (barCode != '-1') {
-                                print(barCode);
-                                // if (await ServiceManager.isInternetAvailable()) {
-                                //   ServiceManager.getItemDetails(
-                                //       barCode: barCode,
-                                //       onSuccess: onSuccess,
-                                //       onError: onError);
-                                // }
-                              }
-                            });
-                          },
-                          minWidth: MediaQuery.of(context).size.width,
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.qr_code_scanner,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Scan",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0),
-                              ),
-                            ],
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: SizedBox(
+                height: Get.height / 15,
+                child: Row(
+                  children: [
+                    Expanded(child: Container()),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Material(
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: const Color(0XFFba532b),
+                          elevation: 0.0,
+                          child: MaterialButton(
+                            onPressed: () {
+                              ServiceManager.scanQRCode(
+                                  onSuccess: (String scanResult) async {
+                                if (!mounted) return;
+                                String barCode = scanResult;
+                                if (barCode != '-1') {
+                                  print(barCode);
+                                  // if (await ServiceManager.isInternetAvailable()) {
+                                  //   ServiceManager.getItemDetails(
+                                  //       barCode: barCode,
+                                  //       onSuccess: onSuccess,
+                                  //       onError: onError);
+                                  // }
+                                }
+                              });
+                            },
+                            minWidth: MediaQuery.of(context).size.width,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.qr_code_scanner,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  "Scan",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(child: Container()),
-                ],
+                    Expanded(child: Container()),
+                  ],
+                ),
               ),
             )
           : null,

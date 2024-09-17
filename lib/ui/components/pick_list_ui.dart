@@ -148,7 +148,6 @@ Widget getUnassignedPickListUI({required PickListModel pickListModel}) {
           ),
         ],
       ),
-
       width: Get.width,
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -386,11 +385,12 @@ Widget getUnScannedPickListUI({required PickListModel pickListModel}) {
               ],
             ),
           ),
-          const SizedBox(
-            height: 8,
+          const Divider(
+            thickness: 1,
+            color: Colors.grey,
           ),
           SizedBox(
-            height: 60,
+            height: 35,
             child: Row(
               children: [
                 // Expanded(
@@ -425,36 +425,36 @@ Widget getUnScannedPickListUI({required PickListModel pickListModel}) {
                 //   ),
                 // ),
                 Expanded(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(right: 8.0, bottom: 8, top: 8),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: const Color(0XFFba532b),
-                      elevation: 0.0,
-                      child: MaterialButton(
-                        onPressed: () {
-                          ServiceManager.scanQRCode(
-                              onSuccess: (String scanResult) async {
-                            String barCode = scanResult;
-                            if (barCode != '-1') {
-                              print(barCode);
-                              // if (await ServiceManager.isInternetAvailable()) {
-                              //   ServiceManager.getItemDetails(
-                              //       barCode: barCode,
-                              //       onSuccess: onSuccess,
-                              //       onError: onError);
-                              // }
-                            }
-                          });
-                        },
-                        minWidth: Get.size.width,
-                        child: const Row(
+                  child: Material(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.white,
+                    elevation: 0.0,
+                    child: MaterialButton(
+                      onPressed: () {
+                        ServiceManager.scanQRCode(
+                            onSuccess: (String scanResult) async {
+                          String barCode = scanResult;
+                          if (barCode != '-1') {
+                            print(barCode);
+                            // if (await ServiceManager.isInternetAvailable()) {
+                            //   ServiceManager.getItemDetails(
+                            //       barCode: barCode,
+                            //       onSuccess: onSuccess,
+                            //       onError: onError);
+                            // }
+                          }
+                        });
+                      },
+                      minWidth: Get.size.width,
+                      child: const Padding(
+                        padding: EdgeInsets.only(bottom: 8.0),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
                               Icons.qr_code_scanner,
-                              color: Colors.white,
+                              color: appPrimary,
+                              size: 16,
                             ),
                             SizedBox(
                               width: 10,
@@ -463,9 +463,9 @@ Widget getUnScannedPickListUI({required PickListModel pickListModel}) {
                               "Scan",
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: appPrimary,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 20.0),
+                                  fontSize: 15.0),
                             ),
                           ],
                         ),
