@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/display_dialogbox.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -114,6 +115,7 @@ class _AssignUserListScreenState extends State<AssignUserListScreen> {
                       await Future.delayed(const Duration(seconds: 1), () {
                         Get.back();
                         Get.back();
+                        CustomSnackBar.successSnackBar('Pick lists assigned');
                       });
                     },
                     child: getPoppinsText(
