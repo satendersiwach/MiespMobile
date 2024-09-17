@@ -45,10 +45,6 @@ class _UserAppScreenState extends State<UserAppScreen> {
                 SizedBox(
                   height: Get.height / 8,
                 ),
-                _pickListButton(),
-                const SizedBox(
-                  height: 16,
-                ),
                 _outboundDeliveryButton(),
                 const SizedBox(
                   height: 16,
@@ -93,19 +89,6 @@ class _UserAppScreenState extends State<UserAppScreen> {
         btnText: 'Physical Entry',
         onPress: () {
           Get.to(() => const PhysicalInventoryScreen());
-        },
-      ),
-    );
-  }
-
-  Widget _pickListButton() {
-    return SizedBox(
-      width: Get.width,
-      child: loadingButton(
-        isLoading: false,
-        btnText: 'Pick List',
-        onPress: () {
-          Get.to(() => const OutboundDeliveryWindow());
         },
       ),
     );
