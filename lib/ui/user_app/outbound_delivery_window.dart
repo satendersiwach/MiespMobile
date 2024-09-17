@@ -71,14 +71,14 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Scanned",
+                          "Un-Scanned",
                         ),
                       )),
                       Tab(
                           child: Padding(
                         padding: EdgeInsets.all(8.0),
                         child: Text(
-                          "Un-Scanned",
+                          "Scanned",
                         ),
                       )),
                     ],
@@ -86,12 +86,15 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
                 ],
               ),
             ),
+            actions: [
+              IconButton(onPressed: (){}, icon: Icon(Icons.refresh,color: Colors.white,))
+            ],
             title: getHeadingText(
                 text: "Outbound Delivery", color: headColor, fontSize: 20)),
         body: TabBarView(
           children: [
-            _scannedPickList(),
             _unScannedPickList(),
+            _scannedPickList(),
           ],
         ),
       ),
