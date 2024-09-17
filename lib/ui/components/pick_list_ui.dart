@@ -394,37 +394,37 @@ Widget getUnScannedPickListUI({required PickListModel pickListModel}) {
             height: 60,
             child: Row(
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Material(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: const Color(0XFFba532b),
-                      elevation: 0.0,
-                      child: MaterialButton(
-                        onPressed: () {},
-                        minWidth: Get.size.width,
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.picture_as_pdf, color: Colors.white),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Manual",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Material(
+                //       borderRadius: BorderRadius.circular(10.0),
+                //       color: const Color(0XFFba532b),
+                //       elevation: 0.0,
+                //       child: MaterialButton(
+                //         onPressed: () {},
+                //         minWidth: Get.size.width,
+                //         child: const Row(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           children: [
+                //             Icon(Icons.picture_as_pdf, color: Colors.white),
+                //             SizedBox(
+                //               width: 10,
+                //             ),
+                //             Text(
+                //               "Manual",
+                //               textAlign: TextAlign.center,
+                //               style: TextStyle(
+                //                   color: Colors.white,
+                //                   fontWeight: FontWeight.bold,
+                //                   fontSize: 20.0),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: Padding(
                     padding:
