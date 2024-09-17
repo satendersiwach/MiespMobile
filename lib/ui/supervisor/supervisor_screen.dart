@@ -4,8 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/element_button.dart';
-import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
-import 'package:scanner/ui/supervisor/assigned_pick_list_screen.dart';
+import 'package:scanner/ui/supervisor/pick_list_screen.dart';
 
 class SupervisorScreen extends StatefulWidget {
   const SupervisorScreen({super.key});
@@ -45,18 +44,22 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
                 SizedBox(
                   height: Get.height / 8,
                 ),
-                _assignPickListButton(),
+                _pickListButton(),
                 const SizedBox(
                   height: 16,
                 ),
-                _assignedPickListButton(),
-                const SizedBox(
-                  height: 16,
-                ),
-                _outboundDeliveryButton(),
-                const SizedBox(
-                  height: 16,
-                ),
+                // _assignPickListButton(),
+                // const SizedBox(
+                //   height: 16,
+                // ),
+                // _assignedPickListButton(),
+                // const SizedBox(
+                //   height: 16,
+                // ),
+                // _outboundDeliveryButton(),
+                // const SizedBox(
+                //   height: 16,
+                // ),
                 _signOutButton()
               ],
             ),
@@ -87,42 +90,55 @@ class _SupervisorScreenState extends State<SupervisorScreen> {
     );
   }
 
-  Widget _assignPickListButton() {
+  // Widget _assignPickListButton() {
+  //   return SizedBox(
+  //     width: Get.width,
+  //     child: loadingButton(
+  //       isLoading: false,
+  //       btnText: 'Assign Pick List',
+  //       onPress: () {
+  //         Get.to(()=>const AssignPickListScreen());
+  //       },
+  //     ),
+  //   );
+  // }
+
+  Widget _pickListButton() {
     return SizedBox(
       width: Get.width,
       child: loadingButton(
         isLoading: false,
-        btnText: 'Assign Pick List',
+        btnText: 'Pick List',
         onPress: () {
-          Get.to(()=>const AssignPickListScreen());
+          Get.to(() => const PickListScreen());
         },
       ),
     );
   }
 
-  Widget _assignedPickListButton() {
-    return SizedBox(
-      width: Get.width,
-      child: loadingButton(
-        isLoading: false,
-        btnText: 'Assigned Pick List',
-        onPress: () {
-          Get.to(()=>AssignedPickListScreen());
-        },
-      ),
-    );
-  }
+  // Widget _assignedPickListButton() {
+  //   return SizedBox(
+  //     width: Get.width,
+  //     child: loadingButton(
+  //       isLoading: false,
+  //       btnText: 'Assigned Pick List',
+  //       onPress: () {
+  //         Get.to(()=>AssignedPickListScreen());
+  //       },
+  //     ),
+  //   );
+  // }
 
-  Widget _outboundDeliveryButton() {
-    return SizedBox(
-      width: Get.width,
-      child: loadingButton(
-        isLoading: false,
-        btnText: 'Outbound Delivery',
-        onPress: () {},
-      ),
-    );
-  }
+  // Widget _outboundDeliveryButton() {
+  //   return SizedBox(
+  //     width: Get.width,
+  //     child: loadingButton(
+  //       isLoading: false,
+  //       btnText: 'Outbound Delivery',
+  //       onPress: () {},
+  //     ),
+  //   );
+  // }
 
   Widget _signOutButton() {
     return SizedBox(

@@ -45,6 +45,10 @@ class _UserAppScreenState extends State<UserAppScreen> {
                 SizedBox(
                   height: Get.height / 8,
                 ),
+                _pickListButton(),
+                const SizedBox(
+                  height: 16,
+                ),
                 _outboundDeliveryButton(),
                 const SizedBox(
                   height: 16,
@@ -53,8 +57,6 @@ class _UserAppScreenState extends State<UserAppScreen> {
                 const SizedBox(
                   height: 16,
                 ),
-
-
                 _signOutButton()
               ],
             ),
@@ -79,12 +81,9 @@ class _UserAppScreenState extends State<UserAppScreen> {
     return Align(
       alignment: Alignment.centerLeft,
       child: getPoppinsText(
-          text: 'Welcome, HHT1',
-          fontWeight: FontWeight.w700,
-          fontSize: 20),
+          text: 'Welcome, HHT1', fontWeight: FontWeight.w700, fontSize: 20),
     );
   }
-
 
   Widget _physicalEntryButton() {
     return SizedBox(
@@ -93,7 +92,20 @@ class _UserAppScreenState extends State<UserAppScreen> {
         isLoading: false,
         btnText: 'Physical Entry',
         onPress: () {
-          Get.to(()=>const PhysicalInventoryScreen());
+          Get.to(() => const PhysicalInventoryScreen());
+        },
+      ),
+    );
+  }
+
+  Widget _pickListButton() {
+    return SizedBox(
+      width: Get.width,
+      child: loadingButton(
+        isLoading: false,
+        btnText: 'Pick List',
+        onPress: () {
+          Get.to(() => const OutboundDeliveryWindow());
         },
       ),
     );
@@ -106,7 +118,7 @@ class _UserAppScreenState extends State<UserAppScreen> {
         isLoading: false,
         btnText: 'Outbound Delivery',
         onPress: () {
-          Get.to(()=>const OutboundDeliveryWindow());
+          Get.to(() => const OutboundDeliveryWindow());
         },
       ),
     );
