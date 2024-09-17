@@ -20,7 +20,7 @@ class _AssignPickListScreenState extends State<AssignPickListScreen> {
           IconButton(
               onPressed: () {},
               icon: const Icon(
-                Icons.search,
+                Icons.refresh,
                 color: Colors.white,
               ))
         ],

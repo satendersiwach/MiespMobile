@@ -31,7 +31,7 @@ class _UserAppScreenState extends State<UserAppScreen> {
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
-        title: 'Supervisor Window',
+        title: 'User app window',
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),

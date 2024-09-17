@@ -61,7 +61,7 @@ class LoginPageState extends State<LoginPage> {
                     child: Container(
                       // width: MediaQuery.of(context).size.width/3,
                       // height: MediaQuery.of(context).size.height/15,
-                      color: appPrimary,
+                      // color: appPrimary,
                       child: const FlutterLogo(
                         size: 100,
                       ),
@@ -82,6 +82,7 @@ class LoginPageState extends State<LoginPage> {
                   controller: username,
                   labelText: 'Username',
                   labelFontSize: 18,
+                  contentPadding: const EdgeInsets.only(bottom: 8),
                   labelColor: Colors.grey,
                   borderRadius: const BorderRadius.all(Radius.zero),
                   boxShadow: [],
@@ -96,6 +97,7 @@ class LoginPageState extends State<LoginPage> {
                 child: getTextField(
                     labelText: 'Password',
                     controller: password,
+                    contentPadding: const EdgeInsets.only(bottom: 8),
                     labelFontSize: 18,
                     labelColor: Colors.grey,
                     maxLines: 1,
