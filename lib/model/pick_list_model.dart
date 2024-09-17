@@ -123,6 +123,7 @@ class PickListModel {
   String? pickedStatus;
   double? releaseQty;
   DateTime? assignedDate;
+  bool checked;
 
   PickListModel({
     required this.id,
@@ -130,6 +131,7 @@ class PickListModel {
     required this.itemCode,
     this.description,
     this.assignedTo,
+    this.checked=false,
     this.soId,
     this.whseCode,
     this.batchNumber,

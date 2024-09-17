@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanner/model/pick_list_model.dart';
-import 'package:scanner/services/service_manager.dart';
-import 'package:scanner/theme/custom_text_widgets.dart';
+import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/pick_list_ui.dart';
 
@@ -15,101 +14,76 @@ class PickListScreen extends StatefulWidget {
 class _PickListScreenState extends State<PickListScreen> {
   List<String> optionList = ["All", "Assigned", "Unassigned"];
   String selectedOption = "Unassigned";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
-      title: "Pick List",
-      actions: [
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.refresh,
-              color: Colors.white,
-            ))
-      ],
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            _dropdownContainer(),
-            const SizedBox(
-              height: 10,
-            ),
-            if (selectedOption == "Unassigned") ...[_unAssignedContainer()],
-            if (selectedOption == "Assigned") ...[
-              _assignedContainer(),
+        title: "Pick List",
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.refresh,
+                color: Colors.white,
+              ))
+        ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              _dropdownContainer(),
+              const SizedBox(
+                height: 10,
+              ),
+              if (selectedOption == "Unassigned") ...[_unAssignedContainer()],
+              if (selectedOption == "Assigned") ...[
+                _assignedContainer(),
+              ],
+              if (selectedOption == "All") ...[
+                _allContainer(),
+              ],
+              const SizedBox(
+                height: 10,
+              ),
             ],
-            if (selectedOption == "All") ...[
-              _allContainer(),
-            ],
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+          ),
+        ),
+        bottomNavigationBar: _assignButtonContainer());
+  }
+
+  Widget _assignButtonContainer() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height / 13,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(10.0),
+          color: appPrimary,
+          elevation: 0.0,
+          child: isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : MaterialButton(
+                  onPressed: () {},
+                  minWidth: MediaQuery.of(context).size.width,
+                  child: const Text(
+                    "Assign",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                  ),
+                ),
         ),
       ),
-      // bottomNavigationBar: SizedBox(
-      //   height: Get.height / 12,
-      //   child: Row(
-      //     children: [
-      //       Expanded(child: Container()),
-      //       Expanded(
-      //         flex: 2,
-      //         child: Padding(
-      //           padding: const EdgeInsets.all(8.0),
-      //           child: Material(
-      //             borderRadius: BorderRadius.circular(10.0),
-      //             color: const Color(0XFFba532b),
-      //             elevation: 0.0,
-      //             child: MaterialButton(
-      //               onPressed: () {
-      //                 ServiceManager.scanQRCode(
-      //                     onSuccess: (String scanResult) async {
-      //                   if (!mounted) return;
-      //                   String barCode = scanResult;
-      //                   if (barCode != '-1') {
-      //                     print(barCode);
-      //                     // if (await ServiceManager.isInternetAvailable()) {
-      //                     //   ServiceManager.getItemDetails(
-      //                     //       barCode: barCode,
-      //                     //       onSuccess: onSuccess,
-      //                     //       onError: onError);
-      //                     // }
-      //                   }
-      //                 });
-      //               },
-      //               minWidth: MediaQuery.of(context).size.width,
-      //               child: const Row(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: [
-      //                   Icon(
-      //                     Icons.qr_code_scanner,
-      //                     color: Colors.white,
-      //                   ),
-      //                   SizedBox(
-      //                     width: 10,
-      //                   ),
-      //                   Text(
-      //                     "Scan",
-      //                     textAlign: TextAlign.center,
-      //                     style: TextStyle(
-      //                         color: Colors.white,
-      //                         fontWeight: FontWeight.bold,
-      //                         fontSize: 20.0),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //       Expanded(child: Container()),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
@@ -119,8 +93,23 @@ class _PickListScreenState extends State<PickListScreen> {
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        PickListModel pickListModel=pickLists[index];
-        return getUnassignedPickListUI(pickListModel: pickListModel);
+        PickListModel pickListModel = pickLists[index];
+        return CheckboxListTile(
+          value: pickListModel.checked,
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+          onChanged: (bool? value) {
+            setState(() {
+              pickListModel.checked = value ?? !pickListModel.checked;
+            });
+          },
+          checkColor: Colors.white,
+          activeColor: appPrimary,
+          title: Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: getUnassignedPickListUI(pickListModel: pickListModel),
+          ),
+        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
@@ -137,9 +126,23 @@ class _PickListScreenState extends State<PickListScreen> {
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        PickListModel pickListModel=pickLists[index];
-
-        return getAssignedPickListUI(pickListModel: pickListModel);
+        PickListModel pickListModel = pickLists[index];
+        return CheckboxListTile(
+          value: pickListModel.checked,
+          controlAffinity: ListTileControlAffinity.leading,
+          contentPadding: EdgeInsets.zero,
+          onChanged: (bool? value) {
+            setState(() {
+              pickListModel.checked = value ?? !pickListModel.checked;
+            });
+          },
+          checkColor: Colors.white,
+          activeColor: appPrimary,
+          title: Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: getAssignedPickListUI(pickListModel: pickListModel),
+          ),
+        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
@@ -156,146 +159,42 @@ class _PickListScreenState extends State<PickListScreen> {
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        PickListModel pickListModel=pickLists[index];
+        PickListModel pickListModel = pickLists[index];
         if (index % 2 == 0) {
-          return getAssignedPickListUI(pickListModel: pickListModel);
+          return CheckboxListTile(
+            value: pickListModel.checked,
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            onChanged: (bool? value) {
+              setState(() {
+                pickListModel.checked = value ?? !pickListModel.checked;
+              });
+            },
+            checkColor: Colors.white,
+            activeColor: appPrimary,
+            title: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: getAssignedPickListUI(pickListModel: pickListModel),
+            ),
+          );
         } else {
-          return getUnassignedPickListUI(pickListModel: pickListModel);
+          return CheckboxListTile(
+            value: pickListModel.checked,
+            controlAffinity: ListTileControlAffinity.leading,
+            contentPadding: EdgeInsets.zero,
+            onChanged: (bool? value) {
+              setState(() {
+                pickListModel.checked = value ?? !pickListModel.checked;
+              });
+            },
+            checkColor: Colors.white,
+            activeColor: appPrimary,
+            title: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: getUnassignedPickListUI(pickListModel: pickListModel),
+            ),
+          );
         }
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider(
-          thickness: 1.5,
-          color: Colors.grey,
-        );
-      },
-    );
-  }
-
-  Widget _list() {
-    return ListView.separated(
-      itemCount: 3,
-      physics: const ScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return InkWell(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4.0,
-                  offset: Offset(2.0, 2.0),
-                ),
-              ],
-            ),
-            margin: const EdgeInsets.all(15),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Pick List id'),
-                                getPoppinsTextSpanDetails(text: '1'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Item Code'),
-                                getPoppinsTextSpanDetails(text: 'FGOM0002'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'SO Id'),
-                                getPoppinsTextSpanDetails(text: '1'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Item Description'),
-                                getPoppinsTextSpanDetails(
-                                    text:
-                                        'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'WHSE Code'),
-                                getPoppinsTextSpanDetails(text: 'B02'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Batch No.'),
-                                getPoppinsTextSpanDetails(
-                                    text: 'WR21011B41150005'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Release Qty'),
-                                getPoppinsTextSpanDetails(text: '0.0'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Picked Status'),
-                                getPoppinsTextSpanDetails(text: 'Not Picked'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                _buttonContainer(),
-              ],
-            ),
-          ),
-        );
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
@@ -318,6 +217,9 @@ class _PickListScreenState extends State<PickListScreen> {
           if (newValue != null) {
             setState(() {
               selectedOption = newValue;
+              for (PickListModel pickListModel in pickLists) {
+                pickListModel.checked = false;
+              }
             });
           }
         },
@@ -358,69 +260,6 @@ class _PickListScreenState extends State<PickListScreen> {
             ),
           );
         }).toList(),
-      ),
-    );
-  }
-
-  Widget _buttonContainer() {
-    return SizedBox(
-      height: 50,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 8.0, bottom: 8, top: 8),
-        child: Material(
-          borderRadius: BorderRadius.circular(10.0),
-          color: const Color(0XFFba532b),
-          elevation: 0.0,
-          child: MaterialButton(
-            onPressed: () {
-              ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
-                if (!mounted) return;
-                String barCode = scanResult;
-                if (barCode != '-1') {
-                  print(barCode);
-                  // if (await ServiceManager.isInternetAvailable()) {
-                  //   ServiceManager.getItemDetails(
-                  //       barCode: barCode,
-                  //       onSuccess: onSuccess,
-                  //       onError: onError);
-                  // }
-                }
-              });
-            },
-            minWidth: MediaQuery.of(context).size.width,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.qr_code_scanner,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "Scan",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _scanNowContainer() {
-    return Align(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: getPoppinsText(
-            text: 'Scan Now', fontWeight: FontWeight.w700, fontSize: 20),
       ),
     );
   }

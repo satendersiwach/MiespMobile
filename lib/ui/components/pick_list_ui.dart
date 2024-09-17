@@ -21,7 +21,6 @@ Widget getAssignedPickListUI({required PickListModel pickListModel}) {
           ),
         ],
       ),
-      margin: const EdgeInsets.all(15),
       width: Get.width,
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -149,7 +148,7 @@ Widget getUnassignedPickListUI({required PickListModel pickListModel}) {
           ),
         ],
       ),
-      margin: const EdgeInsets.all(15),
+
       width: Get.width,
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -230,40 +229,40 @@ Widget getUnassignedPickListUI({required PickListModel pickListModel}) {
                 )),
               ],
             ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                // getPoppinsText(text: 'Assign',
-                // textAlign: TextAlign.start,
-                // fontSize: 13,
-                // fontWeight: FontWeight.bold),
-                // const SizedBox(width: 20,),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.white),
-                      side: WidgetStateProperty.all(
-                          const BorderSide(color: appPrimary, width: 1.5)),
-                      // Add outline
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8.0), // Optional: Adjust border radius
-                        ),
-                      ),
-                    ),
-                    child: getPoppinsText(
-                        text: 'Assign',
-                        color: appPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            )
+            // const SizedBox(
+            //   height: 8,
+            // ),
+            // Row(
+            //   children: [
+            //     // getPoppinsText(text: 'Assign',
+            //     // textAlign: TextAlign.start,
+            //     // fontSize: 13,
+            //     // fontWeight: FontWeight.bold),
+            //     // const SizedBox(width: 20,),
+            //     Expanded(
+            //       child: OutlinedButton(
+            //         onPressed: () {},
+            //         style: ButtonStyle(
+            //           backgroundColor: WidgetStateProperty.all(Colors.white),
+            //           side: WidgetStateProperty.all(
+            //               const BorderSide(color: appPrimary, width: 1.5)),
+            //           // Add outline
+            //           shape: WidgetStateProperty.all(
+            //             RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(
+            //                   8.0), // Optional: Adjust border radius
+            //             ),
+            //           ),
+            //         ),
+            //         child: getPoppinsText(
+            //             text: 'Assign',
+            //             color: appPrimary,
+            //             fontSize: 15,
+            //             fontWeight: FontWeight.bold),
+            //       ),
+            //     ),
+            //   ],
+            // )
           ],
         ),
       ),
