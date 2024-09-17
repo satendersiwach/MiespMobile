@@ -12,6 +12,9 @@ class OutboundDeliveryWindow extends StatefulWidget {
 }
 
 class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
+  List<String> optionList = ["All", "Selected"];
+  String selectedOption = "Selected";
+
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
@@ -31,12 +34,71 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
               height: 20,
             ),
             _assignCountContainer(),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 8,),
+            _dropdownContainer(),
+
+
             _list(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _dropdownContainer() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      child: DropdownButtonFormField<String>(
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            setState(() {
+              selectedOption = newValue;
+            });
+          }
+        },
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.only(top: 2),
+          focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent)),
+          enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent)),
+        ),
+        elevation: 0,
+        isDense: false,
+        autofocus: false,
+        hint: optionList.contains(selectedOption)
+            ? null
+            : const Center(
+                child: Text(
+                  'Select',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+        value: optionList.contains(selectedOption) ? selectedOption : null,
+        padding: const EdgeInsets.only(left: 16),
+        borderRadius: BorderRadius.circular(15),
+        items: optionList.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 145),
+              // Set a maximum width
+              child: Text(
+                value,
+                overflow: TextOverflow.clip,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
