@@ -33,7 +33,7 @@ Widget getTextField(
     bool autofocus = false,
     bool readOnly = false,
     bool enabled = true,
-    bool enableInteractiveSelection = true,
+    bool enableInteractiveSelection = false,
     bool enableSuggestions = false,
     int? maxLines,
     int? maxLength,
@@ -106,7 +106,7 @@ Widget getTextField(
               fontSize: labelFontSize,
               fontWeight: labelFontWeight,
               color: labelColor),
-          filled: true,
+          filled: false,
           labelText: labelText,
           hintText: hintText,
           hintStyle: GoogleFonts.redHatDisplay(
@@ -137,7 +137,7 @@ Widget getTextField(
         ),
         maxLines: maxLines,
         keyboardType: keyboardType,
-        autofocus: false,
+        autofocus: autofocus,
         style: GoogleFonts.redHatDisplay(
             fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
       ),

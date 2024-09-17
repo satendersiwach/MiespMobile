@@ -20,108 +20,6 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
   // List<String> optionList = ["All", "Selected"];
   // String selectedOption = "Selected";
   List<PickListModel?> selectedPickList = [];
-  List<PickListModel> pickLists = [
-    PickListModel(
-      id: 1,
-      itemCode: "ITEM001",
-      description: "Item 1 Description",
-      soId: 1001,
-      whseCode: "WH001",
-      batchNumber: "BATCH001",
-      releaseQty: 10.5,
-      pickedStatus: "Picked",
-    ),
-    PickListModel(
-      id: 2,
-      itemCode: "ITEM002",
-      description: "Item 2 Description",
-      soId: 1002,
-      whseCode: "WH002",
-      batchNumber: "BATCH002",
-      releaseQty: 8.0,
-      pickedStatus: "Not Picked",
-    ),
-    PickListModel(
-      id: 3,
-      itemCode: "ITEM003",
-      description: "Item 3 Description",
-      soId: 1003,
-      whseCode: "WH001",
-      batchNumber: "BATCH003",
-      releaseQty: 15.0,
-      pickedStatus: "Picked",
-    ),
-    PickListModel(
-      id: 4,
-      itemCode: "ITEM004",
-      description: "Item 4 Description",
-      soId: 1004,
-      whseCode: "WH003",
-      batchNumber: "BATCH004",
-      releaseQty: 6.5,
-      pickedStatus: "Not Picked",
-    ),
-    PickListModel(
-      id: 5,
-      itemCode: "ITEM005",
-      description: "Item 5 Description",
-      soId: 1005,
-      whseCode: "WH002",
-      batchNumber: "BATCH005",
-      releaseQty: 12.0,
-      pickedStatus: "Picked",
-    ),
-    PickListModel(
-      id: 6,
-      itemCode: "ITEM006",
-      description: "Item 6 Description",
-      soId: 1006,
-      whseCode: "WH001",
-      batchNumber: "BATCH006",
-      releaseQty: 7.0,
-      pickedStatus: "Not Picked",
-    ),
-    PickListModel(
-      id: 7,
-      itemCode: "ITEM007",
-      description: "Item 7 Description",
-      soId: 1007,
-      whseCode: "WH003",
-      batchNumber: "BATCH007",
-      releaseQty: 20.0,
-      pickedStatus: "Picked",
-    ),
-    PickListModel(
-      id: 8,
-      itemCode: "ITEM008",
-      description: "Item 8 Description",
-      soId: 1008,
-      whseCode: "WH002",
-      batchNumber: "BATCH008",
-      releaseQty: 5.5,
-      pickedStatus: "Not Picked",
-    ),
-    PickListModel(
-      id: 9,
-      itemCode: "ITEM009",
-      description: "Item 9 Description",
-      soId: 1009,
-      whseCode: "WH001",
-      batchNumber: "BATCH009",
-      releaseQty: 18.0,
-      pickedStatus: "Picked",
-    ),
-    PickListModel(
-      id: 10,
-      itemCode: "ITEM010",
-      description: "Item 10 Description",
-      soId: 1010,
-      whseCode: "WH003",
-      batchNumber: "BATCH010",
-      releaseQty: 9.0,
-      pickedStatus: "Not Picked",
-    ),
-  ];
 
   @override
   void initState() {
@@ -146,14 +44,17 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14.0,),
+                      horizontal: 14.0,
+                    ),
                     child: getPoppinsText(
                         text: 'Pick List(19)',
                         fontSize: 14,
                         fontWeight: FontWeight.bold),
                   ),
                   _pickListMultiSelection(),
-                  const SizedBox(height: 10,),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   TabBar(
                     indicator: const BoxDecoration(
                         borderRadius: BorderRadius.only(
@@ -295,11 +196,11 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: ListView.separated(
-        itemCount: 23,
+        itemCount: pickLists.length,
         physics: const ScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return getScannedPickListUI();
+          return getScannedPickListUI(pickListModel: pickLists[index]);
         },
         separatorBuilder: (BuildContext context, int index) {
           return const Divider(
@@ -315,11 +216,11 @@ class _OutboundDeliveryWindowState extends State<OutboundDeliveryWindow> {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: ListView.separated(
-        itemCount: 3,
+        itemCount: pickLists.length,
         physics: const ScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return getUnScannedPickListUI();
+          return getUnScannedPickListUI(pickListModel: pickLists[index]);
         },
         separatorBuilder: (BuildContext context, int index) {
           return const Divider(

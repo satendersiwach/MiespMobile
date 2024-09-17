@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/get_formatted_date.dart';
+import 'package:scanner/model/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 
-Widget getAssignedPickListUI() {
+Widget getAssignedPickListUI({required PickListModel pickListModel}) {
   return InkWell(
     child: Container(
       decoration: BoxDecoration(
@@ -40,7 +41,8 @@ Widget getAssignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Pick List id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.id.toString()),
                         ],
                       ),
                     ),
@@ -48,7 +50,8 @@ Widget getAssignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'SO Id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.soId?.toString() ?? ''),
                         ],
                       ),
                     ),
@@ -56,7 +59,8 @@ Widget getAssignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Status'),
-                          getPoppinsTextSpanDetails(text: 'Not Picked'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.pickedStatus ?? ''),
                         ],
                       ),
                     ),
@@ -70,7 +74,8 @@ Widget getAssignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Total Items'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.totalItems.toString()),
                         ],
                       ),
                     ),
@@ -78,7 +83,8 @@ Widget getAssignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Assigned To'),
-                          getPoppinsTextSpanDetails(text: 'HHT1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.assignedTo ?? ''),
                         ],
                       ),
                     ),
@@ -87,7 +93,8 @@ Widget getAssignedPickListUI() {
                         children: [
                           getPoppinsTextSpanHeading(text: 'Assigned Date'),
                           getPoppinsTextSpanDetails(
-                              text: getFormattedDate(DateTime.now())),
+                              text:
+                                  getFormattedDate(pickListModel.assignedDate)),
                         ],
                       ),
                     ),
@@ -127,7 +134,7 @@ Widget getAssignedPickListUI() {
   );
 }
 
-Widget getUnassignedPickListUI() {
+Widget getUnassignedPickListUI({required PickListModel pickListModel}) {
   return InkWell(
     child: Container(
       decoration: BoxDecoration(
@@ -162,7 +169,8 @@ Widget getUnassignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Pick List id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.id.toString()),
                         ],
                       ),
                     ),
@@ -170,7 +178,17 @@ Widget getUnassignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'SO Id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.soId?.toString() ?? ''),
+                        ],
+                      ),
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          getPoppinsTextSpanHeading(text: 'Status'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.pickedStatus ?? ''),
                         ],
                       ),
                     ),
@@ -184,15 +202,27 @@ Widget getUnassignedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Total Items'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.totalItems.toString()),
                         ],
                       ),
                     ),
                     Text.rich(
                       TextSpan(
                         children: [
-                          getPoppinsTextSpanHeading(text: 'Status'),
-                          getPoppinsTextSpanDetails(text: 'Not Picked'),
+                          getPoppinsTextSpanHeading(text: 'Assigned To'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.assignedTo ?? ''),
+                        ],
+                      ),
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          getPoppinsTextSpanHeading(text: 'Assigned Date'),
+                          getPoppinsTextSpanDetails(
+                              text:
+                                  getFormattedDate(pickListModel.assignedDate)),
                         ],
                       ),
                     ),
@@ -241,7 +271,7 @@ Widget getUnassignedPickListUI() {
   );
 }
 
-Widget getUnScannedPickListUI() {
+Widget getUnScannedPickListUI({required PickListModel pickListModel}) {
   return InkWell(
     child: Container(
       decoration: BoxDecoration(
@@ -276,7 +306,8 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Pick List id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.id.toString()),
                         ],
                       ),
                     ),
@@ -284,7 +315,8 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Item Code'),
-                          getPoppinsTextSpanDetails(text: 'FGOM0002'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.itemCode),
                         ],
                       ),
                     ),
@@ -292,7 +324,8 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'SO Id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.soId.toString()),
                         ],
                       ),
                     ),
@@ -301,7 +334,7 @@ Widget getUnScannedPickListUI() {
                         children: [
                           getPoppinsTextSpanHeading(text: 'Item Description'),
                           getPoppinsTextSpanDetails(
-                              text: 'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
+                              text: pickListModel.description),
                         ],
                       ),
                     ),
@@ -315,7 +348,8 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'WHSE Code'),
-                          getPoppinsTextSpanDetails(text: 'B02'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.whseCode),
                         ],
                       ),
                     ),
@@ -323,7 +357,8 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Batch No.'),
-                          getPoppinsTextSpanDetails(text: 'WR21011B41150005'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.batchNumber),
                         ],
                       ),
                     ),
@@ -331,7 +366,10 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Release Qty'),
-                          getPoppinsTextSpanDetails(text: '0.0'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.releaseQty
+                                      ?.toStringAsFixed(2) ??
+                                  "0.0"),
                         ],
                       ),
                     ),
@@ -339,7 +377,8 @@ Widget getUnScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Picked Status'),
-                          getPoppinsTextSpanDetails(text: 'Not Picked'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.pickedStatus),
                         ],
                       ),
                     ),
@@ -444,7 +483,7 @@ Widget getUnScannedPickListUI() {
   );
 }
 
-Widget getScannedPickListUI() {
+Widget getScannedPickListUI({required PickListModel pickListModel}) {
   return InkWell(
     child: Container(
       decoration: BoxDecoration(
@@ -479,7 +518,8 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Pick List id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.id.toString()),
                         ],
                       ),
                     ),
@@ -487,7 +527,8 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Item Code'),
-                          getPoppinsTextSpanDetails(text: 'FGOM0002'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.itemCode),
                         ],
                       ),
                     ),
@@ -495,7 +536,8 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'SO Id'),
-                          getPoppinsTextSpanDetails(text: '1'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.soId.toString()),
                         ],
                       ),
                     ),
@@ -504,7 +546,7 @@ Widget getScannedPickListUI() {
                         children: [
                           getPoppinsTextSpanHeading(text: 'Item Description'),
                           getPoppinsTextSpanDetails(
-                              text: 'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
+                              text: pickListModel.description),
                         ],
                       ),
                     ),
@@ -518,7 +560,8 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'WHSE Code'),
-                          getPoppinsTextSpanDetails(text: 'B02'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.whseCode),
                         ],
                       ),
                     ),
@@ -526,7 +569,8 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Batch No.'),
-                          getPoppinsTextSpanDetails(text: 'WR21011B41150005'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.batchNumber),
                         ],
                       ),
                     ),
@@ -534,7 +578,10 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Release Qty'),
-                          getPoppinsTextSpanDetails(text: '0.0'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.releaseQty
+                                      ?.toStringAsFixed(2) ??
+                                  "0.0"),
                         ],
                       ),
                     ),
@@ -542,7 +589,8 @@ Widget getScannedPickListUI() {
                       TextSpan(
                         children: [
                           getPoppinsTextSpanHeading(text: 'Picked Status'),
-                          getPoppinsTextSpanDetails(text: 'Not Picked'),
+                          getPoppinsTextSpanDetails(
+                              text: pickListModel.pickedStatus),
                         ],
                       ),
                     ),

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/model/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
+import 'package:scanner/theme/get_text_field.dart';
+import 'package:scanner/ui/components/pick_list_ui.dart';
 
 enum ScanOption { none, scanned, unScanned }
 
@@ -17,6 +21,7 @@ class PhysicalInventoryScreen extends StatefulWidget {
 
 class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   ScanOption scanOption = ScanOption.none;
+  final TextEditingController _query = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,203 +70,111 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
             const SizedBox(
               height: 20,
             ),
-            _scanNowContainer(),
-            const SizedBox(
-              height: 10,
-            ),
-            if (scanOption != ScanOption.none) _list(),
+            if (scanOption == ScanOption.none) ...[
+              _scanNowContainer(),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+            if (scanOption != ScanOption.none) ...[_searchContainer(), _list()],
             const SizedBox(
               height: 10,
             ),
           ],
         ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: Get.height / 12,
-        child: Row(
-          children: [
-            Expanded(child: Container()),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: const Color(0XFFba532b),
-                  elevation: 0.0,
-                  child: MaterialButton(
-                    onPressed: () {
-                      ServiceManager.scanQRCode(
-                          onSuccess: (String scanResult) async {
-                        if (!mounted) return;
-                        String barCode = scanResult;
-                        if (barCode != '-1') {
-                          print(barCode);
-                          // if (await ServiceManager.isInternetAvailable()) {
-                          //   ServiceManager.getItemDetails(
-                          //       barCode: barCode,
-                          //       onSuccess: onSuccess,
-                          //       onError: onError);
-                          // }
-                        }
-                      });
-                    },
-                    minWidth: MediaQuery.of(context).size.width,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.qr_code_scanner,
-                          color: Colors.white,
+      bottomNavigationBar: scanOption == ScanOption.none
+          ? SizedBox(
+              height: Get.height / 12,
+              child: Row(
+                children: [
+                  Expanded(child: Container()),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: const Color(0XFFba532b),
+                        elevation: 0.0,
+                        child: MaterialButton(
+                          onPressed: () {
+                            ServiceManager.scanQRCode(
+                                onSuccess: (String scanResult) async {
+                              if (!mounted) return;
+                              String barCode = scanResult;
+                              if (barCode != '-1') {
+                                print(barCode);
+                                // if (await ServiceManager.isInternetAvailable()) {
+                                //   ServiceManager.getItemDetails(
+                                //       barCode: barCode,
+                                //       onSuccess: onSuccess,
+                                //       onError: onError);
+                                // }
+                              }
+                            });
+                          },
+                          minWidth: MediaQuery.of(context).size.width,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.qr_code_scanner,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Scan",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0),
+                              ),
+                            ],
+                          ),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Scan",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Expanded(child: Container()),
+                ],
               ),
-            ),
-            Expanded(child: Container()),
-          ],
-        ),
-      ),
+            )
+          : null,
     );
+  }
+
+  Widget _searchContainer() {
+    return getTextField(
+        controller: _query,
+        labelText: 'Search',
+        enabled: false,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+          bottomRight: Radius.circular(8),
+          bottomLeft: Radius.circular(8),
+        ),
+        suffixIcon: const Icon(
+          Icons.search,
+          color: appPrimary,
+        ));
   }
 
   Widget _list() {
     return ListView.separated(
-      itemCount: 3,
+      itemCount: pickLists.length,
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return InkWell(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4.0,
-                  offset: Offset(2.0, 2.0),
-                ),
-              ],
-            ),
-            margin: const EdgeInsets.all(15),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Pick List id'),
-                                getPoppinsTextSpanDetails(text: '1'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Item Code'),
-                                getPoppinsTextSpanDetails(text: 'FGOM0002'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'SO Id'),
-                                getPoppinsTextSpanDetails(text: '1'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Item Description'),
-                                getPoppinsTextSpanDetails(
-                                    text:
-                                        'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'WHSE Code'),
-                                getPoppinsTextSpanDetails(text: 'B02'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Batch No.'),
-                                getPoppinsTextSpanDetails(
-                                    text: 'WR21011B41150005'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Release Qty'),
-                                getPoppinsTextSpanDetails(text: '0.0'),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Picked Status'),
-                                getPoppinsTextSpanDetails(text: 'Not Picked'),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                if (scanOption == ScanOption.unScanned) _buttonContainer(),
-              ],
-            ),
-          ),
-        );
+        if (scanOption == ScanOption.unScanned) {
+          return getUnScannedPickListUI(pickListModel: pickLists[index]);
+        } else {
+          return getScannedPickListUI(pickListModel: pickLists[index]);
+        }
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(

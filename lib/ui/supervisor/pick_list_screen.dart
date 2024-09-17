@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scanner/model/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -118,7 +119,8 @@ class _PickListScreenState extends State<PickListScreen> {
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return getUnassignedPickListUI();
+        PickListModel pickListModel=pickLists[index];
+        return getUnassignedPickListUI(pickListModel: pickListModel);
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
@@ -131,11 +133,13 @@ class _PickListScreenState extends State<PickListScreen> {
 
   Widget _assignedContainer() {
     return ListView.separated(
-      itemCount: 3,
+      itemCount: pickLists.length,
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return getAssignedPickListUI();
+        PickListModel pickListModel=pickLists[index];
+
+        return getAssignedPickListUI(pickListModel: pickListModel);
       },
       separatorBuilder: (BuildContext context, int index) {
         return const Divider(
@@ -152,10 +156,11 @@ class _PickListScreenState extends State<PickListScreen> {
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
+        PickListModel pickListModel=pickLists[index];
         if (index % 2 == 0) {
-          return getAssignedPickListUI();
+          return getAssignedPickListUI(pickListModel: pickListModel);
         } else {
-          return getUnassignedPickListUI();
+          return getUnassignedPickListUI(pickListModel: pickListModel);
         }
       },
       separatorBuilder: (BuildContext context, int index) {
