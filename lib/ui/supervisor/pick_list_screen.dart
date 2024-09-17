@@ -19,6 +19,14 @@ class _PickListScreenState extends State<PickListScreen> {
   Widget build(BuildContext context) {
     return screenWithAppBar(
       title: "Pick List",
+      actions: [
+        IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.refresh,
+              color: Colors.white,
+            ))
+      ],
       body: SingleChildScrollView(
         child: Column(
           children: [
