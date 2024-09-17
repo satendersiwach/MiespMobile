@@ -241,7 +241,7 @@ Widget getUnassignedPickListUI() {
   );
 }
 
-Widget getScannedPickListUI() {
+Widget getUnScannedPickListUI() {
   return InkWell(
     child: Container(
       decoration: BoxDecoration(
@@ -443,7 +443,8 @@ Widget getScannedPickListUI() {
     ),
   );
 }
-Widget getUnScannedPickListUI() {
+
+Widget getScannedPickListUI() {
   return InkWell(
     child: Container(
       decoration: BoxDecoration(
