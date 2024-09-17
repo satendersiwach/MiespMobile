@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:scanner/model/pick_list_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/pick_list_ui.dart';
 
@@ -15,6 +17,16 @@ class _PickListScreenState extends State<PickListScreen> {
   List<String> optionList = ["All", "Assigned", "Unassigned"];
   String selectedOption = "Unassigned";
   bool isLoading = false;
+
+  bool selectAll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    for (PickListModel pickListModel in pickLists) {
+      pickListModel.checked = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +49,68 @@ class _PickListScreenState extends State<PickListScreen> {
               _dropdownContainer(),
               const SizedBox(
                 height: 10,
+              ),
+              CheckboxListTile(
+                value: selectAll,
+                checkColor: Colors.white,
+                activeColor: appPrimary,
+                onChanged: (val) {
+                  selectAll = val ?? !selectAll;
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: SizedBox(
+                          height: Get.height / 20,
+                          width: Get.width / 1.5,
+                          child: getHeadingText(
+                              text: selectAll == true
+                                  ? 'Are you sure you want to select all pick lists?'
+                                  : 'Are you sure you want to un-select all pick lists?'),
+                        ),
+                        actions: [
+                          MaterialButton(
+                            // OPTIONAL BUTTON
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            color: submitButtonColor,
+                            child: const Text(
+                              'No',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          MaterialButton(
+                            // OPTIONAL BUTTON
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            color: Colors.red,
+                            child: const Text(
+                              'Yes',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () async {
+                              for (PickListModel pickListModel in pickLists) {
+                                pickListModel.checked = selectAll;
+                              }
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ).then((val) {
+                    setState(() {});
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                title: getHeadingText(text: 'Select all'),
               ),
               if (selectedOption == "Unassigned") ...[_unAssignedContainer()],
               if (selectedOption == "Assigned") ...[
@@ -217,6 +291,7 @@ class _PickListScreenState extends State<PickListScreen> {
           if (newValue != null) {
             setState(() {
               selectedOption = newValue;
+              selectAll = false;
               for (PickListModel pickListModel in pickLists) {
                 pickListModel.checked = false;
               }
