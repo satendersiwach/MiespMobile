@@ -5,6 +5,7 @@ import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/pick_list_ui.dart';
+import 'package:scanner/ui/supervisor/assign_user_list_screen.dart';
 
 class PickListScreen extends StatefulWidget {
   const PickListScreen({super.key});
@@ -23,9 +24,15 @@ class _PickListScreenState extends State<PickListScreen> {
   @override
   void initState() {
     super.initState();
+    setAllDataTo(val: false);
+  }
+
+  void setAllDataTo({required bool val}) {
     for (PickListModel pickListModel in pickLists) {
-      pickListModel.checked = false;
+      pickListModel.checked = val;
     }
+    selectAll = val;
+    setState(() {});
   }
 
   @override
@@ -93,9 +100,8 @@ class _PickListScreenState extends State<PickListScreen> {
                                 text: 'Yes', color: Colors.white),
                             onPressed: () async {
                               selectAll = val ?? !selectAll;
-                              for (PickListModel pickListModel in pickLists) {
-                                pickListModel.checked = selectAll;
-                              }
+                              setAllDataTo(val: selectAll);
+
                               Navigator.pop(context);
                             },
                           ),
@@ -143,7 +149,11 @@ class _PickListScreenState extends State<PickListScreen> {
                   ),
                 )
               : MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => const AssignUserListScreen())?.then((onValue) {
+                      setAllDataTo(val: false);
+                    });
+                  },
                   minWidth: MediaQuery.of(context).size.width,
                   child: const Text(
                     "Assign",
@@ -290,9 +300,7 @@ class _PickListScreenState extends State<PickListScreen> {
             setState(() {
               selectedOption = newValue;
               selectAll = false;
-              for (PickListModel pickListModel in pickLists) {
-                pickListModel.checked = false;
-              }
+              setAllDataTo(val: false);
             });
           }
         },
