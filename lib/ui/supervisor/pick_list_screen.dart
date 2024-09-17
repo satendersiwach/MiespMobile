@@ -55,46 +55,44 @@ class _PickListScreenState extends State<PickListScreen> {
                 checkColor: Colors.white,
                 activeColor: appPrimary,
                 onChanged: (val) {
-                  selectAll = val ?? !selectAll;
                   showDialog(
                     barrierDismissible: false,
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
+                        title: getHeadingText(
+                            text: val == true ? "Select all" : "Un-select all",
+                            fontSize: 15),
                         content: SizedBox(
-                          height: Get.height / 20,
+                          height: Get.height / 22,
                           width: Get.width / 1.5,
                           child: getHeadingText(
-                              text: selectAll == true
+                              text: val == true
                                   ? 'Are you sure you want to select all pick lists?'
-                                  : 'Are you sure you want to un-select all pick lists?'),
+                                  : 'Are you sure you want to un-select all pick lists?',
+                              fontWeight: FontWeight.w500),
                         ),
                         actions: [
                           MaterialButton(
-                            // OPTIONAL BUTTON
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
                             ),
                             color: submitButtonColor,
-                            child: const Text(
-                              'No',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                            child:
+                                getHeadingText(text: 'No', color: Colors.white),
                             onPressed: () {
                               Navigator.pop(context);
                             },
                           ),
                           MaterialButton(
-                            // OPTIONAL BUTTON
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(40),
                             ),
                             color: Colors.red,
-                            child: const Text(
-                              'Yes',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                            child: getHeadingText(
+                                text: 'Yes', color: Colors.white),
                             onPressed: () async {
+                              selectAll = val ?? !selectAll;
                               for (PickListModel pickListModel in pickLists) {
                                 pickListModel.checked = selectAll;
                               }

@@ -1,10 +1,8 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/supervisor_screen.dart';
 import 'package:scanner/ui/user_app/user_app_screen.dart';
@@ -65,73 +63,49 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           InkWell(
             onTap: () async {
-              List<Widget> titleRowWidgets = [
-                const Text(
-                  "Logout",
-                  style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                )
-              ];
-              List<Widget> actions = [
-                Container(
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.center,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // if (!isShowNegative)
-                        const Spacer(),
-
-                        TextButton(
-                          onPressed: () {
-                            LocalStorage.logout();
-                            Get.offAll(() => const LoginPage());
-                          },
-                          child: const Text(
-                            "Logout",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "No",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    )),
-              ];
               showDialog(
+                barrierDismissible: false,
                 context: context,
                 builder: (BuildContext context) {
-                  if (Platform.isIOS) {
-                    return CupertinoAlertDialog(
-                      title: Row(
-                        children: titleRowWidgets,
+                  return AlertDialog(
+                    title: getHeadingText(text: "Logout", fontSize: 15),
+                    content: SizedBox(
+                      height: Get.height / 20,
+                      width: Get.width / 1.5,
+                      child: getHeadingText(
+                          text: 'Are you sure you want to logout?',
+                      fontWeight: FontWeight.w500),
+                    ),
+                    actions: [
+                      MaterialButton(
+                        // OPTIONAL BUTTON
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        color: submitButtonColor,
+                        child: getHeadingText(text: 'No',color: Colors.white),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: actions,
-                    );
-                  } else {
-                    return AlertDialog(
-                      title: Row(
-                        children: titleRowWidgets,
+                      MaterialButton(
+                        // OPTIONAL BUTTON
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        color: Colors.red,
+                        child:getHeadingText(text: 'Yes',color: Colors.white),
+                        onPressed: () async {
+                          LocalStorage.logout();
+                          Get.offAll(() => const LoginPage());
+                        },
                       ),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: actions,
-                    );
-                  }
+                    ],
+                  );
                 },
-              );
+              ).then((val) {
+                setState(() {});
+              });
             },
             child: const ListTile(
               title: Text(
