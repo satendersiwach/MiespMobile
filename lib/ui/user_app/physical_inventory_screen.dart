@@ -157,9 +157,6 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
               controller: _query,
               labelText: 'Search',
               enabled: false,
-              onChanged: (val) {
-                setState(() {});
-              },
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
                 topRight: Radius.circular(8),
