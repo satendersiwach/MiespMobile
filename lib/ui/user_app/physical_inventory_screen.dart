@@ -7,6 +7,7 @@ import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/theme/get_text_field.dart';
+import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/components/pick_list_ui.dart';
 
 enum ScanOption { none, scanned, unScanned }
@@ -148,20 +149,42 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   }
 
   Widget _searchContainer() {
-    return getTextField(
-        controller: _query,
-        labelText: 'Search',
-        enabled: false,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-          bottomRight: Radius.circular(8),
-          bottomLeft: Radius.circular(8),
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: getTextField(
+              controller: _query,
+              labelText: 'Search',
+              enabled: false,
+              onChanged: (val) {
+                setState(() {});
+              },
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+                bottomLeft: Radius.circular(8),
+              ),
+              suffixIcon: const Icon(
+                Icons.search,
+                color: appPrimary,
+              )),
         ),
-        suffixIcon: const Icon(
-          Icons.search,
-          color: appPrimary,
-        ));
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0, bottom: 4),
+          child: SizedBox(
+            height: 43,
+            child: loadingButton(
+                isLoading: false,
+                btnText: 'Search',
+                onPress: () {
+                  setState(() {});
+                }),
+          ),
+        )
+      ],
+    );
   }
 
   Widget _list() {
@@ -170,17 +193,45 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        if (scanOption == ScanOption.unScanned) {
-          return getUnScannedPickListUI(pickListModel: pickLists[index]);
+        if (_query.text.isNotEmpty
+            ? pickLists[index]
+                    .itemCode
+                    .toUpperCase()
+                    .contains(_query.text.toUpperCase()) ||
+                pickLists[index]
+                        .description
+                        ?.toUpperCase()
+                        .contains(_query.text.toUpperCase()) ==
+                    true
+            : true) {
+          if (scanOption == ScanOption.unScanned) {
+            return getUnScannedPickListUI(pickListModel: pickLists[index]);
+          } else {
+            return getScannedPickListUI(pickListModel: pickLists[index]);
+          }
         } else {
-          return getScannedPickListUI(pickListModel: pickLists[index]);
+          return Container();
         }
       },
       separatorBuilder: (BuildContext context, int index) {
-        return const Divider(
-          thickness: 1.5,
-          color: Colors.grey,
-        );
+        if (_query.text.isNotEmpty
+            ? pickLists[index]
+                    .itemCode
+                    .toUpperCase()
+                    .contains(_query.text.toUpperCase()) ||
+                pickLists[index]
+                        .description
+                        ?.toUpperCase()
+                        .contains(_query.text.toUpperCase()) ==
+                    true
+            : true) {
+          return const Divider(
+            thickness: 1.5,
+            color: Colors.grey,
+          );
+        } else {
+          return Container();
+        }
       },
     );
   }
