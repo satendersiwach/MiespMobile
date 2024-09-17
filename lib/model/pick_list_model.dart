@@ -19,6 +19,17 @@ class PickListModel {
     this.pickedStatus,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          other is PickListModel &&
+              runtimeType == other.runtimeType &&
+              itemCode == other.itemCode &&
+              id == other.id;
+
+  @override
+  int get hashCode => itemCode.hashCode ^ id.hashCode;
+
   factory PickListModel.fromJson(Map json) => PickListModel(
         id: int.tryParse(json['id']?.toString() ?? '0') ?? 0,
         soId: int.tryParse(json['so_id']?.toString() ?? '0') ?? 0,
