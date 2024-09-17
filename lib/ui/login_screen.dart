@@ -74,49 +74,90 @@ class LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 50,
+                height: 70,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, right: 8),
-                child: getTextField(
+              getTextField(
                   controller: username,
                   labelText: 'Username',
-                  labelFontSize: 18,
-                  contentPadding: const EdgeInsets.only(bottom: 8),
-                  labelColor: Colors.grey,
-                  borderRadius: const BorderRadius.all(Radius.zero),
-                  boxShadow: [],
-                  disabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 1),
+                  enabled: false,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
                   ),
+                  prefixIcon: const Icon(
+                    Icons.person,
+                    color: appPrimary,
+                  ),
+              ),
+              const SizedBox(height: 12,),
+              getTextField(
+                  controller: password,
+                  labelText: 'Password',
+                  obscureText: obscurePassword,
+                  maxLines: 1,
+                  enabled: false,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
+                  ),
+                prefixIcon: const Icon(
+                  Icons.password,
+                  color: appPrimary,
                 ),
-              ),
-              const SizedBox(height: 20,),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, right: 8),
-                child: getTextField(
-                    labelText: 'Password',
-                    controller: password,
-                    contentPadding: const EdgeInsets.only(bottom: 8),
-                    labelFontSize: 18,
-                    labelColor: Colors.grey,
-                    maxLines: 1,
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            obscurePassword = !obscurePassword;
-                          });
-                        },
-                        icon: Icon(obscurePassword
-                            ? Icons.visibility
-                            : Icons.visibility_off)),
-                    borderRadius: const BorderRadius.all(Radius.zero),
-                    boxShadow: [],
-                    disabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black, width: 1),
-                    ),
-                    obscureText: obscurePassword),
-              ),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        obscurePassword = !obscurePassword;
+                      });
+                    },
+                    icon: Icon(obscurePassword
+                        ? Icons.visibility
+                        : Icons.visibility_off,color: appPrimary,)),),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 8.0, right: 8),
+              //   child: getTextField(
+              //     controller: username,
+              //     labelText: 'Username',
+              //     labelFontSize: 18,
+              //     contentPadding: const EdgeInsets.only(bottom: 8),
+              //     labelColor: Colors.grey,
+              //     borderRadius: const BorderRadius.all(Radius.zero),
+              //     boxShadow: [],
+              //     disabledBorder: const UnderlineInputBorder(
+              //       borderSide: BorderSide(color: Colors.black, width: 1),
+              //     ),
+              //   ),
+              // ),
+              // const SizedBox(height: 20,),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 8.0, right: 8),
+              //   child: getTextField(
+              //       labelText: 'Password',
+              //       controller: password,
+              //       contentPadding: const EdgeInsets.only(bottom: 8),
+              //       labelFontSize: 18,
+              //       labelColor: Colors.grey,
+              //       maxLines: 1,
+              //       suffixIcon: IconButton(
+              //           onPressed: () {
+              //             setState(() {
+              //               obscurePassword = !obscurePassword;
+              //             });
+              //           },
+              //           icon: Icon(obscurePassword
+              //               ? Icons.visibility
+              //               : Icons.visibility_off)),
+              //       borderRadius: const BorderRadius.all(Radius.zero),
+              //       boxShadow: [],
+              //       disabledBorder: const UnderlineInputBorder(
+              //         borderSide: BorderSide(color: Colors.black, width: 1),
+              //       ),
+              //       obscureText: obscurePassword),
+              // ),
               if (keyboardIsVisible(
                   context: context, scrollController: _scrollController)) ...[
                 const SizedBox(
