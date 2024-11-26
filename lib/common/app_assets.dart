@@ -1,7 +1,7 @@
 //----------FOR LITPL -------------
 // const logoPath = 'assets/images/logo.jpeg';
-const appName = 'Omsoft Bill';
-String appPkg = 'com.omsoft.bill';
+const appName = 'Chemtron';
+String appPkg = 'com.app.scanner';
 
 ///icons
 const lockIcon='assets/icons/lock.svg';

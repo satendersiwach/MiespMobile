@@ -225,9 +225,9 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void onSuccess(CustomerModel customerModel) {
+  void onSuccess(UserModel customerModel) {
     CustomSnackBar.successSnackBar('Login successful');
-    CustomerModel.setLoginCustomer(customerModel: customerModel);
+    UserModel.setLoginCustomer(customerModel: customerModel);
     Get.to(() => const Dashboard());
   }
 
@@ -238,7 +238,7 @@ class LoginPageState extends State<LoginPage> {
   _onLogin() async {
     if (await ServiceManager.isInternetAvailable()) {
       ServiceManager.login(
-          UserEmail: username.text,
+          Username: username.text,
           Password: password.text,
           onSuccess: onSuccess,
           onError: onError);

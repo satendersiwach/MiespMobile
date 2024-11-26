@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
@@ -31,12 +31,12 @@ class ServiceManager {
   }) async {
     String scanResult = '';
     try {
-      scanResult = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', // Color for the background of the scan page
-        'Cancel', // Text for the button that cancels the scan
-        true, // Whether to show the flash icon
-        ScanMode.QR, // The type of code to scan (QR Code or Barcode)
-      );
+      // scanResult = await FlutterBarcodeScanner.scanBarcode(
+      //   '#ff6666', // Color for the background of the scan page
+      //   'Cancel', // Text for the button that cancels the scan
+      //   true, // Whether to show the flash icon
+      //   ScanMode.QR, // The type of code to scan (QR Code or Barcode)
+      // );
     } catch (e) {
       print('Error during scan: $e');
       CustomSnackBar.errorSnackBar('Error during scan: $e');
@@ -74,7 +74,7 @@ class ServiceManager {
   }
 
 
-  static String baseURL = 'http://51.79.229.83:8080/API/';
+  static String baseURL = 'http://172.16.0.205:8085/API/';
   static Map<String, String>? header = {
     'accept': '*/*',
     'Content-Type': 'application/json'
@@ -97,21 +97,26 @@ class ServiceManager {
   }
 
   static Future<void> login({
-    required String UserEmail,
+    required String Username,
     required String Password,
-    required Function(CustomerModel) onSuccess,
+    required Function(UserModel) onSuccess,
     required Function onError,
   }) async {
-    CustomerModel? customerModel;
-    var res = await http.post(Uri.parse('${baseURL}Account/Login'),
-        headers: header,
-        body: jsonEncode({"UserEmail": UserEmail, "Password": Password}));
-    print(res.body);
-    if (res.statusCode == 200) {
-      customerModel = CustomerModel.fromJson(jsonDecode(res.body));
-      onSuccess(customerModel);
-    } else {
-      onError();
+    try {
+      UserModel? customerModel;
+      var res = await http.post(Uri.parse('${baseURL}login/verifyuser'),
+          headers: header,
+          body: jsonEncode({"Username": Username, "Password": Password}));
+      print(res.body);
+      if (res.statusCode == 200) {
+        customerModel = UserModel.fromJson(jsonDecode(res.body));
+        onSuccess(customerModel);
+      } else {
+        CustomSnackBar.errorSnackBar(res.body);
+        onError();
+      }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
     }
   }
 
@@ -176,7 +181,7 @@ class ServiceManager {
     required Function onError,
   }) async {
     ItemDetailModel? warehouseList;
-    CustomerModel customerModel = CustomerModel.getLoginCustomer();
+    UserModel customerModel = UserModel.getLoginCustomer();
     WarehouseModel? warehouseModel = WarehouseModel.getSelectedWarehouse();
 
     var res = await http.post(
@@ -208,7 +213,7 @@ class ServiceManager {
     required Function onError,
   }) async {
     StockCountingDetailModel? stockCountingDetail;
-    CustomerModel customerModel = CustomerModel.getLoginCustomer();
+    UserModel customerModel = UserModel.getLoginCustomer();
     WarehouseModel? warehouseModel = WarehouseModel.getSelectedWarehouse();
 
     var res = await http.post(
