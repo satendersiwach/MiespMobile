@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 
@@ -59,8 +60,10 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                           onSuccess: (String scanResult) async {
                         if (!mounted) return;
                         String barCode = scanResult;
-                        if (barCode != '-1') {
+                        if (barCode != '') {
                           print(barCode);
+                          Get.back();
+                          CustomSnackBar.successSnackBar('Scanned result: $barCode');
                           // if (await ServiceManager.isInternetAvailable()) {
                           //   ServiceManager.getItemDetails(
                           //       barCode: barCode,

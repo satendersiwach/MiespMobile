@@ -9,7 +9,7 @@ const String keyFlagOnBoarding = "flagOnBoarding";
 
 // Object
 const String keyObjUser = "objUser";
-const String keyUserType = "objUserType";
+// const String keyUserType = "objUserType";
 const String keyLoginTime = "loginTime";
 const String keyObjProfile = "objProfile";
 const String keyToken = "objToken";

@@ -30,8 +30,11 @@ class LoginPageState extends State<LoginPage> {
   final ScrollController _scrollController = ScrollController();
   bool obscurePassword = true;
   bool isLoading = false;
-  TextEditingController username = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController username = TextEditingController(text: 'supervisor');
+  TextEditingController password = TextEditingController(text: '12345');
+
+  // TextEditingController username = TextEditingController();
+  // TextEditingController password = TextEditingController();
 
   @override
   void initState() {
@@ -225,23 +228,40 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void onSuccess(UserModel customerModel) {
+  void onSuccess(UserModel customerModel) async{
     CustomSnackBar.successSnackBar('Login successful');
     UserModel.setLoginCustomer(customerModel: customerModel);
-    Get.to(() => const Dashboard());
+    setState(() {
+      isLoading=false;
+    });
+    await Future.delayed(const Duration(milliseconds: 500));
+    Get.offAll(() => const Dashboard());
   }
 
-  void onError() {
-    CustomSnackBar.successSnackBar('Invalid credentials');
+  onError(Map responseMap) {
+    CustomSnackBar.errorSnackBar(responseMap['Error']);
+    setState(() {
+      isLoading=false;
+    });
   }
 
   _onLogin() async {
     if (await ServiceManager.isInternetAvailable()) {
-      ServiceManager.login(
-          Username: username.text,
-          Password: password.text,
-          onSuccess: onSuccess,
-          onError: onError);
+      setState(() {
+        isLoading=true;
+      });
+      try
+          {
+            ServiceManager.login(
+                Username: username.text,
+                Password: password.text,
+                onSuccess: onSuccess,
+                onError: onError);
+          }
+          catch(e)
+    {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
     }
   }
 

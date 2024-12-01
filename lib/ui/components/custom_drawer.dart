@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
 import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
+import 'package:scanner/zzz.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -16,8 +17,6 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class CustomDrawerState extends State<CustomDrawer> {
-  String? userType;
-
   @override
   void initState() {
     super.initState();
@@ -25,7 +24,6 @@ class CustomDrawerState extends State<CustomDrawer> {
   }
 
   setVersion() async {
-    userType = LocalStorage.getString(key: keyUserType);
     setState(() {});
   }
 
@@ -60,7 +58,7 @@ class CustomDrawerState extends State<CustomDrawer> {
           const SizedBox(
             height: 20,
           ),
-          if (userType != null && userType == 'Supervisor') ...[
+          if (!UserModel.isUser()) ...[
             ListTile(
               title: getPoppinsText(
                   text: 'Assign Pick List',
@@ -86,7 +84,7 @@ class CustomDrawerState extends State<CustomDrawer> {
               },
             ),
           ],
-          if (userType != null && userType == 'User') ...[
+          if (UserModel.isUser()) ...[
             ListTile(
               title: getPoppinsText(
                   text: 'Physical Inventory',
@@ -109,6 +107,18 @@ class CustomDrawerState extends State<CustomDrawer> {
           //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
           //   onTap: () {
           //     Get.to(() => const SupervisorScreen());
+          //   },
+          // ),
+          //
+          // ListTile(
+          //   title: getPoppinsText(
+          //       text: 'Scan sample',
+          //       textAlign: TextAlign.start,
+          //       color: appPrimary,
+          //       fontWeight: FontWeight.bold),
+          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+          //   onTap: () {
+          //     Get.to(() => const BarcodeScannerSimple());
           //   },
           // ),
           // ListTile(

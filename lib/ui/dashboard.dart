@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:scanner/common/keys.dart';
-import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -19,7 +18,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   PackageInfo? packageInfo;
-  String? userType;
 
   @override
   void initState() {
@@ -29,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
 
   setVersion() async {
     packageInfo = await PackageInfo.fromPlatform();
-    userType = LocalStorage.getString(key: keyUserType);
+
     setState(() {});
   }
 
@@ -64,10 +62,15 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                 ),
-                const Divider(thickness: 1,color: Colors.grey,),
-                const SizedBox(height: 10,)
+                const Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+                const SizedBox(
+                  height: 10,
+                )
               ],
-              if (userType != null && userType == 'Supervisor') ...[
+              if (!UserModel.isUser()) ...[
                 getPoppinsText(
                     text: 'Welcome, Supervisor',
                     fontWeight: FontWeight.w700,
@@ -75,7 +78,7 @@ class _DashboardState extends State<Dashboard> {
                 //todo: implement search
                 const AssignedPickListScreen(),
               ],
-              if (userType != null && userType == 'User') ...[
+              if (UserModel.isUser()) ...[
                 getPoppinsText(
                     text: 'Welcome, HHT1',
                     fontWeight: FontWeight.w700,
@@ -96,7 +99,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _buttonContainer() {
-    if (userType != null && userType == 'Supervisor') {
+    if (!UserModel.isUser()) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: loadingButton(

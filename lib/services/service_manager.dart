@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
+
 import 'package:connectivity_plus/connectivity_plus.dart';
-// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
@@ -14,9 +16,20 @@ import 'package:scanner/models/uom_model.dart';
 import 'package:scanner/models/warehouse_model.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/translations/custom_locale.dart';
+import 'package:scanner/zzz.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServiceManager {
+  static Codec<String, String> stringToBase64 = utf8.fuse(base64);
+  static String baseURL = 'http://satusingh-001-site1.mtempurl.com/api/';
+  static String credentials = '11205952:60-dayfreetrial';
+  static String encoded = stringToBase64.encode(credentials);
+
+  static Map<String, String>? header = {
+    'Authorization': 'Basic $encoded',
+    "content-type": "application/json",
+    "connection": "keep-alive"
+  };
 
   static Future<bool> isInternetAvailable() async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -26,11 +39,21 @@ class ServiceManager {
     }
     return true;
   }
-  static  scanQRCode({
+
+  static scanQRCode({
     required Function(String) onSuccess,
   }) async {
     String scanResult = '';
     try {
+      Get.to(()=>BarcodeScannerSimple(barCodeScanResult: (String? res){
+        onSuccess(res??'');
+      },));
+      // MobileScanner(
+      //   onDetect: (BarcodeCapture barcodes) {
+      //     barcodes.barcodes.firstOrNull;
+      //   },
+      //
+      // );
       // scanResult = await FlutterBarcodeScanner.scanBarcode(
       //   '#ff6666', // Color for the background of the scan page
       //   'Cancel', // Text for the button that cancels the scan
@@ -43,9 +66,9 @@ class ServiceManager {
       return;
     }
 
-    if (scanResult != '-1') {
-      onSuccess(scanResult);
-    }
+    // if (scanResult != '-1') {
+    //   onSuccess(scanResult);
+    // }
   }
 
   static void updateCurrentLangCode(String locale) async {
@@ -73,20 +96,12 @@ class ServiceManager {
     }
   }
 
-
-  static String baseURL = 'http://172.16.0.205:8085/API/';
-  static Map<String, String>? header = {
-    'accept': '*/*',
-    'Content-Type': 'application/json'
-  };
-
-
-
   static launchCSV() async {
     try {
-      File file=File('/storage/emulated/0/Download/report.csv');
+      File file = File('/storage/emulated/0/Download/report.csv');
       print(await file.exists());
-      if (await canLaunchUrl(Uri.parse('/storage/emulated/0/Download/report.csv'))) {
+      if (await canLaunchUrl(
+          Uri.parse('/storage/emulated/0/Download/report.csv'))) {
         await launchUrl(Uri.parse('/storage/emulated/0/Download/report.csv'));
       } else {
         print('Cant launch');
@@ -100,7 +115,7 @@ class ServiceManager {
     required String Username,
     required String Password,
     required Function(UserModel) onSuccess,
-    required Function onError,
+    required Function(Map) onError,
   }) async {
     try {
       UserModel? customerModel;
@@ -108,13 +123,16 @@ class ServiceManager {
           headers: header,
           body: jsonEncode({"Username": Username, "Password": Password}));
       print(res.body);
-      if (res.statusCode == 200) {
-        customerModel = UserModel.fromJson(jsonDecode(res.body));
+      Map responseMap = jsonDecode(res.body);
+      if (responseMap['Code'] == 0) {
+        customerModel = UserModel.fromJson(jsonDecode(res.body)['result']);
         onSuccess(customerModel);
       } else {
-        CustomSnackBar.errorSnackBar(res.body);
-        onError();
+        onError(responseMap);
       }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
     } catch (e) {
       CustomSnackBar.errorSnackBar(e.toString());
     }
@@ -195,8 +213,7 @@ class ServiceManager {
     );
     print(res.body);
     if (res.statusCode == 200) {
-      if(res.body=='null')
-      {
+      if (res.body == 'null') {
         onError();
         return;
       }
@@ -227,8 +244,7 @@ class ServiceManager {
     );
     print(res.body);
     if (res.statusCode == 200) {
-      if(res.body=='null')
-      {
+      if (res.body == 'null') {
         onError();
         return;
       }

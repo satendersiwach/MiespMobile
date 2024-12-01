@@ -65,4 +65,11 @@ class UserModel {
         LocalStorage.getInstance()?.localStorage?.getString(keyObjUser) ?? '';
     return UserModel.fromJson(jsonDecode(customer));
   }
+
+  static bool isUser() {
+    String customer =
+        LocalStorage.getInstance()?.localStorage?.getString(keyObjUser) ?? '';
+    UserModel userModel = UserModel.fromJson(jsonDecode(customer));
+    return userModel.isSupervisor == 'False';
+  }
 }

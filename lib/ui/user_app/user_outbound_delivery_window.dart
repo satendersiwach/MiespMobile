@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 
 class UserOutboundDeliveryWindow extends StatefulWidget {
@@ -219,8 +221,10 @@ class _UserOutboundDeliveryWindowState
               ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
                 if (!mounted) return;
                 String barCode = scanResult;
-                if (barCode != '-1') {
+                if (barCode != '') {
                   print(barCode);
+                  Get.back();
+                  CustomSnackBar.successSnackBar('Scanned result: $barCode');
                   // if (await ServiceManager.isInternetAvailable()) {
                   //   ServiceManager.getItemDetails(
                   //       barCode: barCode,
@@ -284,7 +288,7 @@ class _UserOutboundDeliveryWindowState
           //               onSuccess: (String scanResult) async {
           //             if (!mounted) return;
           //             String barCode = scanResult;
-          //             if (barCode != '-1') {
+          //             if (barCode != '') {
           //               print(barCode);
           //               // if (await ServiceManager.isInternetAvailable()) {
           //               //   ServiceManager.getItemDetails(
