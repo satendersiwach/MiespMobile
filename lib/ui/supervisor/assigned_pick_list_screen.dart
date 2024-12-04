@@ -25,6 +25,7 @@ class _AssignedPickListScreenState extends State<AssignedPickListScreen> {
   }
 
   Widget _list() {
+    //api/picklist/getpicklistbystatus?status=O
     return ListView.separated(
       itemCount: 3,
       physics: const ScrollPhysics(),
@@ -124,28 +125,73 @@ class _AssignedPickListScreenState extends State<AssignedPickListScreen> {
                     color: Colors.grey,
                     thickness: 1,
                   ),
+                  // SizedBox(
+                  //   height: 28,
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //           child: InkWell(
+                  //             onTap: (){
+                  //               //todo:
+                  //               //api/picklist/UpdatePickList
+                  //               // model : Remove
+                  //             },
+                  //         child: getPoppinsText(
+                  //             text: 'Add',
+                  //             color: Colors.red,
+                  //             fontSize: 13,
+                  //             fontWeight: FontWeight.bold),
+                  //       )),
+                  //       const VerticalDivider(
+                  //         color: Colors.grey,
+                  //         thickness: 1,
+                  //       ),
+                  //       Expanded(
+                  //           child: InkWell(
+                  //             onTap: (){
+                  //               //todo:
+                  //               //api/picklist/UpdatePickList
+                  //               // model : Update
+                  //             },
+                  //         child: getPoppinsText(
+                  //             text: 'Update',
+                  //             color: appPrimary,
+                  //             fontSize: 13,
+                  //             fontWeight: FontWeight.bold),
+                  //       )),
+                  //     ],
+                  //   ),
+                  // )
                   SizedBox(
                     height: 28,
                     child: Row(
                       children: [
+                        // Expanded(
+                        //     child: InkWell(
+                        //       onTap: (){
+                        //         //todo:
+                        //         //api/picklist/UpdatePickList
+                        //         // model : Remove
+                        //       },
+                        //   child: getPoppinsText(
+                        //       text: 'Add',
+                        //       color: Colors.red,
+                        //       fontSize: 13,
+                        //       fontWeight: FontWeight.bold),
+                        // )),
+                        // const VerticalDivider(
+                        //   color: Colors.grey,
+                        //   thickness: 1,
+                        // ),
                         Expanded(
                             child: InkWell(
-                              onTap: (){},
+                              onTap: (){
+                                //todo:
+                                //api/picklist/UpdatePickList
+                                /// call /master/getusers to get user and then assign only for one user
+                              },
                           child: getPoppinsText(
-                              text: 'Remove',
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold),
-                        )),
-                        const VerticalDivider(
-                          color: Colors.grey,
-                          thickness: 1,
-                        ),
-                        Expanded(
-                            child: InkWell(
-                              onTap: (){},
-                          child: getPoppinsText(
-                              text: 'Update',
+                              text: 'Assign',
                               color: appPrimary,
                               fontSize: 13,
                               fontWeight: FontWeight.bold),

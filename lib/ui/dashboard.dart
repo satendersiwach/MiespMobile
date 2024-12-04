@@ -75,6 +75,7 @@ class _DashboardState extends State<Dashboard> {
                     text: 'Welcome, Supervisor',
                     fontWeight: FontWeight.w700,
                     fontSize: 20),
+                //todo: add filter based on status
                 //todo: implement search
                 const AssignedPickListScreen(),
               ],
@@ -104,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
         padding: const EdgeInsets.all(8.0),
         child: loadingButton(
             isLoading: false,
-            btnText: 'Submit',
+            btnText: 'Assign',
             onPress: () {},
             backColor: appPrimary),
       );
