@@ -138,6 +138,32 @@ class ServiceManager {
     }
   }
 
+  static Future<void> getPickListByStatus({
+    required String status,
+    required Function(UserModel) onSuccess,
+    required Function(Map) onError,
+  }) async {
+    try {
+      UserModel? customerModel;
+      var res = await http.get(Uri.parse('${baseURL}picklist/getpicklistbystatus?status=$status'),
+          headers: header,
+          );
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (responseMap['Code'] == 0) {
+        customerModel = UserModel.fromJson(jsonDecode(res.body)['result']);
+        onSuccess(customerModel);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
   static Future<void> getWarehouseList({
     required Function(List<WarehouseModel>) onSuccess,
     required Function onError,
