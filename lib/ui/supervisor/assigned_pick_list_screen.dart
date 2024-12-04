@@ -25,7 +25,7 @@ class _AssignedPickListScreenState extends State<AssignedPickListScreen> {
   }
 
   Widget _list() {
-    //api/picklist/getpicklistbystatus?status=O
+    //todo: api/picklist/getpicklistbystatus?status=O
     return ListView.separated(
       itemCount: 3,
       physics: const ScrollPhysics(),
