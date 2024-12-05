@@ -11,6 +11,7 @@ import 'package:scanner/models/item_details_model.dart';
 import 'package:scanner/models/stock_count_request_model.dart';
 import 'package:scanner/models/stock_counting_detail_model.dart';
 import 'package:scanner/models/uom_model.dart';
+import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/models/warehouse_model.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/translations/custom_locale.dart';
@@ -164,7 +165,8 @@ class ServiceManager {
     required String status,
     required Function(UserModel) onSuccess,
     required Function(Map) onError,
-  }) async {
+  })
+  async {
     try {
       UserModel? customerModel;
       var res = await http.get(
@@ -176,6 +178,34 @@ class ServiceManager {
       if (responseMap['Code'] == 0) {
         customerModel = UserModel.fromJson(jsonDecode(res.body)['result']);
         onSuccess(customerModel);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
+  static Future<void> updatePickList({
+    required List<UpdatePickListModel> l,
+    required Function(Map) onSuccess,
+    required Function(Map) onError,
+  })
+  async {
+    try {
+
+      var res = await http.post(
+        Uri.parse('${baseURL}picklist/UpdatePickList'),
+        headers: header,
+        body: jsonEncode(l)
+      );
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (responseMap['Code'] == 0) {
+        onSuccess(responseMap);
       } else {
         onError(responseMap);
       }

@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
+import 'package:scanner/theme/display_dialogbox.dart';
 import 'package:scanner/theme/elements_screen.dart';
 
 class AssignPicklistToUserScreen extends StatefulWidget {
   final List<PickListModel> pickList;
-  const AssignPicklistToUserScreen({super.key,
-  required this.pickList});
+
+  const AssignPicklistToUserScreen({super.key, required this.pickList});
 
   @override
-  State<AssignPicklistToUserScreen> createState() => _AssignPicklistToUserScreenState();
+  State<AssignPicklistToUserScreen> createState() =>
+      _AssignPicklistToUserScreenState();
 }
 
-class _AssignPicklistToUserScreenState extends State<AssignPicklistToUserScreen> {
+class _AssignPicklistToUserScreenState
+    extends State<AssignPicklistToUserScreen> {
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
@@ -129,6 +134,12 @@ class _AssignPicklistToUserScreenState extends State<AssignPicklistToUserScreen>
                                             //todo:
                                             //api/picklist/UpdatePickList
                                             /// call /master/getusers to get user and then assign only for one user
+                                            showLoaderDialog(context,
+                                                text: 'Assigning pick lists');
+                                            ServiceManager.updatePickList(
+                                                l: [],
+                                                onSuccess: onSuccess,
+                                                onError: onError);
                                           },
                                           child: getPoppinsText(
                                               text: 'Assign',
@@ -148,5 +159,16 @@ class _AssignPicklistToUserScreenState extends State<AssignPicklistToUserScreen>
             ],
           ),
         ));
+  }
+
+  onError(Map responseMap) {
+    Get.back();
+    CustomSnackBar.errorSnackBar(responseMap['Error']);
+  }
+
+  onSuccess(Map responseMap) {
+    Get.back();
+    Get.back();
+    CustomSnackBar.errorSnackBar(responseMap['result']);
   }
 }

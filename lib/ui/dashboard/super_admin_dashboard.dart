@@ -52,10 +52,11 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
           btnText: 'Assign',
           onPress: () {
             //todo: send selected pick list
-
             Get.to(() => const AssignPicklistToUserScreen(
                   pickList: [],
-                ));
+                ))?.then((onValue) {
+              setState(() {});
+            });
           },
           backColor: appPrimary),
     );
