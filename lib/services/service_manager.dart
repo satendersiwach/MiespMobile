@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:scanner/common/enums.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
@@ -326,6 +327,24 @@ class ServiceManager {
       onSuccess(stockCountingDetail);
     } else {
       onError();
+    }
+  }
+
+  static String getPickListStatusFromEnum(
+      {required PickListStatusEnum pickListStatusEnum}) {
+    if (pickListStatusEnum == PickListStatusEnum.assigned) {
+      return 'A';
+    }
+    if (pickListStatusEnum == PickListStatusEnum.closed) {
+      return 'C';
+    }
+    if (pickListStatusEnum == PickListStatusEnum.open) {
+      return 'O';
+    }
+    if (pickListStatusEnum == PickListStatusEnum.all) {
+      return 'All';
+    } else {
+      return '';
     }
   }
 }

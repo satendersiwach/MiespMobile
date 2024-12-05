@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/common/enums.dart';
 import 'package:scanner/common/get_formatted_date.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
@@ -21,6 +22,7 @@ class SuperAdminDashboard extends StatefulWidget {
 
 class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   List<PickListModel> pickList = [];
+  PickListStatusEnum pickListStatusEnum = PickListStatusEnum.open;
 
   @override
   void initState() {
@@ -30,7 +32,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
 
   setData() async {
     await ServiceManager.getPickListByStatus(
-        status: 'O',
+        status: ServiceManager.getPickListStatusFromEnum(
+            pickListStatusEnum: pickListStatusEnum),
         onSuccess: (pickList) {
           setState(() {
             this.pickList = pickList;
@@ -62,25 +65,38 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   }
 
   Widget _buttonContainer() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: loadingButton(
-          isLoading: false,
-          btnText: 'Assign',
-          onPress: () {
-            if (!atLeastOnePickListSelected()) {
-              CustomSnackBar.errorSnackBar(
-                  'Please select at least one Pick List');
-            } else {
-              Get.to(() => const AssignPicklistToUserScreen(
-                    pickList: [],
-                  ))?.then((onValue) {
-                setState(() {});
-              });
-            }
-          },
-          backColor: appPrimary),
-    );
+    if (pickList.isEmpty) {
+      return const SizedBox(
+        height: 0,
+        width: 0,
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: loadingButton(
+            isLoading: false,
+            btnText: 'Assign',
+            onPress: () {
+              if (!atLeastOnePickListSelected()) {
+                CustomSnackBar.errorSnackBar(
+                    'Please select at least one Pick List');
+              } else {
+                List<PickListModel> selectedPickList = [];
+                for (PickListModel pickListModel in pickList) {
+                  if (pickListModel.isSelected) {
+                    selectedPickList.add(pickListModel);
+                  }
+                }
+                Get.to(() => AssignPicklistToUserScreen(
+                      pickList: selectedPickList,
+                    ))?.then((onValue) {
+                  setState(() {});
+                });
+              }
+            },
+            backColor: appPrimary),
+      );
+    }
   }
 
   Widget _list() {
