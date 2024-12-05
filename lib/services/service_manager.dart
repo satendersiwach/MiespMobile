@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
@@ -45,9 +43,11 @@ class ServiceManager {
   }) async {
     String scanResult = '';
     try {
-      Get.to(()=>BarcodeScannerSimple(barCodeScanResult: (String? res){
-        onSuccess(res??'');
-      },));
+      Get.to(() => BarcodeScannerSimple(
+            barCodeScanResult: (String? res) {
+              onSuccess(res ?? '');
+            },
+          ));
       // MobileScanner(
       //   onDetect: (BarcodeCapture barcodes) {
       //     barcodes.barcodes.firstOrNull;
@@ -138,6 +138,28 @@ class ServiceManager {
     }
   }
 
+  static Future<List<UserModel>> getUserList() async {
+    List<UserModel> userList = [];
+    try {
+      var res = await http.get(
+        Uri.parse('${baseURL}master/getusers'),
+        headers: header,
+      );
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (responseMap['Code'] == 0) {
+        List l = responseMap['UsersList'];
+
+        for (var user in l) {
+          userList.add(UserModel.fromJson(user));
+        }
+      }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+    return userList;
+  }
+
   static Future<void> getPickListByStatus({
     required String status,
     required Function(UserModel) onSuccess,
@@ -145,9 +167,10 @@ class ServiceManager {
   }) async {
     try {
       UserModel? customerModel;
-      var res = await http.get(Uri.parse('${baseURL}picklist/getpicklistbystatus?status=$status'),
-          headers: header,
-          );
+      var res = await http.get(
+        Uri.parse('${baseURL}picklist/getpicklistbystatus?status=$status'),
+        headers: header,
+      );
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (responseMap['Code'] == 0) {
