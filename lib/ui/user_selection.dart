@@ -6,7 +6,7 @@
 // import 'package:scanner/theme/custom_text_widgets.dart';
 // import 'package:scanner/theme/elements_screen.dart';
 // import 'package:scanner/ui/components/element_button.dart';
-// import 'package:scanner/ui/dashboard.dart';
+// import 'package:scanner/ui/super_admin_dashboard.dart';
 //
 // class UserSelection extends StatefulWidget {
 //

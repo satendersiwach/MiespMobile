@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_theme.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/translations/custom_locale.dart';
-import 'package:scanner/ui/dashboard.dart';
+import 'package:scanner/ui/dashboard/super_admin_dashboard.dart';
+import 'package:scanner/ui/dashboard/user_dashboard.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,8 +69,14 @@ class _ScannerAppState extends State<ScannerApp> {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const LoginPage()));
     } else {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const Dashboard()));
+      if(UserModel.isUser())
+        {
+          Get.to(()=>const UserDashboard());
+        }
+      else
+        {
+          Get.to(()=>const SuperAdminDashboard());
+        }
       // CustomerModel customerModel =
       //     CustomerModel.fromJson(jsonDecode(customer));
       // if (customerModel.email.isNotEmpty) {

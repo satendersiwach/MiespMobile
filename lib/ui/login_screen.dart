@@ -14,7 +14,8 @@ import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/check_keyboard_visibility.dart';
 import 'package:scanner/ui/components/element_button.dart';
-import 'package:scanner/ui/dashboard.dart';
+import 'package:scanner/ui/dashboard/super_admin_dashboard.dart';
+import 'package:scanner/ui/dashboard/user_dashboard.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -228,40 +229,41 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void onSuccess(UserModel customerModel) async{
+  void onSuccess(UserModel customerModel) async {
     CustomSnackBar.successSnackBar('Login successful');
     UserModel.setLoginCustomer(customerModel: customerModel);
     setState(() {
-      isLoading=false;
+      isLoading = false;
     });
     await Future.delayed(const Duration(milliseconds: 500));
-    Get.offAll(() => const Dashboard());
+    if (UserModel.isUser()) {
+      Get.to(() => const UserDashboard());
+    } else {
+      Get.to(() => const SuperAdminDashboard());
+    }
   }
 
   onError(Map responseMap) {
     CustomSnackBar.errorSnackBar(responseMap['Error']);
     setState(() {
-      isLoading=false;
+      isLoading = false;
     });
   }
 
   _onLogin() async {
     if (await ServiceManager.isInternetAvailable()) {
       setState(() {
-        isLoading=true;
+        isLoading = true;
       });
-      try
-          {
-            ServiceManager.login(
-                Username: username.text,
-                Password: password.text,
-                onSuccess: onSuccess,
-                onError: onError);
-          }
-          catch(e)
-    {
-      CustomSnackBar.errorSnackBar(e.toString());
-    }
+      try {
+        ServiceManager.login(
+            Username: username.text,
+            Password: password.text,
+            onSuccess: onSuccess,
+            onError: onError);
+      } catch (e) {
+        CustomSnackBar.errorSnackBar(e.toString());
+      }
     }
   }
 
