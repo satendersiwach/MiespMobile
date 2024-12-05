@@ -23,6 +23,7 @@ class SuperAdminDashboard extends StatefulWidget {
 class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   List<PickListModel> pickList = [];
   PickListStatusEnum pickListStatusEnum = PickListStatusEnum.open;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -30,16 +31,37 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
     setData();
   }
 
+  String getEnumLabel(PickListStatusEnum value) {
+    switch (value) {
+      case PickListStatusEnum.assigned:
+        return 'Assigned';
+      case PickListStatusEnum.closed:
+        return 'Closed';
+      case PickListStatusEnum.open:
+        return 'Open';
+      case PickListStatusEnum.all:
+        return 'All';
+      default:
+        return '';
+    }
+  }
+
   setData() async {
+    _isLoading = true;
     await ServiceManager.getPickListByStatus(
         status: ServiceManager.getPickListStatusFromEnum(
             pickListStatusEnum: pickListStatusEnum),
         onSuccess: (pickList) {
           setState(() {
             this.pickList = pickList;
+            _isLoading = false;
           });
         },
-        onError: (Map map) {});
+        onError: (Map map) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
   }
 
   @override
@@ -55,13 +77,66 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                   text: 'Welcome, Supervisor',
                   fontWeight: FontWeight.w700,
                   fontSize: 20),
-              //todo: add filter based on status
               //todo: implement search
-              _list(),
+              _statusFilterWidget(),
+              if (_isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: CircularProgressIndicator(),
+                )
+              else
+                _list(),
             ],
           ),
         ),
         bottomNavigationBar: _buttonContainer());
+  }
+
+  Widget _statusFilterWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: getInterText(
+              text: 'Picklist Status',
+              textAlign: TextAlign.left,
+              color: const Color(0XFF0F3C4D),
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
+            child: SizedBox(
+              width: Get.width / 4,
+              child: DropdownButton<PickListStatusEnum>(
+                value: pickListStatusEnum, // Currently selected value
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      pickListStatusEnum =
+                          newValue; // Update the selected value
+                    });
+                    setData();
+                  }
+                },
+                items:
+                    PickListStatusEnum.values.map((PickListStatusEnum value) {
+                  return DropdownMenuItem<PickListStatusEnum>(
+                    value: value,
+                    child: Text(
+                        getEnumLabel(value)), // Display user-friendly label
+                  );
+                }).toList(), // Converts enum values to dropdown items
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          )),
+        ],
+      ),
+    );
   }
 
   Widget _buttonContainer() {

@@ -134,7 +134,7 @@ class _AssignPicklistToUserScreenState
                                             //todo:
                                             //api/picklist/UpdatePickList
                                             /// call /master/getusers to get user and then assign only for one user
-                                            showLoaderDialog(context,
+                                            showLoaderDialog(
                                                 text: 'Assigning pick lists');
                                             ServiceManager.updatePickList(
                                                 l: [],

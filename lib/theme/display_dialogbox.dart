@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_font.dart';
 import 'package:scanner/theme/custom_theme.dart';
@@ -210,7 +211,7 @@ Widget _dialogButtonNegative(
   );
 }
 
-AlertDialog showLoaderDialog(BuildContext context,
+AlertDialog showLoaderDialog(
     {String text = "downloading file..."}) {
   AlertDialog alert = AlertDialog(
     content: Row(
@@ -232,7 +233,7 @@ AlertDialog showLoaderDialog(BuildContext context,
   );
   showDialog(
     barrierDismissible: false,
-    context: context,
+    context: Get.context!,
     builder: (BuildContext context) {
       return alert;
     },
