@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/get_formatted_date.dart';
+import 'package:scanner/models/pick_list_model.dart';
+import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/custom_drawer.dart';
@@ -17,9 +20,23 @@ class SuperAdminDashboard extends StatefulWidget {
 }
 
 class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
+  List<PickListModel> pickList = [];
+
   @override
   void initState() {
     super.initState();
+    setData();
+  }
+
+  setData() async {
+    await ServiceManager.getPickListByStatus(
+        status: 'O',
+        onSuccess: (pickList) {
+          setState(() {
+            this.pickList = pickList;
+          });
+        },
+        onError: (Map map) {});
   }
 
   @override
@@ -51,27 +68,35 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
           isLoading: false,
           btnText: 'Assign',
           onPress: () {
-            //todo: send selected pick list
-            Get.to(() => const AssignPicklistToUserScreen(
-                  pickList: [],
-                ))?.then((onValue) {
-              setState(() {});
-            });
+            if (!atLeastOnePickListSelected()) {
+              CustomSnackBar.errorSnackBar(
+                  'Please select at least one Pick List');
+            } else {
+              Get.to(() => const AssignPicklistToUserScreen(
+                    pickList: [],
+                  ))?.then((onValue) {
+                setState(() {});
+              });
+            }
           },
           backColor: appPrimary),
     );
   }
 
   Widget _list() {
-    //todo: api/picklist/getpicklistbystatus?status=O
     return ListView.separated(
-      itemCount: 3,
+      itemCount: pickList.length,
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
+        PickListModel pickListModel = pickList[index];
         return CheckboxListTile(
-          value: false,
-          onChanged: (val) {},
+          value: pickListModel.isSelected,
+          onChanged: (val) {
+            pickListModel.isSelected = !pickListModel.isSelected;
+
+            setState(() {});
+          },
           controlAffinity: ListTileControlAffinity.leading,
           contentPadding: const EdgeInsets.only(left: 8),
           title: Container(
@@ -107,7 +132,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                             TextSpan(
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Pick List id'),
-                                getPoppinsTextSpanDetails(text: '1'),
+                                getPoppinsTextSpanDetails(
+                                    text: pickListModel.pickListId.toString()),
                               ],
                             ),
                           ),
@@ -115,7 +141,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                             TextSpan(
                               children: [
                                 getPoppinsTextSpanHeading(text: 'SO Id'),
-                                getPoppinsTextSpanDetails(text: '1'),
+                                getPoppinsTextSpanDetails(
+                                    text: pickListModel.soId.toString()),
                               ],
                             ),
                           ),
@@ -123,7 +150,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                             TextSpan(
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Status'),
-                                getPoppinsTextSpanDetails(text: 'Not Picked'),
+                                getPoppinsTextSpanDetails(
+                                    text: pickListModel.status),
                               ],
                             ),
                           ),
@@ -137,7 +165,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                             TextSpan(
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Total Items'),
-                                getPoppinsTextSpanDetails(text: '1'),
+                                getPoppinsTextSpanDetails(
+                                    text: pickListModel.totalItems.toString()),
                               ],
                             ),
                           ),
@@ -145,7 +174,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                             TextSpan(
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Assigned To'),
-                                getPoppinsTextSpanDetails(text: 'HHT1'),
+                                getPoppinsTextSpanDetails(
+                                    text: pickListModel.user),
                               ],
                             ),
                           ),
@@ -155,7 +185,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                 getPoppinsTextSpanHeading(
                                     text: 'Assigned Date'),
                                 getPoppinsTextSpanDetails(
-                                    text: getFormattedDate(DateTime.now())),
+                                    text: getFormattedDate(getDateFromString(
+                                        pickListModel.assignDate))),
                               ],
                             ),
                           ),
@@ -254,5 +285,16 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         );
       },
     );
+  }
+
+  bool atLeastOnePickListSelected() {
+    bool isSelected = false;
+    for (PickListModel pickListModel in pickList) {
+      if (pickListModel.isSelected) {
+        isSelected = true;
+        break;
+      }
+    }
+    return isSelected;
   }
 }

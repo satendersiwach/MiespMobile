@@ -8,6 +8,7 @@ import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/item_details_model.dart';
+import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/stock_count_request_model.dart';
 import 'package:scanner/models/stock_counting_detail_model.dart';
 import 'package:scanner/models/uom_model.dart';
@@ -163,12 +164,11 @@ class ServiceManager {
 
   static Future<void> getPickListByStatus({
     required String status,
-    required Function(UserModel) onSuccess,
+    required Function(List<PickListModel>) onSuccess,
     required Function(Map) onError,
-  })
-  async {
+  }) async {
     try {
-      UserModel? customerModel;
+      List<PickListModel> pickList = [];
       var res = await http.get(
         Uri.parse('${baseURL}picklist/getpicklistbystatus?status=$status'),
         headers: header,
@@ -176,8 +176,8 @@ class ServiceManager {
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (responseMap['Code'] == 0) {
-        customerModel = UserModel.fromJson(jsonDecode(res.body)['result']);
-        onSuccess(customerModel);
+        //todo:
+        onSuccess(pickList);
       } else {
         onError(responseMap);
       }
@@ -193,15 +193,10 @@ class ServiceManager {
     required List<UpdatePickListModel> l,
     required Function(Map) onSuccess,
     required Function(Map) onError,
-  })
-  async {
+  }) async {
     try {
-
-      var res = await http.post(
-        Uri.parse('${baseURL}picklist/UpdatePickList'),
-        headers: header,
-        body: jsonEncode(l)
-      );
+      var res = await http.post(Uri.parse('${baseURL}picklist/UpdatePickList'),
+          headers: header, body: jsonEncode(l));
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (responseMap['Code'] == 0) {

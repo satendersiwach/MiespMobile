@@ -16,6 +16,9 @@ class PickListModel {
   String status;
   String code;
 
+  /// for dev purpose only
+  bool isSelected;
+
   PickListModel({
     required this.pickListId,
     required this.soId,
@@ -24,6 +27,7 @@ class PickListModel {
     required this.assignDate,
     required this.status,
     required this.code,
+    this.isSelected=false
   });
 
   factory PickListModel.fromJson(Map<String, dynamic> json) => PickListModel(
