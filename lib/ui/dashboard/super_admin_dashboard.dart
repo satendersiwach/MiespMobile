@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/common/get_formatted_date.dart';
+import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
@@ -11,6 +12,7 @@ import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/custom_drawer.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/components/element_common_widget.dart';
+import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_to_user_screen.dart';
 
 class SuperAdminDashboard extends StatefulWidget {
@@ -69,7 +71,92 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   Widget build(BuildContext context) {
     return screenWithAppBar(
         title: 'Scanner App',
-        drawer: const CustomDrawer(),
+        // drawer: const CustomDrawer(),
+        isBackVisible: false,
+        actions: [
+          IconButton(onPressed: (){
+            List<Widget> titleRowWidgets = [
+              getPoppinsText(
+                  text: 'Logout',
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ];
+            List<Widget> actions = [
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // if (!isShowNegative)
+                      const Spacer(),
+
+                      TextButton(
+                        onPressed: () {
+                          LocalStorage.logout();
+                          Get.offAll(() => const LoginPage());
+                        },
+                        child: getPoppinsText(
+                            text: 'Logout',
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: getPoppinsText(
+                            text: 'No',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: appPrimary),
+                      ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     LocalStorage.logout();
+                      //     Get.offAll(() => const LoginPage());
+                      //   },
+                      //   child: const Text(
+                      //     "Logout",
+                      //     style: TextStyle(
+                      //         color: Colors.red,
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize: 16),
+                      //   ),
+                      // ),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     Navigator.pop(context);
+                      //   },
+                      //   child: const Text(
+                      //     "No",
+                      //     style: TextStyle(
+                      //         fontWeight: FontWeight.bold, fontSize: 16),
+                      //   ),
+                      // ),
+                    ],
+                  )),
+            ];
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Row(
+                    children: titleRowWidgets,
+                  ),
+                  content: getPoppinsText(
+                      text: 'Are you sure you want to logout?',
+                      textAlign: TextAlign.start,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
+                  actions: actions,
+                );
+              },
+            );
+          }, icon: const Icon(Icons.logout,color: Colors.red,)),
+        ],
         body: SingleChildScrollView(
           child: Column(
             children: [

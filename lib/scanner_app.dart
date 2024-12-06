@@ -68,14 +68,15 @@ class _ScannerAppState extends State<ScannerApp> {
     if (customer == null || customer == '') {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+      Get.offAll(()=>const LoginPage());
     } else {
       if(UserModel.isUser())
         {
-          Get.to(()=>const UserDashboard());
+          Get.offAll(()=>const UserDashboard());
         }
       else
         {
-          Get.to(()=>const SuperAdminDashboard());
+          Get.offAll(()=>const SuperAdminDashboard());
         }
       // CustomerModel customerModel =
       //     CustomerModel.fromJson(jsonDecode(customer));

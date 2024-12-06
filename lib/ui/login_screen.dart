@@ -237,9 +237,9 @@ class LoginPageState extends State<LoginPage> {
     });
     await Future.delayed(const Duration(milliseconds: 500));
     if (UserModel.isUser()) {
-      Get.to(() => const UserDashboard());
+      Get.offAll(() => const UserDashboard());
     } else {
-      Get.to(() => const SuperAdminDashboard());
+      Get.offAll(() => const SuperAdminDashboard());
     }
   }
 
