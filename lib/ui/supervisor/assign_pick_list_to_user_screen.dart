@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';
@@ -12,8 +13,10 @@ import 'package:scanner/theme/elements_screen.dart';
 
 class AssignPicklistToUserScreen extends StatefulWidget {
   final List<PickListModel> pickList;
+  final Mode mode;
 
-  const AssignPicklistToUserScreen({super.key, required this.pickList});
+  const AssignPicklistToUserScreen(
+      {super.key, required this.pickList, required this.mode});
 
   @override
   State<AssignPicklistToUserScreen> createState() =>
@@ -135,11 +138,21 @@ class _AssignPicklistToUserScreenState
                                             //todo:
                                             //api/picklist/UpdatePickList
                                             /// call /master/getusers to get user and then assign only for one user
-                                            List<UpdatePickListModel> updatePickList=[];
-                                            for(PickListModel pickListModel in widget.pickList)
-                                              {
-                                                updatePickList.add(UpdatePickListModel(pickListId: pickListModel.pickListId, soId: pickListModel.soId, user: userModel.username??'', mode: 'Add'));
-                                              }
+                                            List<UpdatePickListModel>
+                                                updatePickList = [];
+                                            for (PickListModel pickListModel
+                                                in widget.pickList) {
+                                              updatePickList.add(
+                                                  UpdatePickListModel(
+                                                      pickListId: pickListModel
+                                                          .pickListId,
+                                                      soId: pickListModel.soId,
+                                                      user:
+                                                          userModel.username ??
+                                                              '',
+                                                      mode: getModeLabel(
+                                                          widget.mode)));
+                                            }
                                             print(updatePickList);
                                             showLoaderDialog(
                                                 text: 'Assigning pick lists');
@@ -176,6 +189,6 @@ class _AssignPicklistToUserScreenState
   onSuccess(Map responseMap) {
     Get.back();
     Get.back();
-    CustomSnackBar.errorSnackBar(responseMap['Error']);
+    CustomSnackBar.successSnackBar(responseMap['Error']);
   }
 }

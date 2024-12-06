@@ -9,7 +9,6 @@ import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
-import 'package:scanner/ui/components/custom_drawer.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/components/element_common_widget.dart';
 import 'package:scanner/ui/login_screen.dart';
@@ -31,21 +30,6 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   void initState() {
     super.initState();
     setData();
-  }
-
-  String getEnumLabel(PickListStatusEnum value) {
-    switch (value) {
-      case PickListStatusEnum.assigned:
-        return 'Assigned';
-      case PickListStatusEnum.closed:
-        return 'Closed';
-      case PickListStatusEnum.open:
-        return 'Open';
-      case PickListStatusEnum.all:
-        return 'All';
-      default:
-        return '';
-    }
   }
 
   setData() async {
@@ -74,88 +58,93 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         // drawer: const CustomDrawer(),
         isBackVisible: false,
         actions: [
-          IconButton(onPressed: (){
-            List<Widget> titleRowWidgets = [
-              getPoppinsText(
-                  text: 'Logout',
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20),
-            ];
-            List<Widget> actions = [
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.center,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // if (!isShowNegative)
-                      const Spacer(),
+          IconButton(
+              onPressed: () {
+                List<Widget> titleRowWidgets = [
+                  getPoppinsText(
+                      text: 'Logout',
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ];
+                List<Widget> actions = [
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.center,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // if (!isShowNegative)
+                          const Spacer(),
 
-                      TextButton(
-                        onPressed: () {
-                          LocalStorage.logout();
-                          Get.offAll(() => const LoginPage());
-                        },
-                        child: getPoppinsText(
-                            text: 'Logout',
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
+                          TextButton(
+                            onPressed: () {
+                              LocalStorage.logout();
+                              Get.offAll(() => const LoginPage());
+                            },
+                            child: getPoppinsText(
+                                text: 'Logout',
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: getPoppinsText(
+                                text: 'No',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: appPrimary),
+                          ),
+                          // TextButton(
+                          //   onPressed: () {
+                          //     LocalStorage.logout();
+                          //     Get.offAll(() => const LoginPage());
+                          //   },
+                          //   child: const Text(
+                          //     "Logout",
+                          //     style: TextStyle(
+                          //         color: Colors.red,
+                          //         fontWeight: FontWeight.bold,
+                          //         fontSize: 16),
+                          //   ),
+                          // ),
+                          // TextButton(
+                          //   onPressed: () {
+                          //     Navigator.pop(context);
+                          //   },
+                          //   child: const Text(
+                          //     "No",
+                          //     style: TextStyle(
+                          //         fontWeight: FontWeight.bold, fontSize: 16),
+                          //   ),
+                          // ),
+                        ],
+                      )),
+                ];
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Row(
+                        children: titleRowWidgets,
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: getPoppinsText(
-                            text: 'No',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: appPrimary),
-                      ),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     LocalStorage.logout();
-                      //     Get.offAll(() => const LoginPage());
-                      //   },
-                      //   child: const Text(
-                      //     "Logout",
-                      //     style: TextStyle(
-                      //         color: Colors.red,
-                      //         fontWeight: FontWeight.bold,
-                      //         fontSize: 16),
-                      //   ),
-                      // ),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     Navigator.pop(context);
-                      //   },
-                      //   child: const Text(
-                      //     "No",
-                      //     style: TextStyle(
-                      //         fontWeight: FontWeight.bold, fontSize: 16),
-                      //   ),
-                      // ),
-                    ],
-                  )),
-            ];
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Row(
-                    children: titleRowWidgets,
-                  ),
-                  content: getPoppinsText(
-                      text: 'Are you sure you want to logout?',
-                      textAlign: TextAlign.start,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
-                  actions: actions,
+                      content: getPoppinsText(
+                          text: 'Are you sure you want to logout?',
+                          textAlign: TextAlign.start,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500),
+                      actions: actions,
+                    );
+                  },
                 );
               },
-            );
-          }, icon: const Icon(Icons.logout,color: Colors.red,)),
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.red,
+              )),
         ],
         body: SingleChildScrollView(
           child: Column(
@@ -228,7 +217,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   }
 
   Widget _buttonContainer() {
-    if (pickList.isEmpty) {
+    if (pickList.isEmpty || pickListStatusEnum == PickListStatusEnum.closed) {
       return const SizedBox(
         height: 0,
         width: 0,
@@ -238,7 +227,9 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         padding: const EdgeInsets.all(8.0),
         child: loadingButton(
             isLoading: false,
-            btnText: 'Assign',
+            btnText: pickListStatusEnum == PickListStatusEnum.assigned
+                ? 'Reassign'
+                : 'Assign',
             onPress: () {
               if (!atLeastOnePickListSelected()) {
                 CustomSnackBar.errorSnackBar(
@@ -252,6 +243,9 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                 }
                 Get.to(() => AssignPicklistToUserScreen(
                       pickList: selectedPickList,
+                      mode: pickListStatusEnum == PickListStatusEnum.assigned
+                          ? Mode.update
+                          : Mode.add,
                     ))?.then((onValue) {
                   setState(() {
                     setData();
@@ -271,6 +265,10 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         PickListModel pickListModel = pickList[index];
+        String btnTxt = 'Assign';
+        if (pickListModel.status == 'A') {
+          btnTxt = 'Reassign';
+        }
         return CheckboxListTile(
           value: pickListModel.isSelected,
           onChanged: (val) {
@@ -366,8 +364,9 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                 getPoppinsTextSpanHeading(
                                     text: 'Assigned Date'),
                                 getPoppinsTextSpanDetails(
-                                    text: getFormattedDateAndTime(getDateFromString(
-                                        pickListModel.assignDate))),
+                                    text: getFormattedDateAndTime(
+                                        getDateFromString(
+                                            pickListModel.assignDate))),
                               ],
                             ),
                           ),
@@ -445,7 +444,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                             /// call /master/getusers to get user and then assign only for one user
                           },
                           child: getPoppinsText(
-                              text: 'Assign',
+                              text: btnTxt,
                               color: appPrimary,
                               fontSize: 13,
                               fontWeight: FontWeight.bold),
