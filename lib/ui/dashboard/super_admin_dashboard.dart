@@ -4,6 +4,7 @@ import 'package:scanner/common/enums.dart';
 import 'package:scanner/common/get_formatted_date.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/pick_list_model.dart';
+import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
@@ -217,43 +218,164 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   }
 
   Widget _buttonContainer() {
-    if (pickList.isEmpty || pickListStatusEnum == PickListStatusEnum.closed) {
+    if (pickList.isEmpty ||
+        pickListStatusEnum == PickListStatusEnum.closed ||
+        pickListStatusEnum == PickListStatusEnum.all) {
       return const SizedBox(
         height: 0,
         width: 0,
       );
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: loadingButton(
-            isLoading: false,
-            btnText: pickListStatusEnum == PickListStatusEnum.assigned
-                ? 'Reassign'
-                : 'Assign',
-            onPress: () {
-              if (!atLeastOnePickListSelected()) {
-                CustomSnackBar.errorSnackBar(
-                    'Please select at least one Pick List');
-              } else {
-                List<PickListModel> selectedPickList = [];
-                for (PickListModel pickListModel in pickList) {
-                  if (pickListModel.isSelected) {
-                    selectedPickList.add(pickListModel);
-                  }
-                }
-                Get.to(() => AssignPicklistToUserScreen(
-                      pickList: selectedPickList,
-                      mode: pickListStatusEnum == PickListStatusEnum.assigned
-                          ? Mode.update
-                          : Mode.add,
-                    ))?.then((onValue) {
-                  setState(() {
-                    setData();
-                  });
-                });
-              }
-            },
-            backColor: appPrimary),
+      return SizedBox(
+        height: Get.height/13,
+        child: Row(
+          children: [
+            if(pickListStatusEnum==PickListStatusEnum.assigned)...[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: loadingButton(
+                      isLoading: false,
+                      btnText: 'Remove',
+                      onPress: () {
+                        if (!atLeastOnePickListSelected()) {
+                          CustomSnackBar.errorSnackBar(
+                              'Please select at least one Pick List');
+                        } else {
+                          List<Widget> titleRowWidgets = [
+                            getPoppinsText(
+                                text: 'Remove',
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ];
+                          List<Widget> actions = [
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                alignment: Alignment.center,
+                                child: Row(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    // if (!isShowNegative)
+                                    const Spacer(),
+
+                                    TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                        List<UpdatePickListModel> selectedPickList = [];
+                                        for (PickListModel pickListModel in pickList) {
+                                          if (pickListModel.isSelected) {
+                                            selectedPickList.add(UpdatePickListModel(
+                                                pickListId: pickListModel
+                                                    .pickListId,
+                                                soId: pickListModel.soId,
+                                                user: '',
+                                                mode: getModeLabel(
+                                                    Mode.remove)));
+                                          }
+                                        }
+                                        ServiceManager.updatePickList(
+                                            l: selectedPickList,
+                                            onSuccess: (Map responseMap) {
+                                              setData();
+                                              CustomSnackBar
+                                                  .successSnackBar(
+                                                  responseMap[
+                                                  'Error']);
+                                            },
+                                            onError: (Map responseMap) {
+                                              CustomSnackBar
+                                                  .errorSnackBar(
+                                                  responseMap[
+                                                  'Error']);
+                                            });
+                                      },
+                                      child: getPoppinsText(
+                                          text: 'Remove',
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: getPoppinsText(
+                                          text: 'No',
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: appPrimary),
+                                    ),
+                                  ],
+                                )),
+                          ];
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Row(
+                                  children: titleRowWidgets,
+                                ),
+                                content: getPoppinsText(
+                                    text:
+                                    'Are you sure you want to remove this picklist?',
+                                    textAlign: TextAlign.start,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                                actions: actions,
+                              );
+                            },
+                          );
+
+
+                        }
+                      },
+                      backColor: appPrimary),
+                ),
+              ),
+              const VerticalDivider(
+                color: Colors.grey,
+                thickness: 1,
+              ),
+            ],
+
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: loadingButton(
+                    isLoading: false,
+                    btnText: pickListStatusEnum == PickListStatusEnum.assigned
+                        ? 'Reassign'
+                        : 'Assign',
+                    onPress: () {
+                      if (!atLeastOnePickListSelected()) {
+                        CustomSnackBar.errorSnackBar(
+                            'Please select at least one Pick List');
+                      } else {
+                        List<PickListModel> selectedPickList = [];
+                        for (PickListModel pickListModel in pickList) {
+                          if (pickListModel.isSelected) {
+                            selectedPickList.add(pickListModel);
+                          }
+                        }
+                        Get.to(() => AssignPicklistToUserScreen(
+                              pickList: selectedPickList,
+                              mode: pickListStatusEnum == PickListStatusEnum.assigned
+                                  ? Mode.update
+                                  : Mode.add,
+                            ))?.then((onValue) {
+                          setState(() {
+                            setData();
+                          });
+                        });
+                      }
+                    },
+                    backColor: appPrimary),
+              ),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -374,84 +496,140 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                       )),
                     ],
                   ),
-                  const Divider(
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                  // SizedBox(
-                  //   height: 28,
-                  //   child: Row(
-                  //     children: [
-                  //       Expanded(
-                  //           child: InkWell(
-                  //             onTap: (){
-                  //               //todo:
-                  //               //api/picklist/UpdatePickList
-                  //               // model : Remove
-                  //             },
-                  //         child: getPoppinsText(
-                  //             text: 'Add',
-                  //             color: Colors.red,
-                  //             fontSize: 13,
-                  //             fontWeight: FontWeight.bold),
-                  //       )),
-                  //       const VerticalDivider(
-                  //         color: Colors.grey,
-                  //         thickness: 1,
-                  //       ),
-                  //       Expanded(
-                  //           child: InkWell(
-                  //             onTap: (){
-                  //               //todo:
-                  //               //api/picklist/UpdatePickList
-                  //               // model : Update
-                  //             },
-                  //         child: getPoppinsText(
-                  //             text: 'Update',
-                  //             color: appPrimary,
-                  //             fontSize: 13,
-                  //             fontWeight: FontWeight.bold),
-                  //       )),
-                  //     ],
-                  //   ),
-                  // )
-                  SizedBox(
-                    height: 28,
-                    child: Row(
-                      children: [
-                        // Expanded(
-                        //     child: InkWell(
-                        //       onTap: (){
-                        //         //todo:
-                        //         //api/picklist/UpdatePickList
-                        //         // model : Remove
-                        //       },
-                        //   child: getPoppinsText(
-                        //       text: 'Add',
-                        //       color: Colors.red,
-                        //       fontSize: 13,
-                        //       fontWeight: FontWeight.bold),
-                        // )),
-                        // const VerticalDivider(
-                        //   color: Colors.grey,
-                        //   thickness: 1,
-                        // ),
-                        Expanded(
-                            child: InkWell(
-                          onTap: () {
-                            //todo:
-                            //api/picklist/UpdatePickList
-                            /// call /master/getusers to get user and then assign only for one user
-                          },
-                          child: getPoppinsText(
-                              text: btnTxt,
-                              color: appPrimary,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold),
-                        )),
-                      ],
+                  if (pickListStatusEnum == PickListStatusEnum.assigned ||
+                      pickListStatusEnum == PickListStatusEnum.open) ...[
+                    const Divider(
+                      color: Colors.grey,
+                      thickness: 1,
                     ),
-                  )
+                    SizedBox(
+                      height: 28,
+                      child: Row(
+                        children: [
+                          if (pickListStatusEnum ==
+                              PickListStatusEnum.assigned) ...[
+                            Expanded(
+                                child: InkWell(
+                              onTap: () {
+                                List<Widget> titleRowWidgets = [
+                                  getPoppinsText(
+                                      text: 'Remove',
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ];
+                                List<Widget> actions = [
+                                  Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      alignment: Alignment.center,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          // if (!isShowNegative)
+                                          const Spacer(),
+
+                                          TextButton(
+                                            onPressed: () {
+                                              Get.back();
+                                              UpdatePickListModel
+                                                  updatePickListModel =
+                                                  UpdatePickListModel(
+                                                      pickListId: pickListModel
+                                                          .pickListId,
+                                                      soId: pickListModel.soId,
+                                                      user: '',
+                                                      mode: getModeLabel(
+                                                          Mode.remove));
+                                              ServiceManager.updatePickList(
+                                                  l: [updatePickListModel],
+                                                  onSuccess: (Map responseMap) {
+                                                    setData();
+                                                    CustomSnackBar
+                                                        .successSnackBar(
+                                                            responseMap[
+                                                                'Error']);
+                                                  },
+                                                  onError: (Map responseMap) {
+                                                    CustomSnackBar
+                                                        .errorSnackBar(
+                                                            responseMap[
+                                                                'Error']);
+                                                  });
+                                            },
+                                            child: getPoppinsText(
+                                                text: 'Remove',
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: getPoppinsText(
+                                                text: 'No',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                color: appPrimary),
+                                          ),
+                                        ],
+                                      )),
+                                ];
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Row(
+                                        children: titleRowWidgets,
+                                      ),
+                                      content: getPoppinsText(
+                                          text:
+                                              'Are you sure you want to remove this picklist?',
+                                          textAlign: TextAlign.start,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500),
+                                      actions: actions,
+                                    );
+                                  },
+                                );
+                              },
+                              child: getPoppinsText(
+                                  text: 'Remove',
+                                  color: Colors.red,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold),
+                            )),
+                            const VerticalDivider(
+                              color: Colors.grey,
+                              thickness: 1,
+                            ),
+                          ],
+                          Expanded(
+                              child: InkWell(
+                            onTap: () {
+                              Get.to(() => AssignPicklistToUserScreen(
+                                    pickList: [pickListModel],
+                                    mode: pickListStatusEnum ==
+                                            PickListStatusEnum.assigned
+                                        ? Mode.update
+                                        : Mode.add,
+                                  ))?.then((onValue) {
+                                setState(() {
+                                  setData();
+                                });
+                              });
+                            },
+                            child: getPoppinsText(
+                                text: btnTxt,
+                                color: appPrimary,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                          )),
+                        ],
+                      ),
+                    )
+                  ],
                 ],
               ),
             ),

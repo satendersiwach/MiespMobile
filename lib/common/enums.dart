@@ -16,7 +16,7 @@ String getEnumLabel(PickListStatusEnum value) {
   }
 }
 
-enum Mode { add, update }
+enum Mode { add, update, remove }
 
 String getModeLabel(Mode value) {
   switch (value) {
@@ -24,6 +24,8 @@ String getModeLabel(Mode value) {
       return 'Add';
     case Mode.update:
       return 'Update';
+    case Mode.remove:
+      return 'Remove';
     default:
       return '';
   }
