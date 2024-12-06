@@ -138,7 +138,7 @@ class _AssignPicklistToUserScreenState
                                             List<UpdatePickListModel> updatePickList=[];
                                             for(PickListModel pickListModel in widget.pickList)
                                               {
-                                                updatePickList.add(UpdatePickListModel(pickListId: pickListModel.pickListId, soId: pickListModel.soId, user: userModel.username??'', mode: 'Update'));
+                                                updatePickList.add(UpdatePickListModel(pickListId: pickListModel.pickListId, soId: pickListModel.soId, user: userModel.username??'', mode: 'Add'));
                                               }
                                             print(updatePickList);
                                             showLoaderDialog(
@@ -176,6 +176,6 @@ class _AssignPicklistToUserScreenState
   onSuccess(Map responseMap) {
     Get.back();
     Get.back();
-    CustomSnackBar.errorSnackBar(responseMap['result']);
+    CustomSnackBar.errorSnackBar(responseMap['Error']);
   }
 }
