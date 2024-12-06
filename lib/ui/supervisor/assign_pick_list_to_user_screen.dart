@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
+import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
@@ -134,10 +135,16 @@ class _AssignPicklistToUserScreenState
                                             //todo:
                                             //api/picklist/UpdatePickList
                                             /// call /master/getusers to get user and then assign only for one user
+                                            List<UpdatePickListModel> updatePickList=[];
+                                            for(PickListModel pickListModel in widget.pickList)
+                                              {
+                                                updatePickList.add(UpdatePickListModel(pickListId: pickListModel.pickListId, soId: pickListModel.soId, user: pickListModel.user, mode: 'Add'));
+                                              }
+                                            print(updatePickList);
                                             showLoaderDialog(
                                                 text: 'Assigning pick lists');
                                             ServiceManager.updatePickList(
-                                                l: [],
+                                                l: updatePickList,
                                                 onSuccess: onSuccess,
                                                 onError: onError);
                                           },

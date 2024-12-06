@@ -48,6 +48,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
 
   setData() async {
     _isLoading = true;
+    pickList.clear();
     await ServiceManager.getPickListByStatus(
         status: ServiceManager.getPickListStatusFromEnum(
             pickListStatusEnum: pickListStatusEnum),
@@ -165,7 +166,9 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                 Get.to(() => AssignPicklistToUserScreen(
                       pickList: selectedPickList,
                     ))?.then((onValue) {
-                  setState(() {});
+                  setState(() {
+                    setData();
+                  });
                 });
               }
             },
