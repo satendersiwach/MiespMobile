@@ -279,7 +279,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                 getPoppinsTextSpanHeading(
                                     text: 'Assigned Date'),
                                 getPoppinsTextSpanDetails(
-                                    text: getFormattedDate(getDateFromString(
+                                    text: getFormattedDateAndTime(getDateFromString(
                                         pickListModel.assignDate))),
                               ],
                             ),

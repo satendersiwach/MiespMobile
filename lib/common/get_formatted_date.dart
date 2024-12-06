@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-String dateFormat = 'yyyy-MM-dd';
+String dateFormat = 'M/d/yyyy';
 
 String getFormattedDate(DateTime? now) {
   if (now == null) {
@@ -16,7 +16,7 @@ String getFormattedDate(DateTime? now) {
 }
 
 String getFormattedDateAndTime(DateTime? now) {
-  DateFormat formatter = DateFormat('$dateFormat HH:mm a');
+  DateFormat formatter = DateFormat('$dateFormat HH:mm:ss');
   if (now != null) {
     String formatted = formatter.format(now);
     return formatted;
@@ -29,7 +29,7 @@ DateTime getDateFromString(String? now) {
   if (now == null || now == '') {
     return DateTime.parse("1900-01-01");
   }
-  DateTime tempDate = DateFormat(dateFormat).parse(now);
+  DateTime tempDate = DateFormat('$dateFormat HH:mm:ss').parse(now);
   return tempDate;
 }
 

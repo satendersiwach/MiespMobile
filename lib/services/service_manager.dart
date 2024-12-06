@@ -177,19 +177,31 @@ class ServiceManager {
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (responseMap['Code'] == 0) {
-        String key='';
-
-        if (status == 'O') {
-          key='OpenPickList';
-        }else if (status == 'A') {
-          key='AssignedPickList';
-        }
-        else if (status == 'C') {
-          key='ClosedPickList';
-        }
-        List open = responseMap[key];
-        for (Map<String, dynamic> map in open) {
-          pickList.add(PickListModel.fromJson(map));
+        if (status == 'All') {
+          List<String> keys = [
+            'OpenPickList',
+            'AssignedPickList',
+            'ClosedPickList'
+          ];
+          for (String key in keys) {
+            List open = responseMap[key];
+            for (Map<String, dynamic> map in open) {
+              pickList.add(PickListModel.fromJson(map));
+            }
+          }
+        } else {
+          String key = '';
+          if (status == 'O') {
+            key = 'OpenPickList';
+          } else if (status == 'A') {
+            key = 'AssignedPickList';
+          } else if (status == 'C') {
+            key = 'ClosedPickList';
+          }
+          List open = responseMap[key];
+          for (Map<String, dynamic> map in open) {
+            pickList.add(PickListModel.fromJson(map));
+          }
         }
         onSuccess(pickList);
       } else {
@@ -209,11 +221,10 @@ class ServiceManager {
     required Function(Map) onError,
   }) async {
     try {
-      List<Map<String, dynamic>> list=[];
-      for(UpdatePickListModel updatePickListModel in l)
-        {
-          list.add(updatePickListModel.toJson());
-        }
+      List<Map<String, dynamic>> list = [];
+      for (UpdatePickListModel updatePickListModel in l) {
+        list.add(updatePickListModel.toJson());
+      }
       var res = await http.post(Uri.parse('${baseURL}picklist/UpdatePickList'),
           headers: header, body: jsonEncode(l));
       print(res.body);

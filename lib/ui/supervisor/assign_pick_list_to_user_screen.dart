@@ -138,7 +138,7 @@ class _AssignPicklistToUserScreenState
                                             List<UpdatePickListModel> updatePickList=[];
                                             for(PickListModel pickListModel in widget.pickList)
                                               {
-                                                updatePickList.add(UpdatePickListModel(pickListId: pickListModel.pickListId, soId: pickListModel.soId, user: pickListModel.user, mode: 'Add'));
+                                                updatePickList.add(UpdatePickListModel(pickListId: pickListModel.pickListId, soId: pickListModel.soId, user: userModel.username??'', mode: 'Add'));
                                               }
                                             print(updatePickList);
                                             showLoaderDialog(
