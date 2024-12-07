@@ -31,11 +31,11 @@ class LoginPageState extends State<LoginPage> {
   final ScrollController _scrollController = ScrollController();
   bool obscurePassword = true;
   bool isLoading = false;
-  TextEditingController username = TextEditingController(text: 'supervisor');
-  TextEditingController password = TextEditingController(text: '12345');
-
-  // TextEditingController username = TextEditingController();
-  // TextEditingController password = TextEditingController();
+  // TextEditingController username = TextEditingController(text: 'supervisor');
+  // TextEditingController password = TextEditingController(text: '12345');
+  //
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   void initState() {
