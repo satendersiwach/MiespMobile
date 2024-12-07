@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
@@ -9,8 +11,6 @@ import 'package:scanner/translations/custom_locale.dart';
 import 'package:scanner/ui/dashboard/super_admin_dashboard.dart';
 import 'package:scanner/ui/dashboard/user_dashboard.dart';
 import 'package:scanner/ui/login_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ScannerApp extends StatefulWidget {
   static _ScannerAppState? _state;
@@ -68,16 +68,13 @@ class _ScannerAppState extends State<ScannerApp> {
     if (customer == null || customer == '') {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const LoginPage()));
-      Get.offAll(()=>const LoginPage());
+      Get.offAll(() => const LoginPage());
     } else {
-      if(UserModel.isUser())
-        {
-          Get.offAll(()=>const UserDashboard());
-        }
-      else
-        {
-          Get.offAll(()=>const SuperAdminDashboard());
-        }
+      if (UserModel.isUser()) {
+        Get.offAll(() => const UserDashboard());
+      } else {
+        Get.offAll(() => const SuperAdminDashboard());
+      }
       // CustomerModel customerModel =
       //     CustomerModel.fromJson(jsonDecode(customer));
       // if (customerModel.email.isNotEmpty) {
@@ -99,6 +96,12 @@ class _ScannerAppState extends State<ScannerApp> {
 
   @override
   Widget build(BuildContext context) {
-    return screenWithoutAppBar(body: const Center(child: FlutterLogo()));
+    return screenWithoutAppBar(
+        body: Center(
+            child: Image.asset(
+      'assets/icons/logo.png',
+              height: Get.height/5,
+              width: Get.height/5,
+    )));
   }
 }
