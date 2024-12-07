@@ -72,8 +72,9 @@ class LoginPageState extends State<LoginPage> {
                       // width: MediaQuery.of(context).size.width/3,
                       // height: MediaQuery.of(context).size.height/15,
                       color: appPrimary,
-                      child: const FlutterLogo(
-                        size: 100,
+                      child: Image.asset('assets/icons/no-bg-logo.png',
+                        height: Get.height/5,
+                        fit: BoxFit.cover,
                       ),
                       // child: Image.asset(
                       //   logoPath,
