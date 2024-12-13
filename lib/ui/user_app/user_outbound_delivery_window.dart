@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
@@ -15,9 +19,39 @@ class UserOutboundDeliveryWindow extends StatefulWidget {
 
 class _UserOutboundDeliveryWindowState
     extends State<UserOutboundDeliveryWindow> {
+  List<PickListModel> pickList = [];
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    setUserData();
+  }
+  setUserData() async {
+    _isLoading = true;
+    pickList.clear();
+    UserModel userModel=UserModel.getLoginCustomer();
+    await ServiceManager.getPickListByUser(
+        username: userModel.username??"",
+        onSuccess: (pickList) {
+          setState(() {
+            this.pickList = pickList;
+            _isLoading = false;
+          });
+        },
+        onError: (Map map) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+
+  }
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return _isLoading?const Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: CircularProgressIndicator(),
+    ):SingleChildScrollView(
       child: Column(
         children: [
           const SizedBox(
@@ -50,10 +84,11 @@ class _UserOutboundDeliveryWindowState
 
   Widget _list() {
     return ListView.separated(
-      itemCount: 3,
+      itemCount: pickList.length,
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
+        PickListModel pickListModel=pickList[index];
         return InkWell(
           child: Container(
             decoration: BoxDecoration(
@@ -91,7 +126,7 @@ class _UserOutboundDeliveryWindowState
                                 children: [
                                   getPoppinsTextSpanHeading(
                                       text: 'Pick List id'),
-                                  getPoppinsTextSpanDetails(text: '1'),
+                                  getPoppinsTextSpanDetails(text: pickListModel.pickListId.toString()),
                                 ],
                               ),
                             ),
@@ -99,7 +134,7 @@ class _UserOutboundDeliveryWindowState
                               TextSpan(
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'Item Code'),
-                                  getPoppinsTextSpanDetails(text: 'FGOM0002'),
+                                  getPoppinsTextSpanDetails(text: pickListModel.code),
                                 ],
                               ),
                             ),
@@ -107,7 +142,7 @@ class _UserOutboundDeliveryWindowState
                               TextSpan(
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'SO Id'),
-                                  getPoppinsTextSpanDetails(text: '1'),
+                                  getPoppinsTextSpanDetails(text: pickListModel.soId.toString()),
                                 ],
                               ),
                             ),
@@ -118,7 +153,7 @@ class _UserOutboundDeliveryWindowState
                                       text: 'Item Description'),
                                   getPoppinsTextSpanDetails(
                                       text:
-                                          'FG CSCI 50C1000-B7J8131K00 CORE COMP2'),
+                                      pickListModel.description),
                                 ],
                               ),
                             ),
@@ -135,7 +170,7 @@ class _UserOutboundDeliveryWindowState
                                   children: [
                                     getPoppinsTextSpanHeading(
                                         text: 'WHSE Code'),
-                                    getPoppinsTextSpanDetails(text: 'B02'),
+                                    getPoppinsTextSpanDetails(text: pickListModel.whseCode),
                                   ],
                                 ),
                               ),
@@ -145,7 +180,7 @@ class _UserOutboundDeliveryWindowState
                                     getPoppinsTextSpanHeading(
                                         text: 'Batch No.'),
                                     getPoppinsTextSpanDetails(
-                                        text: 'WR21011B41150005'),
+                                        text: pickListModel.batchNo),
                                   ],
                                 ),
                               ),
@@ -154,7 +189,7 @@ class _UserOutboundDeliveryWindowState
                                   children: [
                                     getPoppinsTextSpanHeading(
                                         text: 'Release Qty'),
-                                    getPoppinsTextSpanDetails(text: '0.0'),
+                                    getPoppinsTextSpanDetails(text: pickListModel.releaseQty.toString()),
                                   ],
                                 ),
                               ),
@@ -164,7 +199,7 @@ class _UserOutboundDeliveryWindowState
                                     getPoppinsTextSpanHeading(
                                         text: 'Picked Status'),
                                     getPoppinsTextSpanDetails(
-                                        text: 'Not Picked'),
+                                        text: pickListModel.status),
                                   ],
                                 ),
                               ),

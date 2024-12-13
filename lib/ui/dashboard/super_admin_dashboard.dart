@@ -263,19 +263,14 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                     TextButton(
                                       onPressed: () {
                                         Get.back();
-                                        List<UpdatePickListModel> selectedPickList = [];
+                                        List<String> selectedPickList = [];
                                         for (PickListModel pickListModel in pickList) {
                                           if (pickListModel.isSelected) {
-                                            selectedPickList.add(UpdatePickListModel(
-                                                pickListId: pickListModel
-                                                    .pickListId,
-                                                soId: pickListModel.soId,
-                                                user: '',
-                                                mode: getModeLabel(
-                                                    Mode.remove)));
+                                            selectedPickList.add(pickListModel
+                                                .docEntry.toString());
                                           }
                                         }
-                                        ServiceManager.updatePickList(
+                                        ServiceManager.removePickList(
                                             l: selectedPickList,
                                             onSuccess: (Map responseMap) {
                                               setData();
@@ -532,23 +527,14 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                           TextButton(
                                             onPressed: () {
                                               Get.back();
-                                              UpdatePickListModel
-                                                  updatePickListModel =
-                                                  UpdatePickListModel(
-                                                      pickListId: pickListModel
-                                                          .pickListId,
-                                                      soId: pickListModel.soId,
-                                                      user: '',
-                                                      mode: getModeLabel(
-                                                          Mode.remove));
-                                              ServiceManager.updatePickList(
-                                                  l: [updatePickListModel],
+
+                                              ServiceManager.removePickList(
+                                                  l: [pickListModel.absEntry.toString()],
                                                   onSuccess: (Map responseMap) {
                                                     setData();
                                                     CustomSnackBar
                                                         .successSnackBar(
-                                                            responseMap[
-                                                                'Error']);
+                                                        responseMap['Result']);
                                                   },
                                                   onError: (Map responseMap) {
                                                     CustomSnackBar

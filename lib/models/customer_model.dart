@@ -11,7 +11,7 @@ String customerModelToJson(UserModel data) => json.encode(data.toJson());
 class UserModel {
   int? userId;
   String? userCode;
-  String? isSupervisor;
+  bool isSupervisor;
   String? username;
   String? name;
   String? email;
@@ -21,7 +21,7 @@ class UserModel {
   UserModel({
     this.userId,
     this.userCode,
-    this.isSupervisor,
+    this.isSupervisor=false,
     this.username,
     this.email,
     this.name,
@@ -31,8 +31,8 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         userId: int.tryParse(json["userId"].toString()),
-        userCode: json["userCode"],
-        username: json["Username"],
+        userCode: json["Code"],
+        username: json["UserName"],
         name: json["Name"],
         isSupervisor: json["IsSupervisor"],
         email: json["email"] ?? '',
@@ -42,9 +42,9 @@ class UserModel {
 
   Map<String, dynamic> toJson() => {
         "userId": userId,
-        "userCode": userCode,
+        "Code": userCode,
         "Name": name,
-        "Username": username,
+        "UserName": username,
         "IsSupervisor": isSupervisor,
         "email": email,
         "roleId": roleId,

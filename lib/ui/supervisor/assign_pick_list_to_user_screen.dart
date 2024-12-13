@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
+import 'package:scanner/models/assign_pick_list_model.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';
@@ -135,28 +136,21 @@ class _AssignPicklistToUserScreenState
                                         Expanded(
                                             child: InkWell(
                                           onTap: () {
-                                            //todo:
-                                            //api/picklist/UpdatePickList
-                                            /// call /master/getusers to get user and then assign only for one user
-                                            List<UpdatePickListModel>
+
+                                            List<AssignPickListModel>
                                                 updatePickList = [];
                                             for (PickListModel pickListModel
                                                 in widget.pickList) {
                                               updatePickList.add(
-                                                  UpdatePickListModel(
-                                                      pickListId: pickListModel
-                                                          .pickListId,
-                                                      soId: pickListModel.soId,
-                                                      user:
-                                                          userModel.username ??
-                                                              '',
-                                                      mode: getModeLabel(
-                                                          widget.mode)));
+                                                  AssignPickListModel(
+                                                      code: pickListModel.absEntry.toString(),
+                                                      user: userModel.username ?? '',
+                                                      docEntry: pickListModel.docEntry,));
                                             }
                                             print(updatePickList);
                                             showLoaderDialog(
                                                 text: 'Assigning pick lists');
-                                            ServiceManager.updatePickList(
+                                            ServiceManager.assignPickList(
                                                 l: updatePickList,
                                                 onSuccess: onSuccess,
                                                 onError: onError);
@@ -189,6 +183,6 @@ class _AssignPicklistToUserScreenState
   onSuccess(Map responseMap) {
     Get.back();
     Get.back();
-    CustomSnackBar.successSnackBar(responseMap['Error']);
+    CustomSnackBar.successSnackBar(responseMap['Result']);
   }
 }

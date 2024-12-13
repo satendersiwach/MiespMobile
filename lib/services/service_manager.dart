@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
+import 'package:scanner/models/assign_pick_list_model.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/item_details_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
@@ -122,13 +123,13 @@ class ServiceManager {
   }) async {
     try {
       UserModel? customerModel;
-      var res = await http.post(Uri.parse('${baseURL}login/verifyuser'),
+      var res = await http.post(Uri.parse('${baseURL}logindetails/login'),
           headers: header,
-          body: jsonEncode({"Username": Username, "Password": Password}));
+          body: jsonEncode({"Code": Username, "Password": Password}));
       print(res.body);
       Map responseMap = jsonDecode(res.body);
-      if (responseMap['Code'] == 0) {
-        customerModel = UserModel.fromJson(jsonDecode(res.body)['result']);
+      if (!responseMap['IsError']) {
+        customerModel = UserModel.fromJson(jsonDecode(res.body)['Result']);
         onSuccess(customerModel);
       } else {
         onError(responseMap);
@@ -150,8 +151,8 @@ class ServiceManager {
       );
       print(res.body);
       Map responseMap = jsonDecode(res.body);
-      if (responseMap['Code'] == 0) {
-        List l = responseMap['UsersList'];
+      if (!responseMap['IsError']) {
+        List l = responseMap['Result'];
 
         for (var user in l) {
           userList.add(UserModel.fromJson(user));
@@ -171,37 +172,45 @@ class ServiceManager {
     try {
       List<PickListModel> pickList = [];
       var res = await http.get(
-        Uri.parse('${baseURL}picklist/getpicklistbystatus?status=$status'),
+        Uri.parse('${baseURL}PickList/GetPicklistByStatus?status=$status'),
+        headers: header,
+      );
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
+        List open = responseMap['Result'];
+        for (Map<String, dynamic> map in open) {
+          pickList.add(PickListModel.fromJson(map));
+        }
+        onSuccess(pickList);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
+  static Future<void> getPickListByUser({
+    required String username,
+    required Function(List<PickListModel>) onSuccess,
+    required Function(Map) onError,
+  }) async {
+    try {
+      List<PickListModel> pickList = [];
+      var res = await http.post(
+        Uri.parse('${baseURL}picklist/getpicklistbyuser?username=$username'),
         headers: header,
       );
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (responseMap['Code'] == 0) {
-        if (status == 'All') {
-          List<String> keys = [
-            'OpenPickList',
-            'AssignedPickList',
-            'ClosedPickList'
-          ];
-          for (String key in keys) {
-            List open = responseMap[key];
-            for (Map<String, dynamic> map in open) {
-              pickList.add(PickListModel.fromJson(map));
-            }
-          }
-        } else {
-          String key = '';
-          if (status == 'O') {
-            key = 'OpenPickList';
-          } else if (status == 'A') {
-            key = 'AssignedPickList';
-          } else if (status == 'C') {
-            key = 'ClosedPickList';
-          }
-          List open = responseMap[key];
-          for (Map<String, dynamic> map in open) {
-            pickList.add(PickListModel.fromJson(map));
-          }
+        List open = responseMap['Picklists'];
+        for (Map<String, dynamic> map in open) {
+          pickList.add(PickListModel.fromJson(map));
         }
         onSuccess(pickList);
       } else {
@@ -219,7 +228,8 @@ class ServiceManager {
     required List<UpdatePickListModel> l,
     required Function(Map) onSuccess,
     required Function(Map) onError,
-  }) async {
+  })
+  async {
     try {
       List<Map<String, dynamic>> list = [];
       for (UpdatePickListModel updatePickListModel in l) {
@@ -230,6 +240,55 @@ class ServiceManager {
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (responseMap['Code'] == 0) {
+        onSuccess(responseMap);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
+
+  static Future<void> assignPickList({
+    required List<AssignPickListModel> l,
+    required Function(Map) onSuccess,
+    required Function(Map) onError,
+  })
+  async {
+    try {
+      var res = await http.post(Uri.parse('${baseURL}picklist/AssignPickList'),
+          headers: header, body: jsonEncode(l));
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
+        onSuccess(responseMap);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
+  static Future<void> removePickList({
+    required List<String> l,
+    required Function(Map) onSuccess,
+    required Function(Map) onError,
+  })
+  async {
+    try {
+      var res = await http.post(Uri.parse('${baseURL}picklist/RemovePickList'),
+          headers: header, body: jsonEncode(l));
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
         onSuccess(responseMap);
       } else {
         onError(responseMap);
