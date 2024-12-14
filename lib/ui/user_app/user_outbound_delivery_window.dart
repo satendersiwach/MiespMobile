@@ -33,6 +33,7 @@ class _UserOutboundDeliveryWindowState
     UserModel userModel=UserModel.getLoginCustomer();
     await ServiceManager.getPickListByUser(
         username: userModel.username??"",
+        status: 'A',
         onSuccess: (pickList) {
           setState(() {
             this.pickList = pickList;

@@ -9,8 +9,6 @@ String pickListModelToJson(List<PickListModel> data) =>
 
 class PickListModel {
   int absEntry;
-
-
   int docEntry;
   int totalItems;
   int releaseQty;

@@ -196,19 +196,20 @@ class ServiceManager {
 
   static Future<void> getPickListByUser({
     required String username,
+    required String status,
     required Function(List<PickListModel>) onSuccess,
     required Function(Map) onError,
   }) async {
     try {
       List<PickListModel> pickList = [];
-      var res = await http.post(
-        Uri.parse('${baseURL}picklist/getpicklistbyuser?username=$username'),
+      var res = await http.get(
+        Uri.parse('${baseURL}PickList/GetPickListByUser?status=$status&user=$username'),
         headers: header,
       );
       print(res.body);
       Map responseMap = jsonDecode(res.body);
-      if (responseMap['Code'] == 0) {
-        List open = responseMap['Picklists'];
+      if (!responseMap['IsError']) {
+        List open = responseMap['Result'];
         for (Map<String, dynamic> map in open) {
           pickList.add(PickListModel.fromJson(map));
         }
