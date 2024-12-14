@@ -471,7 +471,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Assigned To'),
                                 getPoppinsTextSpanDetails(
-                                    text: pickListModel.user),
+                                    text: pickListModel.uUser),
                               ],
                             ),
                           ),
@@ -482,8 +482,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                     text: 'Assigned Date'),
                                 getPoppinsTextSpanDetails(
                                     text: getFormattedDateAndTime(
-                                        getDateFromString(
-                                            pickListModel.assignDate))),
+                                        pickListModel.uAssignDate)),
                               ],
                             ),
                           ),

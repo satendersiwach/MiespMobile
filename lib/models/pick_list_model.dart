@@ -14,8 +14,8 @@ class PickListModel {
   int soId;
   int totalItems;
   int releaseQty;
-  String user;
-  String assignDate;
+  String uUser;
+  DateTime? uAssignDate;
   String status;
   String code;
   String whseCode;
@@ -32,8 +32,8 @@ class PickListModel {
     required this.releaseQty,
     required this.soId,
     required this.totalItems,
-    required this.user,
-    required this.assignDate,
+    required this.uUser,
+    required this.uAssignDate,
     required this.status,
     required this.code,
     required this.description,
@@ -49,11 +49,11 @@ class PickListModel {
         soId: int.tryParse(json["SOId"]?.toString() ?? '') ?? 0,
     releaseQty: int.tryParse(json["ReleaseQty"]?.toString() ?? '') ?? 0,
         totalItems: int.tryParse(json["TotalItems"]?.toString() ?? '') ?? 0,
-        user: json["User"]?.toString() ?? '',
+        uUser: json["U_User"]?.toString() ?? '',
     description: json["Description"]?.toString() ?? '',
     whseCode: json["WhseCode"]?.toString() ?? '',
     batchNo: json["BatchNo"]?.toString() ?? '',
-        assignDate: json["AssignDate"]?.toString() ?? '',
+        uAssignDate: DateTime.tryParse(json["U_AssignDate"]?.toString() ?? ''),
         status: json["Status"]?.toString() ?? '',
         code: json["Code"]?.toString() ?? '',
       );
@@ -68,8 +68,8 @@ class PickListModel {
         "TotalItems": totalItems,
         "batchNo": batchNo,
         "WhseCode": whseCode,
-        "User": user,
-        "AssignDate": assignDate,
+        "U_User": uUser,
+        "U_AssignDate": uAssignDate?.toIso8601String(),
         "Status": status,
         "Code": code,
       };
