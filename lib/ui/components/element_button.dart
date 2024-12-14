@@ -18,30 +18,27 @@ Widget loadingButton(
       double fontSize=16,
       FontWeight fontWeight=FontWeight.w800,
     Key? key}) {
-  return Padding(
-    padding: const EdgeInsets.all(0.0),
-    child: Material(
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(rounded)),
+  return Material(
+    shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(rounded)),
+    elevation: 0.0,
+    color: backColor,
+    clipBehavior: Clip.antiAlias,
+    // Add This
+    child: MaterialButton(
+      key: key,
+      textColor: textColor,
+      onPressed: onPress as Function(),
+      splashColor: backColor,
+      focusColor: backColor,
       elevation: 0.0,
       color: backColor,
-      clipBehavior: Clip.antiAlias,
-      // Add This
-      child: MaterialButton(
-        key: key,
-        textColor: textColor,
-        onPressed: onPress as Function(),
-        splashColor: backColor,
-        focusColor: backColor,
-        elevation: 0.0,
-        color: backColor,
-        child: setUpButtonChild(
-          isLoading ?? true,
-          "${CustomLocale.text(btnText)} ${suffixText ?? ""}",
-          textColor,
-          fontSize: fontSize,
-          fontWeight: fontWeight
-        ),
+      child: setUpButtonChild(
+        isLoading ?? true,
+        "${CustomLocale.text(btnText)} ${suffixText ?? ""}",
+        textColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight
       ),
     ),
   );

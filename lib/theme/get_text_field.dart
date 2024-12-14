@@ -42,13 +42,16 @@ Widget getTextField(
       EdgeInsets  contentPadding= const EdgeInsets.only(bottom: 2.0, top: 2, left: 12),
     BorderRadius borderRadius = const BorderRadius.only(
       topLeft: Radius.circular(8),
-      topRight: Radius.circular(33),
+      topRight: Radius.circular(8),
       bottomRight: Radius.circular(8),
       bottomLeft: Radius.circular(8),
     ),
     double labelFontSize = 16,
     FontWeight labelFontWeight = FontWeight.w500,
     Color labelColor = Colors.black,
+      double inputFontSize = 16,
+    FontWeight inputFontWeight = FontWeight.w500,
+    Color inputColor = Colors.black,
     Color textColor = Colors.black,
     List<TextInputFormatter>? inputFormatters,
     double? height = 43,
@@ -141,7 +144,7 @@ Widget getTextField(
         keyboardType: keyboardType,
         autofocus: false,
         style: GoogleFonts.poppins(
-            fontSize: 16, fontWeight: FontWeight.w500, color: textColor),
+            fontSize: inputFontSize, fontWeight: inputFontWeight, color: inputColor),
       ),
     ),
   );
