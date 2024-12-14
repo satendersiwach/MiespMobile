@@ -31,11 +31,11 @@ class LoginPageState extends State<LoginPage> {
   final ScrollController _scrollController = ScrollController();
   bool obscurePassword = true;
   bool isLoading = false;
-  TextEditingController username = TextEditingController(text: 'supervisor');
-  TextEditingController password = TextEditingController(text: '12345');
-
-  // TextEditingController username = TextEditingController(text: 'HHT1');
+  // TextEditingController username = TextEditingController(text: 'supervisor');
   // TextEditingController password = TextEditingController(text: '12345');
+  //
+  TextEditingController username = TextEditingController(text: 'HHT1');
+  TextEditingController password = TextEditingController(text: '12345');
 
 
   // TextEditingController username = TextEditingController();
@@ -249,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
   }
 
   onError(Map responseMap) {
-    CustomSnackBar.errorSnackBar(responseMap['Error']);
+    CustomSnackBar.errorSnackBar(responseMap['ValidationErrors'][0]);
     setState(() {
       isLoading = false;
     });

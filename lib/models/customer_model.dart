@@ -70,6 +70,6 @@ class UserModel {
     String customer =
         LocalStorage.getInstance()?.localStorage?.getString(keyObjUser) ?? '';
     UserModel userModel = UserModel.fromJson(jsonDecode(customer));
-    return userModel.isSupervisor == 'False';
+    return !userModel.isSupervisor;
   }
 }
