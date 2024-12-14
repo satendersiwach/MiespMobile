@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
@@ -22,6 +23,8 @@ class _UserOutboundDeliveryWindowState
   List<PickListModel> pickList = [];
   bool _isLoading = false;
   final TextEditingController _query = TextEditingController();
+  PickListStatusEnumForUser pickListStatusEnum =
+      PickListStatusEnumForUser.notPicked;
 
   @override
   void initState() {
@@ -29,13 +32,14 @@ class _UserOutboundDeliveryWindowState
     setUserData();
   }
 
-  setUserData() async {
+  Future<void>setUserData() async {
     _isLoading = true;
     pickList.clear();
     UserModel userModel = UserModel.getLoginCustomer();
     await ServiceManager.getPickListByUser(
         username: userModel.username ?? "",
-        status: 'A',
+        status: ServiceManager.getPickListStatusFromEnum(
+            pickListStatusEnum: pickListStatusEnum),
         onSuccess: (pickList) {
           setState(() {
             this.pickList = pickList;
@@ -49,6 +53,7 @@ class _UserOutboundDeliveryWindowState
         });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return _isLoading
@@ -56,24 +61,79 @@ class _UserOutboundDeliveryWindowState
             padding: EdgeInsets.only(top: 20.0),
             child: CircularProgressIndicator(),
           )
-        : SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                _assignCountContainer(),
-                const SizedBox(
-                  height: 25,
-                ),
-                _queryWidget(),
-                const SizedBox(
-                  height: 5,
-                ),
-                _list(),
-              ],
+        : RefreshIndicator(
+          onRefresh: setUserData,
+          child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  _assignCountContainer(),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  _queryWidget(),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  _statusFilterWidget(),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  _list(),
+                ],
+              ),
             ),
-          );
+        );
+  }
+
+  Widget _statusFilterWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, top: 4),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: getInterText(
+              text: 'Picklist Status',
+              textAlign: TextAlign.left,
+              color: const Color(0XFF0F3C4D),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
+            child: SizedBox(
+              width: Get.width / 4,
+              child: DropdownButton<PickListStatusEnumForUser>(
+                value: pickListStatusEnum, // Currently selected value
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      pickListStatusEnum =
+                          newValue; // Update the selected value
+                    });
+                    setUserData();
+                  }
+                },
+                items: PickListStatusEnumForUser.values
+                    .map((PickListStatusEnumForUser value) {
+                  return DropdownMenuItem<PickListStatusEnumForUser>(
+                    value: value,
+                    child: Text(
+                        getEnumLabel(value)), // Display user-friendly label
+                  );
+                }).toList(), // Converts enum values to dropdown items
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          )),
+        ],
+      ),
+    );
   }
 
   Widget _assignCountContainer() {

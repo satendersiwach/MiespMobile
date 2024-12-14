@@ -420,17 +420,19 @@ class ServiceManager {
   }
 
   static String getPickListStatusFromEnum(
-      {required PickListStatusEnum pickListStatusEnum}) {
-    if (pickListStatusEnum == PickListStatusEnum.assigned) {
+      {required var pickListStatusEnum}) {
+    if (pickListStatusEnum == PickListStatusEnumForAdmin.assigned|| pickListStatusEnum == PickListStatusEnumForUser.notPicked) {
       return 'A';
     }
-    if (pickListStatusEnum == PickListStatusEnum.closed) {
+    if (pickListStatusEnum == PickListStatusEnumForAdmin.closed) {
       return 'C';
     }
-    if (pickListStatusEnum == PickListStatusEnum.open) {
+    if (pickListStatusEnum == PickListStatusEnumForAdmin.open) {
       return 'O';
+    }if (pickListStatusEnum == PickListStatusEnumForUser.picked) {
+      return 'P';
     }
-    if (pickListStatusEnum == PickListStatusEnum.all) {
+    if (pickListStatusEnum == PickListStatusEnumForAdmin.all||pickListStatusEnum == PickListStatusEnumForUser.all) {
       return 'All';
     } else {
       return '';

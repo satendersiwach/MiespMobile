@@ -1,16 +1,20 @@
-//A - Assigned Picklist, C - Closed, O - Open, All - To get all pick list without any filter
-enum PickListStatusEnum { assigned, closed, open, all }
+enum PickListStatusEnumForAdmin { assigned, closed, open, all }
+enum PickListStatusEnumForUser { notPicked,picked, all }
 
-String getEnumLabel(PickListStatusEnum value) {
+String getEnumLabel(var value) {
   switch (value) {
-    case PickListStatusEnum.assigned:
+    case PickListStatusEnumForAdmin.assigned:
       return 'Assigned';
-    case PickListStatusEnum.closed:
+    case PickListStatusEnumForAdmin.closed:
       return 'Closed';
-    case PickListStatusEnum.open:
+    case PickListStatusEnumForAdmin.open:
       return 'Open';
-    case PickListStatusEnum.all:
+    case PickListStatusEnumForAdmin.all||PickListStatusEnumForUser.all:
       return 'All';
+      case PickListStatusEnumForUser.notPicked:
+      return 'Not Picked';
+    case PickListStatusEnumForUser.picked:
+      return 'Picked';
     default:
       return '';
   }

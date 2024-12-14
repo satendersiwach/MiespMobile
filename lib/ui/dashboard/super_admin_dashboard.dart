@@ -24,7 +24,7 @@ class SuperAdminDashboard extends StatefulWidget {
 
 class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   List<PickListModel> pickList = [];
-  PickListStatusEnum pickListStatusEnum = PickListStatusEnum.open;
+  PickListStatusEnumForAdmin pickListStatusEnum = PickListStatusEnumForAdmin.open;
   bool _isLoading = false;
 
   @override
@@ -189,7 +189,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
             padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
             child: SizedBox(
               width: Get.width / 4,
-              child: DropdownButton<PickListStatusEnum>(
+              child: DropdownButton<PickListStatusEnumForAdmin>(
                 value: pickListStatusEnum, // Currently selected value
                 onChanged: (newValue) {
                   if (newValue != null) {
@@ -201,8 +201,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                   }
                 },
                 items:
-                    PickListStatusEnum.values.map((PickListStatusEnum value) {
-                  return DropdownMenuItem<PickListStatusEnum>(
+                    PickListStatusEnumForAdmin.values.map((PickListStatusEnumForAdmin value) {
+                  return DropdownMenuItem<PickListStatusEnumForAdmin>(
                     value: value,
                     child: Text(
                         getEnumLabel(value)), // Display user-friendly label
@@ -219,8 +219,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
 
   Widget _buttonContainer() {
     if (pickList.isEmpty ||
-        pickListStatusEnum == PickListStatusEnum.closed ||
-        pickListStatusEnum == PickListStatusEnum.all) {
+        pickListStatusEnum == PickListStatusEnumForAdmin.closed ||
+        pickListStatusEnum == PickListStatusEnumForAdmin.all) {
       return const SizedBox(
         height: 0,
         width: 0,
@@ -230,7 +230,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         height: Get.height/13,
         child: Row(
           children: [
-            if(pickListStatusEnum==PickListStatusEnum.assigned)...[
+            if(pickListStatusEnum==PickListStatusEnumForAdmin.assigned)...[
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -339,7 +339,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                 padding: const EdgeInsets.all(8.0),
                 child: loadingButton(
                     isLoading: false,
-                    btnText: pickListStatusEnum == PickListStatusEnum.assigned
+                    btnText: pickListStatusEnum == PickListStatusEnumForAdmin.assigned
                         ? 'Reassign'
                         : 'Assign',
                     onPress: () {
@@ -355,7 +355,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                         }
                         Get.to(() => AssignPicklistToUserScreen(
                               pickList: selectedPickList,
-                              mode: pickListStatusEnum == PickListStatusEnum.assigned
+                              mode: pickListStatusEnum == PickListStatusEnumForAdmin.assigned
                                   ? Mode.update
                                   : Mode.add,
                             ))?.then((onValue) {
@@ -489,8 +489,8 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                       )),
                     ],
                   ),
-                  if (pickListStatusEnum == PickListStatusEnum.assigned ||
-                      pickListStatusEnum == PickListStatusEnum.open) ...[
+                  if (pickListStatusEnum == PickListStatusEnumForAdmin.assigned ||
+                      pickListStatusEnum == PickListStatusEnumForAdmin.open) ...[
                     const Divider(
                       color: Colors.grey,
                       thickness: 1,
@@ -500,7 +500,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                       child: Row(
                         children: [
                           if (pickListStatusEnum ==
-                              PickListStatusEnum.assigned) ...[
+                              PickListStatusEnumForAdmin.assigned) ...[
                             Expanded(
                                 child: InkWell(
                               onTap: () {
@@ -595,7 +595,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                               Get.to(() => AssignPicklistToUserScreen(
                                     pickList: [pickListModel],
                                     mode: pickListStatusEnum ==
-                                            PickListStatusEnum.assigned
+                                            PickListStatusEnumForAdmin.assigned
                                         ? Mode.update
                                         : Mode.add,
                                   ))?.then((onValue) {
