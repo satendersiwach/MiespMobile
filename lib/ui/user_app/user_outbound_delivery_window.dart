@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/models/customer_model.dart';
@@ -27,12 +25,13 @@ class _UserOutboundDeliveryWindowState
     super.initState();
     setUserData();
   }
+
   setUserData() async {
     _isLoading = true;
     pickList.clear();
-    UserModel userModel=UserModel.getLoginCustomer();
+    UserModel userModel = UserModel.getLoginCustomer();
     await ServiceManager.getPickListByUser(
-        username: userModel.username??"",
+        username: userModel.username ?? "",
         status: 'A',
         onSuccess: (pickList) {
           setState(() {
@@ -45,27 +44,29 @@ class _UserOutboundDeliveryWindowState
             _isLoading = false;
           });
         });
-
   }
+
   @override
   Widget build(BuildContext context) {
-    return _isLoading?const Padding(
-      padding: EdgeInsets.only(top: 20.0),
-      child: CircularProgressIndicator(),
-    ):SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          _assignCountContainer(),
-          const SizedBox(
-            height: 10,
-          ),
-          _list(),
-        ],
-      ),
-    );
+    return _isLoading
+        ? const Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                _assignCountContainer(),
+                const SizedBox(
+                  height: 10,
+                ),
+                _list(),
+              ],
+            ),
+          );
   }
 
   Widget _assignCountContainer() {
@@ -74,7 +75,7 @@ class _UserOutboundDeliveryWindowState
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: getPoppinsText(
-            text: 'You have 19 Pick List assigned',
+            text: 'You have ${pickList.length} Pick List assigned',
             decoration: TextDecoration.underline,
             color: Colors.red,
             fontWeight: FontWeight.bold,
@@ -89,7 +90,7 @@ class _UserOutboundDeliveryWindowState
       physics: const ScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        PickListModel pickListModel=pickList[index];
+        PickListModel pickListModel = pickList[index];
         return InkWell(
           child: Container(
             decoration: BoxDecoration(
@@ -127,7 +128,8 @@ class _UserOutboundDeliveryWindowState
                                 children: [
                                   getPoppinsTextSpanHeading(
                                       text: 'Pick List id'),
-                                  getPoppinsTextSpanDetails(text: pickListModel.absEntry.toString()),
+                                  getPoppinsTextSpanDetails(
+                                      text: pickListModel.absEntry.toString()),
                                 ],
                               ),
                             ),
@@ -135,7 +137,8 @@ class _UserOutboundDeliveryWindowState
                               TextSpan(
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'Item Code'),
-                                  getPoppinsTextSpanDetails(text: pickListModel.code),
+                                  getPoppinsTextSpanDetails(
+                                      text: pickListModel.code),
                                 ],
                               ),
                             ),
@@ -143,7 +146,8 @@ class _UserOutboundDeliveryWindowState
                               TextSpan(
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'SO Id'),
-                                  getPoppinsTextSpanDetails(text: pickListModel.docEntry.toString()),
+                                  getPoppinsTextSpanDetails(
+                                      text: pickListModel.docEntry.toString()),
                                 ],
                               ),
                             ),
@@ -153,8 +157,7 @@ class _UserOutboundDeliveryWindowState
                                   getPoppinsTextSpanHeading(
                                       text: 'Item Description'),
                                   getPoppinsTextSpanDetails(
-                                      text:
-                                      pickListModel.description),
+                                      text: pickListModel.description),
                                 ],
                               ),
                             ),
@@ -171,7 +174,8 @@ class _UserOutboundDeliveryWindowState
                                   children: [
                                     getPoppinsTextSpanHeading(
                                         text: 'WHSE Code'),
-                                    getPoppinsTextSpanDetails(text: pickListModel.whseCode),
+                                    getPoppinsTextSpanDetails(
+                                        text: pickListModel.whseCode),
                                   ],
                                 ),
                               ),
@@ -190,7 +194,9 @@ class _UserOutboundDeliveryWindowState
                                   children: [
                                     getPoppinsTextSpanHeading(
                                         text: 'Release Qty'),
-                                    getPoppinsTextSpanDetails(text: pickListModel.releaseQty.toString()),
+                                    getPoppinsTextSpanDetails(
+                                        text: pickListModel.releaseQty
+                                            .toString()),
                                   ],
                                 ),
                               ),

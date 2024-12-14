@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/custom_drawer.dart';
@@ -29,7 +30,7 @@ class _UserDashboardState extends State<UserDashboard> {
             appVersionWidget(),
 
             getPoppinsText(
-                text: 'Welcome, HHT1',
+                text: 'Welcome, ${UserModel.getLoginCustomer().username}',
                 fontWeight: FontWeight.w700,
                 fontSize: 20),
             //todo: implement refresh
