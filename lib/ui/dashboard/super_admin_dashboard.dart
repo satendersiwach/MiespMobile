@@ -276,8 +276,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                               setData();
                                               CustomSnackBar
                                                   .successSnackBar(
-                                                  responseMap[
-                                                  'Error']);
+                                                  responseMap['Result']);
                                             },
                                             onError: (Map responseMap) {
                                               CustomSnackBar
@@ -429,7 +428,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Pick List id'),
                                 getPoppinsTextSpanDetails(
-                                    text: pickListModel.pickListId.toString()),
+                                    text: pickListModel.absEntry.toString()),
                               ],
                             ),
                           ),
@@ -438,7 +437,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                               children: [
                                 getPoppinsTextSpanHeading(text: 'SO Id'),
                                 getPoppinsTextSpanDetails(
-                                    text: pickListModel.soId.toString()),
+                                    text: pickListModel.docEntry.toString()),
                               ],
                             ),
                           ),

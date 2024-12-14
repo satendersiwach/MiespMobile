@@ -126,7 +126,7 @@ class _UserOutboundDeliveryWindowState
                                 children: [
                                   getPoppinsTextSpanHeading(
                                       text: 'Pick List id'),
-                                  getPoppinsTextSpanDetails(text: pickListModel.pickListId.toString()),
+                                  getPoppinsTextSpanDetails(text: pickListModel.absEntry.toString()),
                                 ],
                               ),
                             ),
@@ -142,7 +142,7 @@ class _UserOutboundDeliveryWindowState
                               TextSpan(
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'SO Id'),
-                                  getPoppinsTextSpanDetails(text: pickListModel.soId.toString()),
+                                  getPoppinsTextSpanDetails(text: pickListModel.docEntry.toString()),
                                 ],
                               ),
                             ),
