@@ -8,10 +8,10 @@ String pickListModelToJson(List<PickListModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class PickListModel {
-  int pickListId;
   int absEntry;
+
+
   int docEntry;
-  int soId;
   int totalItems;
   int releaseQty;
   String uUser;
@@ -26,11 +26,9 @@ class PickListModel {
   bool isSelected;
 
   PickListModel({
-    required this.pickListId,
     required this.absEntry,
-    required this.docEntry,
     required this.releaseQty,
-    required this.soId,
+    required this.docEntry,
     required this.totalItems,
     required this.uUser,
     required this.uAssignDate,
@@ -43,10 +41,9 @@ class PickListModel {
   });
 
   factory PickListModel.fromJson(Map<String, dynamic> json) => PickListModel(
-    docEntry: int.tryParse(json["DocEntry"]?.toString() ?? '') ?? 0,
-    absEntry: int.tryParse(json["AbsEntry"]?.toString() ?? '') ?? 0,
-        pickListId: int.tryParse(json["PickListId"]?.toString() ?? '') ?? 0,
-        soId: int.tryParse(json["SOId"]?.toString() ?? '') ?? 0,
+
+        absEntry: int.tryParse(json["AbsEntry"]?.toString() ?? '') ?? 0,
+        docEntry: int.tryParse(json["DocEntry"]?.toString() ?? '') ?? 0,
     releaseQty: int.tryParse(json["ReleaseQty"]?.toString() ?? '') ?? 0,
         totalItems: int.tryParse(json["TotalItems"]?.toString() ?? '') ?? 0,
         uUser: json["U_User"]?.toString() ?? '',
@@ -59,12 +56,10 @@ class PickListModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "PickListId": pickListId,
         "AbsEntry": absEntry,
-        "DocEntry": docEntry,
         "ReleaseQty": releaseQty,
         "Description": description,
-        "SOId": soId,
+        "DocEntry": docEntry,
         "TotalItems": totalItems,
         "batchNo": batchNo,
         "WhseCode": whseCode,
