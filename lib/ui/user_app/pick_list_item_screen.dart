@@ -5,6 +5,8 @@ import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
+import 'package:scanner/theme/get_text_field.dart';
+import 'package:scanner/ui/components/element_button.dart';
 
 class PickListItemScreen extends StatefulWidget {
   final PickListModel pickListModel;
@@ -70,6 +72,46 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     });
   }
 
+  Widget _queryWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: getTextField(
+                controller: query,
+                hintText: 'Search...',
+                inputFontSize: 12,
+                onChanged: (val) {
+                  setState(() {});
+                },
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        query.clear();
+                      });
+                    },
+                    icon: const Icon(Icons.clear)),
+                labelFontSize: 14),
+          ),
+          Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 8,
+                  top: 2,
+                ),
+                child: SizedBox(
+                  height: 43,
+                  child: loadingButton(
+                      isLoading: false, btnText: 'Search', onPress: () {}),
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
@@ -86,7 +128,12 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                     const SizedBox(
                       height: 25,
                     ),
+                    _queryWidget(),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     _list(),
+
                   ],
                 ),
               ));
