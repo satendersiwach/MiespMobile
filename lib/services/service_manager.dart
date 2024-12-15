@@ -281,6 +281,7 @@ class ServiceManager {
 
   static Future<void> getListingItems({
     required String status,
+    required String search,
     required List<int> pickListId,
     required Function(List<PickListItemDetailModel>) onSuccess,
     required Function(Map) onError,
@@ -292,6 +293,7 @@ class ServiceManager {
           headers: header,
           body: jsonEncode({
             "Status": status,
+            "Search": search,
             "User": userModel.username,
             "PickList": pickListId
           }));

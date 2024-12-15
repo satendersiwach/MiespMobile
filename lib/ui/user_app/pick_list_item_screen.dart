@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -41,11 +44,14 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   }
 
   setItemData() async {
+    pickListItems.clear();
+    _currentMax = 15;
     setState(() {
       _isLoading = true;
     });
     ServiceManager.getListingItems(
         status: 'A',
+        search: query.text,
         pickListId: [widget.pickListModel.absEntry],
         onSuccess: onSuccess,
         onError: onError);
@@ -88,25 +94,28 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                 },
                 suffixIcon: IconButton(
                     onPressed: () {
-                      setState(() {
-                        query.clear();
-                      });
+                      query.clear();
+                      setItemData();
                     },
                     icon: const Icon(Icons.clear)),
                 labelFontSize: 14),
           ),
           Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 8,
-                  top: 2,
-                ),
-                child: SizedBox(
-                  height: 43,
-                  child: loadingButton(
-                      isLoading: false, btnText: 'Search', onPress: () {}),
-                ),
-              )),
+            padding: const EdgeInsets.only(
+              bottom: 8,
+              top: 2,
+            ),
+            child: SizedBox(
+              height: 43,
+              child: loadingButton(
+                  isLoading: false,
+                  btnText: 'Search',
+                  onPress: () {
+                    setItemData();
+                  }),
+            ),
+          )),
         ],
       ),
     );
@@ -133,7 +142,6 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                       height: 10,
                     ),
                     _list(),
-
                   ],
                 ),
               ));
@@ -142,7 +150,9 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   Widget _list() {
     return Column(
       children: [
-        getHeadingText(text: 'You have total of (${pickListItems.length}) items'),
+        getHeadingText(
+            text:
+                'You have total of (${pickListItems.length}) ${pickListItems.length == 1 ? 'item' : 'items'}'),
         ListView.separated(
           // itemCount: pickListItems.length,
           itemCount: ((query.text == "") && ((pickListItems.length ?? 0) > 31)
@@ -162,178 +172,164 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
             }
 
             PickListItemDetailModel pickListModel = pickListItems[index];
-            if (query.text.isNotEmpty
-                ? pickListModel.itemCode
-                        .toString()
-                        .toUpperCase()
-                        .contains(query.text.toUpperCase()) ||
-                    pickListModel.itemName
-                        .toString()
-                        .toUpperCase()
-                        .contains(query.text.toUpperCase())
-                : true) {
-              return InkWell(
-                onTap: () {
-                  // Get.to(()=>PickListItemScreen(pickListModel: pickListModel));
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 4.0,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
-                  ),
-                  margin: const EdgeInsets.all(15),
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                  child: Column(
+            return InkWell(
+              onTap: () {
+                // Get.to(()=>PickListItemScreen(pickListModel: pickListModel));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(16.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4.0,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
+                ),
+                margin: const EdgeInsets.all(15),
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Item Code'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.itemCode
+                                              .toString()),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Item Name'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.itemName),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Dist Number'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.distNumber
+                                              .toString()),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )),
+                            Expanded(
+                                child: Padding(
+                              padding: const EdgeInsets.only(left: 4.0),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text.rich(
                                     TextSpan(
                                       children: [
                                         getPoppinsTextSpanHeading(
-                                            text: 'Item Code'),
+                                            text: 'Doc Entry'),
                                         getPoppinsTextSpanDetails(
-                                            text:
-                                                pickListModel.itemCode.toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Item Name'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.itemName),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Dist Number'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.distNumber
+                                            text: pickListModel.docEntry
                                                 .toString()),
                                       ],
                                     ),
                                   ),
-
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        getPoppinsTextSpanHeading(
+                                            text: 'Abs Entry'),
+                                        getPoppinsTextSpanDetails(
+                                            text: pickListModel.absEntry
+                                                .toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        getPoppinsTextSpanHeading(
+                                            text: 'Rel Qtty'),
+                                        getPoppinsTextSpanDetails(
+                                            text: pickListModel.relQtty
+                                                .toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        getPoppinsTextSpanHeading(
+                                            text: 'Assigned User'),
+                                        getPoppinsTextSpanDetails(
+                                            text: pickListModel.assignedUser
+                                                .toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        getPoppinsTextSpanHeading(
+                                            text: 'Whs Code'),
+                                        getPoppinsTextSpanDetails(
+                                            text: pickListModel.whsCode
+                                                .toString()),
+                                      ],
+                                    ),
+                                  ),
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        getPoppinsTextSpanHeading(
+                                            text: 'Picked'),
+                                        getPoppinsTextSpanDetails(
+                                            text: pickListModel.picked),
+                                      ],
+                                    ),
+                                  ),
                                 ],
-                              )),
-                              Expanded(
-                                  child: Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Doc Entry'),
-                                          getPoppinsTextSpanDetails(
-                                              text:
-                                              pickListModel.docEntry.toString()),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Abs Entry'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.absEntry
-                                                  .toString()),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Rel Qtty'),
-                                          getPoppinsTextSpanDetails(
-                                              text:
-                                                  pickListModel.relQtty.toString()),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Assigned User'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.assignedUser
-                                                  .toString()),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Whs Code'),
-                                          getPoppinsTextSpanDetails(
-                                              text:
-                                                  pickListModel.whsCode.toString()),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(text: 'Picked'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.picked),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                            ],
-                          ),
+                              ),
+                            )),
+                          ],
                         ),
-                        // const Padding(
-                        //   padding: EdgeInsets.symmetric(horizontal: 12.0),
-                        //   child: Divider(
-                        //     thickness: 1,
-                        //     color: Colors.grey,
-                        //   ),
-                        // ),
-                        // _buttonContainer(),
-                      ],
-                    ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Divider(
+                          thickness: 1,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      _buttonContainer(),
+                    ],
                   ),
                 ),
-              );
-            }
-            return const SizedBox(
-              height: 0,
+              ),
             );
           },
           separatorBuilder: (BuildContext context, int index) {
@@ -347,28 +343,67 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
               );
             }
 
-            PickListItemDetailModel pickListModel = pickListItems[index];
-            if (query.text.isNotEmpty
-                ? pickListModel.itemCode
-                        .toString()
-                        .toUpperCase()
-                        .contains(query.text.toUpperCase()) ||
-                    pickListModel.itemName
-                        .toString()
-                        .toUpperCase()
-                        .contains(query.text.toUpperCase())
-                : true) {
-              return const Divider(
-                thickness: 1.5,
-                color: Colors.grey,
-              );
-            }
-            return const SizedBox(
-              height: 0,
+            return const Divider(
+              thickness: 1.5,
+              color: Colors.grey,
             );
           },
         ),
       ],
+    );
+  }
+
+  Widget _buttonContainer() {
+    return SizedBox(
+      height: 30,
+      child: InkWell(
+        onTap: (){
+          ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
+            if (!mounted) return;
+            String barCode = scanResult;
+            if (barCode != '') {
+              Get.back();
+              CustomSnackBar.successSnackBar('Scanned result: $barCode');
+              // if (await ServiceManager.isInternetAvailable()) {
+              //   ServiceManager.getItemDetails(
+              //       barCode: barCode,
+              //       onSuccess: onSuccess,
+              //       onError: onError);
+              // }
+            }
+          });
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Expanded(
+            //     child: InkWell(
+            //       onTap: () {},
+            //       child: getPoppinsText(
+            //           text: 'Manual',
+            //           color: appPrimary,
+            //           fontSize: 13,
+            //           fontWeight: FontWeight.bold),
+            //     )),
+            // const VerticalDivider(
+            //   color: Colors.grey,
+            //   thickness: 1,
+            // ),
+            Icon(
+              MdiIcons.barcode,
+              color: appPrimary,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            getPoppinsText(
+                text: 'Scan',
+                color: appPrimary,
+                fontSize: 13,
+                fontWeight: FontWeight.bold),
+          ],
+        ),
+      ),
     );
   }
 }
