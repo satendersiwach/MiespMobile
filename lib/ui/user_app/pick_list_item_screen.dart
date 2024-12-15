@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/service_manager.dart';
@@ -325,7 +326,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                           color: Colors.grey,
                         ),
                       ),
-                      _buttonContainer(),
+                      _buttonContainer(pickListModel: pickListModel),
                     ],
                   ),
                 ),
@@ -353,7 +354,9 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     );
   }
 
-  Widget _buttonContainer() {
+  Widget _buttonContainer({
+    required PickListItemDetailModel pickListModel
+}) {
     return SizedBox(
       height: 30,
       child: InkWell(
@@ -362,8 +365,126 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
             if (!mounted) return;
             String barCode = scanResult;
             if (barCode != '') {
-              Get.back();
-              CustomSnackBar.successSnackBar('Scanned result: $barCode');
+              //todo: call updatePickingQuantity API
+              List<Widget> titleRowWidgets = [
+                getPoppinsText(
+                    text: 'Data to be sent',
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20),
+              ];
+              List<Widget> actions = [
+                Container(
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // if (!isShowNegative)
+                        const Spacer(),
+
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: getPoppinsText(
+                              text: 'Ok',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: appPrimary),
+                        ),
+                      ],
+                    )),
+              ];
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Row(
+                      children: titleRowWidgets,
+                    ),
+                    content: SizedBox(
+                      height: Get.height/6,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Pick List Id'),
+                                  getPoppinsTextSpanDetails(
+                                      text: widget.pickListModel.absEntry.toString()),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'SO Id'),
+                                  getPoppinsTextSpanDetails(
+                                      text:  widget.pickListModel.docEntry
+                                          .toString()),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Item Code'),
+                                  getPoppinsTextSpanDetails(
+                                      text: pickListModel.itemCode
+                                          .toString()),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'User'),
+                                  getPoppinsTextSpanDetails(
+                                      text: UserModel.getLoginCustomer().username),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Pick Qty'),
+                                  getPoppinsTextSpanDetails(
+                                      text: pickListModel.relQtty
+                                          .toString()),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'BatchNumber'),
+                                  getPoppinsTextSpanDetails(
+                                      text: 'Bar code'),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                    actions: actions,
+                  );
+                },
+              );
+              // Get.back();
+              // CustomSnackBar.successSnackBar('Scanned result: $barCode');
               // if (await ServiceManager.isInternetAvailable()) {
               //   ServiceManager.getItemDetails(
               //       barCode: barCode,
