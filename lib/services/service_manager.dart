@@ -16,6 +16,7 @@ import 'package:scanner/models/stock_count_request_model.dart';
 import 'package:scanner/models/stock_counting_detail_model.dart';
 import 'package:scanner/models/uom_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';
+import 'package:scanner/models/update_picking_qty_model.dart';
 import 'package:scanner/models/warehouse_model.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/translations/custom_locale.dart';
@@ -256,6 +257,36 @@ class ServiceManager {
     }
   }
 
+  static Future<void> updatePickingQuantity({
+    required List<UpdatePickingModel> l,
+    required Function(Map) onSuccess,
+    required Function(Map) onError,
+  }) async {
+    //todo:
+    try {
+      List<Map<String, dynamic>> list = [];
+      for (UpdatePickingModel updatePickListModel in l) {
+        list.add(updatePickListModel.toJson());
+      }
+      var res = await http.post(
+          Uri.parse('${baseURL}picklist/UpdatePickingQuantity'),
+          headers: header,
+          body: jsonEncode(l));
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (responseMap['Code'] == 0) {
+        onSuccess(responseMap);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
   static Future<void> assignPickList({
     required List<AssignPickListModel> l,
     required Function(Map) onSuccess,
@@ -287,7 +318,7 @@ class ServiceManager {
     required Function(Map) onError,
   }) async {
     try {
-      List<PickListItemDetailModel> pickListItems=[];
+      List<PickListItemDetailModel> pickListItems = [];
       UserModel userModel = UserModel.getLoginCustomer();
       var res = await http.post(Uri.parse('${baseURL}picklist/GetListingItems'),
           headers: header,
