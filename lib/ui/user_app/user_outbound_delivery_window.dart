@@ -9,6 +9,7 @@ import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/element_button.dart';
+import 'package:scanner/ui/user_app/pick_list_item_screen.dart';
 
 class UserOutboundDeliveryWindow extends StatefulWidget {
   const UserOutboundDeliveryWindow({super.key});
@@ -209,6 +210,9 @@ class _UserOutboundDeliveryWindowState
                     .contains(_query.text.toUpperCase())
             : true) {
           return InkWell(
+            onTap: (){
+              Get.to(()=>PickListItemScreen(pickListModel: pickListModel));
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -336,14 +340,14 @@ class _UserOutboundDeliveryWindowState
                         ],
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    _buttonContainer(),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 12.0),
+                    //   child: Divider(
+                    //     thickness: 1,
+                    //     color: Colors.grey,
+                    //   ),
+                    // ),
+                    // _buttonContainer(),
                   ],
                 ),
               ),

@@ -10,6 +10,7 @@ import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/assign_pick_list_model.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/item_details_model.dart';
+import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/stock_count_request_model.dart';
 import 'package:scanner/models/stock_counting_detail_model.dart';
@@ -23,7 +24,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ServiceManager {
   static Codec<String, String> stringToBase64 = utf8.fuse(base64);
-  static String baseURL = 'http://satusingh-001-site1.mtempurl.com/api/';
+
+  // static String baseURL = 'http://satusingh-001-site1.mtempurl.com/api/';
+  static String baseURL = 'http://192.168.10.42:8084/api/';
   static String credentials = '11205952:60-dayfreetrial';
   static String encoded = stringToBase64.encode(credentials);
 
@@ -203,7 +206,8 @@ class ServiceManager {
     try {
       List<PickListModel> pickList = [];
       var res = await http.get(
-        Uri.parse('${baseURL}PickList/GetPickListByUser?status=$status&user=$username'),
+        Uri.parse(
+            '${baseURL}PickList/GetPickListByUser?status=$status&user=$username'),
         headers: header,
       );
       print(res.body);
@@ -229,8 +233,7 @@ class ServiceManager {
     required List<UpdatePickListModel> l,
     required Function(Map) onSuccess,
     required Function(Map) onError,
-  })
-  async {
+  }) async {
     try {
       List<Map<String, dynamic>> list = [];
       for (UpdatePickListModel updatePickListModel in l) {
@@ -253,13 +256,11 @@ class ServiceManager {
     }
   }
 
-
   static Future<void> assignPickList({
     required List<AssignPickListModel> l,
     required Function(Map) onSuccess,
     required Function(Map) onError,
-  })
-  async {
+  }) async {
     try {
       var res = await http.post(Uri.parse('${baseURL}picklist/AssignPickList'),
           headers: header, body: jsonEncode(l));
@@ -278,12 +279,46 @@ class ServiceManager {
     }
   }
 
+  static Future<void> getListingItems({
+    required String status,
+    required List<int> pickListId,
+    required Function(List<PickListItemDetailModel>) onSuccess,
+    required Function(Map) onError,
+  }) async {
+    try {
+      List<PickListItemDetailModel> pickListItems=[];
+      UserModel userModel = UserModel.getLoginCustomer();
+      var res = await http.post(Uri.parse('${baseURL}picklist/GetListingItems'),
+          headers: header,
+          body: jsonEncode({
+            "Status": status,
+            "User": userModel.username,
+            "PickList": pickListId
+          }));
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
+        List open = responseMap['Result'];
+        for (Map<String, dynamic> map in open) {
+          pickListItems.add(PickListItemDetailModel.fromJson(map));
+        }
+        onSuccess(pickListItems);
+      } else {
+        onError(responseMap);
+      }
+      // if (res.statusCode == 200) {
+      // } else {
+      // }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+  }
+
   static Future<void> removePickList({
     required List<String> l,
     required Function(Map) onSuccess,
     required Function(Map) onError,
-  })
-  async {
+  }) async {
     try {
       var res = await http.post(Uri.parse('${baseURL}picklist/RemovePickList'),
           headers: header, body: jsonEncode(l));
@@ -419,9 +454,9 @@ class ServiceManager {
     }
   }
 
-  static String getPickListStatusFromEnum(
-      {required var pickListStatusEnum}) {
-    if (pickListStatusEnum == PickListStatusEnumForAdmin.assigned|| pickListStatusEnum == PickListStatusEnumForUser.notPicked) {
+  static String getPickListStatusFromEnum({required var pickListStatusEnum}) {
+    if (pickListStatusEnum == PickListStatusEnumForAdmin.assigned ||
+        pickListStatusEnum == PickListStatusEnumForUser.notPicked) {
       return 'A';
     }
     if (pickListStatusEnum == PickListStatusEnumForAdmin.closed) {
@@ -429,10 +464,12 @@ class ServiceManager {
     }
     if (pickListStatusEnum == PickListStatusEnumForAdmin.open) {
       return 'O';
-    }if (pickListStatusEnum == PickListStatusEnumForUser.picked) {
+    }
+    if (pickListStatusEnum == PickListStatusEnumForUser.picked) {
       return 'P';
     }
-    if (pickListStatusEnum == PickListStatusEnumForAdmin.all||pickListStatusEnum == PickListStatusEnumForUser.all) {
+    if (pickListStatusEnum == PickListStatusEnumForAdmin.all ||
+        pickListStatusEnum == PickListStatusEnumForUser.all) {
       return 'All';
     } else {
       return '';

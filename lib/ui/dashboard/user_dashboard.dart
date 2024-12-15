@@ -25,15 +25,17 @@ class _UserDashboardState extends State<UserDashboard> {
     return screenWithAppBar(
       title: 'Scanner App',
       drawer: const CustomDrawer(),
-      body: Column(
-        children: [
-          appVersionWidget(),
-          getPoppinsText(
-              text: 'Welcome, ${UserModel.getLoginCustomer().username}',
-              fontWeight: FontWeight.w700,
-              fontSize: 20),
-          const UserOutboundDeliveryWindow(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            appVersionWidget(),
+            getPoppinsText(
+                text: 'Welcome, ${UserModel.getLoginCustomer().username}',
+                fontWeight: FontWeight.w700,
+                fontSize: 20),
+            const UserOutboundDeliveryWindow(),
+          ],
+        ),
       ),
     );
   }
