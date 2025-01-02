@@ -34,12 +34,12 @@ class LoginPageState extends State<LoginPage> {
   // TextEditingController username = TextEditingController(text: 'supervisor');
   // TextEditingController password = TextEditingController(text: '12345');
   //
-  TextEditingController username = TextEditingController(text: 'HHT1');
-  TextEditingController password = TextEditingController(text: '12345');
-  //
+  // TextEditingController username = TextEditingController(text: 'HHT1');
+  // TextEditingController password = TextEditingController(text: '12345');
 
-  // TextEditingController username = TextEditingController();
-  // TextEditingController password = TextEditingController();
+  //
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   void initState() {
