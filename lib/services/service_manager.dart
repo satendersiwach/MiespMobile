@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
+// import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:scanner/common/enums.dart';
@@ -38,11 +38,11 @@ class ServiceManager {
   };
 
   static Future<bool> isInternetAvailable() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      CustomSnackBar.errorSnackBar('No Internet');
-      return false;
-    }
+    // var connectivityResult = await Connectivity().checkConnectivity();
+    // if (connectivityResult == ConnectivityResult.none) {
+    //   CustomSnackBar.errorSnackBar('No Internet');
+    //   return false;
+    // }
     return true;
   }
 
@@ -86,13 +86,13 @@ class ServiceManager {
     Get.updateLocale(CustomLocale.toLocale(locale));
   }
 
-  static Future<bool> checkInternet() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      return false;
-    }
-    return true;
-  }
+  // static Future<bool> checkInternet() async {
+  //   var connectivityResult = await Connectivity().checkConnectivity();
+  //   if (connectivityResult == ConnectivityResult.none) {
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   static launchInBrowser(Uri? uri) async {
     try {
