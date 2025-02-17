@@ -1,71 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:flutter/services.dart';
 
-class BarcodeScannerSimple extends StatefulWidget {
-  final Function(String?) barCodeScanResult;
 
-  const BarcodeScannerSimple({super.key,
-  required this.barCodeScanResult});
+class BarcodeScanner {
+  static const platform = MethodChannel('com.example.temp/barcode_scanner');
 
-  @override
-  State<BarcodeScannerSimple> createState() => _BarcodeScannerSimpleState();
+  Future<String?> scanBarcode() async {
+    try {
+      final String? result = await platform.invokeMethod('scanBarcode');
+      return result;
+    } on PlatformException catch (e) {
+      print("Failed to get barcode: '${e.message}'.");
+      return null;
+    }
+  }
 }
 
-class _BarcodeScannerSimpleState extends State<BarcodeScannerSimple> {
-  // Barcode? _barcode;
+void main() {
+  runApp(MyApp());
+}
 
-  Widget _buildBarcode(Barcode? value) {
-    if (value == null) {
-      return const Text(
-        'Scan something!',
-        overflow: TextOverflow.fade,
-        style: TextStyle(color: Colors.white),
-      );
-    }
+class MyApp extends StatelessWidget {
+  static const platform = MethodChannel('com.example.temp/rfid');
 
-    return Text(
-      value.displayValue ?? 'No display value.',
-      overflow: TextOverflow.fade,
-      style: const TextStyle(color: Colors.white),
-    );
-  }
-
-  void _handleBarcode(BarcodeCapture barcodes) {
-    if (mounted) {
-      widget.barCodeScanResult( barcodes.barcodes.firstOrNull?.displayValue);
-
-      // setState(() {
-      //   _barcode = barcodes.barcodes.firstOrNull;
-      // });
+  // Call onCreate from Flutter
+  Future<void> callOnCreate() async {
+    try {
+      final result = await platform.invokeMethod('configureRFID');
+      print("RFID_sample is configured $result");
+    } catch (e) {
+      print("Failed to configure RFID: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Simple scanner')),
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          MobileScanner(
-            onDetect: _handleBarcode,
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text("MIESP Scanner")),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: callOnCreate,
+            child: const Text("Configure RFID"),
           ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: Container(
-          //     alignment: Alignment.bottomCenter,
-          //     height: 100,
-          //     color: Colors.black.withOpacity(0.4),
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //       children: [
-          //         Expanded(child: Center(child: _buildBarcode(_barcode))),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-        ],
+        ),
       ),
     );
   }

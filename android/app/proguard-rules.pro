@@ -1,0 +1,3 @@
+-keep class io.flutter.plugin.editing.** { *; }
+-keep class io.flutter.** { *; }
+-keep class com.app.scanner.** { *; }

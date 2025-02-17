@@ -51,11 +51,11 @@ class ServiceManager {
   }) async {
     String scanResult = '';
     try {
-      Get.to(() => BarcodeScannerSimple(
-            barCodeScanResult: (String? res) {
-              onSuccess(res ?? '');
-            },
-          ));
+      // Get.to(() => BarcodeScannerSimple(
+      //       barCodeScanResult: (String? res) {
+      //         onSuccess(res ?? '');
+      //       },
+      //     ));
       // MobileScanner(
       //   onDetect: (BarcodeCapture barcodes) {
       //     barcodes.barcodes.firstOrNull;
