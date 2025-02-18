@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 // import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:scanner/common/enums.dart';
@@ -25,6 +26,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ServiceManager {
   static Codec<String, String> stringToBase64 = utf8.fuse(base64);
+  static const platform = MethodChannel('com.example.temp/rfid');
 
   // static String baseURL = 'http://satusingh-001-site1.mtempurl.com/api/';
   static String baseURL = 'http://192.168.10.42:8084/api/';
@@ -46,33 +48,61 @@ class ServiceManager {
     return true;
   }
 
+  // static scanQRCode({
+  //   required Function(String) onSuccess,
+  // })
+  // async {
+  //   String scanResult = '';
+  //   try {
+  //     // Get.to(() => BarcodeScannerSimple(
+  //     //       barCodeScanResult: (String? res) {
+  //     //         onSuccess(res ?? '');
+  //     //       },
+  //     //     ));
+  //     // MobileScanner(
+  //     //   onDetect: (BarcodeCapture barcodes) {
+  //     //     barcodes.barcodes.firstOrNull;
+  //     //   },
+  //     //
+  //     // );
+  //     // scanResult = await FlutterBarcodeScanner.scanBarcode(
+  //     //   '#ff6666', // Color for the background of the scan page
+  //     //   'Cancel', // Text for the button that cancels the scan
+  //     //   true, // Whether to show the flash icon
+  //     //   ScanMode.QR, // The type of code to scan (QR Code or Barcode)
+  //     // );
+  //   } catch (e) {
+  //     print('Error during scan: $e');
+  //     CustomSnackBar.errorSnackBar('Error during scan: $e');
+  //     return;
+  //   }
+  //
+  //   // if (scanResult != '-1') {
+  //   //   onSuccess(scanResult);
+  //   // }
+  // }
+
   static scanQRCode({
     required Function(String) onSuccess,
-  }) async {
+  })
+  async {
     String scanResult = '';
     try {
-      // Get.to(() => BarcodeScannerSimple(
-      //       barCodeScanResult: (String? res) {
-      //         onSuccess(res ?? '');
-      //       },
-      //     ));
-      // MobileScanner(
-      //   onDetect: (BarcodeCapture barcodes) {
-      //     barcodes.barcodes.firstOrNull;
-      //   },
-      //
-      // );
-      // scanResult = await FlutterBarcodeScanner.scanBarcode(
-      //   '#ff6666', // Color for the background of the scan page
-      //   'Cancel', // Text for the button that cancels the scan
-      //   true, // Whether to show the flash icon
-      //   ScanMode.QR, // The type of code to scan (QR Code or Barcode)
-      // );
+      final result = await platform.invokeMethod('configureRFID');
+      print("RFID_sample is configured $result");
+      onSuccess(result);
     } catch (e) {
-      print('Error during scan: $e');
+      print("Failed to configure RFID: $e");
       CustomSnackBar.errorSnackBar('Error during scan: $e');
-      return;
     }
+
+    // try {
+    //
+    // } catch (e) {
+    //   print('Error during scan: $e');
+    //   CustomSnackBar.errorSnackBar('Error during scan: $e');
+    //   return;
+    // }
 
     // if (scanResult != '-1') {
     //   onSuccess(scanResult);
