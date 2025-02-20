@@ -21,7 +21,6 @@ import 'package:scanner/models/update_picking_qty_model.dart';
 import 'package:scanner/models/warehouse_model.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/translations/custom_locale.dart';
-import 'package:scanner/zzz.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ServiceManager {
@@ -84,29 +83,24 @@ class ServiceManager {
 
   static scanQRCode({
     required Function(String) onSuccess,
-  })
-  async {
+  }) async {
     String scanResult = '';
     try {
       final result = await platform.invokeMethod('configureRFID');
       print("RFID_sample is configured $result");
-      onSuccess(result);
+      if (result != null) {
+        List l = result.split(":");
+        if (l.length >= 2) {
+          scanResult = l[1];
+          onSuccess(scanResult);
+          return;
+        }
+      }
+      CustomSnackBar.errorSnackBar('Could not scan');
     } catch (e) {
       print("Failed to configure RFID: $e");
       CustomSnackBar.errorSnackBar('Error during scan: $e');
     }
-
-    // try {
-    //
-    // } catch (e) {
-    //   print('Error during scan: $e');
-    //   CustomSnackBar.errorSnackBar('Error during scan: $e');
-    //   return;
-    // }
-
-    // if (scanResult != '-1') {
-    //   onSuccess(scanResult);
-    // }
   }
 
   static void updateCurrentLangCode(String locale) async {
