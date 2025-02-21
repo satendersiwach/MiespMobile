@@ -88,7 +88,7 @@ class ServiceManager {
     try {
       final result = await platform.invokeMethod('configureRFID');
       print("RFID_sample is configured $result");
-      if (result != null) {
+      if (result != null && result!='') {
         List l = result.split(":");
         if (l.length >= 2) {
           scanResult = l[1];

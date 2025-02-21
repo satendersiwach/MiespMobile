@@ -12,8 +12,6 @@ import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/element_button.dart';
 
-import '../../models/item_details_model.dart';
-
 class PickListItemScreen extends StatefulWidget {
   final PickListModel pickListModel;
 
@@ -364,146 +362,18 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
           ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
             if (!mounted) return;
             String barCode = scanResult;
-            if (barCode != '') {
-              // List<Widget> titleRowWidgets = [
-              //   getPoppinsText(
-              //       text: 'Data to be sent',
-              //       color: Colors.red,
-              //       fontWeight: FontWeight.bold,
-              //       fontSize: 20),
-              // ];
-              // List<Widget> actions = [
-              //   Container(
-              //       width: MediaQuery.of(context).size.width,
-              //       alignment: Alignment.center,
-              //       child: Row(
-              //         crossAxisAlignment: CrossAxisAlignment.center,
-              //         children: [
-              //           // if (!isShowNegative)
-              //           const Spacer(),
-              //
-              //           TextButton(
-              //             onPressed: () {
-              //               Navigator.pop(context);
-              //             },
-              //             child: getPoppinsText(
-              //                 text: 'Ok',
-              //                 fontWeight: FontWeight.bold,
-              //                 fontSize: 16,
-              //                 color: appPrimary),
-              //           ),
-              //         ],
-              //       )),
-              // ];
-              // showDialog(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       title: Row(
-              //         children: titleRowWidgets,
-              //       ),
-              //       content: SizedBox(
-              //         height: Get.height/6,
-              //         child: Padding(
-              //           padding: const EdgeInsets.all(8.0),
-              //           child: Column(
-              //             crossAxisAlignment: CrossAxisAlignment.start,
-              //             mainAxisAlignment: MainAxisAlignment.start,
-              //             children: [
-              //               Text.rich(
-              //                 TextSpan(
-              //                   children: [
-              //                     getPoppinsTextSpanHeading(
-              //                         text: 'Pick List Id'),
-              //                     getPoppinsTextSpanDetails(
-              //                         text: widget.pickListModel.absEntry.toString()),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Text.rich(
-              //                 TextSpan(
-              //                   children: [
-              //                     getPoppinsTextSpanHeading(
-              //                         text: 'SO Id'),
-              //                     getPoppinsTextSpanDetails(
-              //                         text:  widget.pickListModel.docEntry
-              //                             .toString()),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Text.rich(
-              //                 TextSpan(
-              //                   children: [
-              //                     getPoppinsTextSpanHeading(
-              //                         text: 'Item Code'),
-              //                     getPoppinsTextSpanDetails(
-              //                         text: pickListModel.itemCode
-              //                             .toString()),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Text.rich(
-              //                 TextSpan(
-              //                   children: [
-              //                     getPoppinsTextSpanHeading(
-              //                         text: 'User'),
-              //                     getPoppinsTextSpanDetails(
-              //                         text: UserModel.getLoginCustomer().username),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Text.rich(
-              //                 TextSpan(
-              //                   children: [
-              //                     getPoppinsTextSpanHeading(
-              //                         text: 'Pick Qty'),
-              //                     getPoppinsTextSpanDetails(
-              //                         text: pickListModel.relQtty
-              //                             .toString()),
-              //                   ],
-              //                 ),
-              //               ),
-              //               Text.rich(
-              //                 TextSpan(
-              //                   children: [
-              //                     getPoppinsTextSpanHeading(
-              //                         text: 'BatchNumber'),
-              //                     getPoppinsTextSpanDetails(
-              //                         text: 'Bar code'),
-              //                   ],
-              //                 ),
-              //               ),
-              //
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       actions: actions,
-              //     );
-              //   },
-              // );
-              // Get.back();
-              CustomSnackBar.successSnackBar('Scanned result: $barCode');
-              if (await ServiceManager.isInternetAvailable()) {
-                ServiceManager.getItemDetails(
-                    barCode: barCode,
-                    onSuccess: (ItemDetailModel itemDetail) {
-                      UpdatePickingModel updatePickingModel =
-                          UpdatePickingModel(
-                              batchNumber: widget.pickListModel.batchNo,
-                              itemCode: pickListModel.itemCode,
-                              pickQty: pickListModel.relQtty,
-                              soId: widget.pickListModel.docEntry,
-                              pickListId: widget.pickListModel.docEntry,
-                              user:
-                                  UserModel.getLoginCustomer().userCode ?? '');
-                      ServiceManager.updatePickingQuantity(
-                          l: [updatePickingModel],
-                          onSuccess: (Map map) {},
-                          onError: (Map map) {});
-                    },
-                    onError: onError);
-              }
+            if (await ServiceManager.isInternetAvailable()) {
+              UpdatePickingModel updatePickingModel = UpdatePickingModel(
+                  batchNumber: barCode,
+                  itemCode: pickListModel.itemCode,
+                  pickQty: pickListModel.relQtty,
+                  soId: widget.pickListModel.docEntry,
+                  pickListId: widget.pickListModel.docEntry,
+                  user: UserModel.getLoginCustomer().userCode ?? '');
+              ServiceManager.updatePickingQuantity(
+                  l: [updatePickingModel],
+                  onSuccess: (Map map) {},
+                  onError: (Map map) {});
             }
           });
         },
