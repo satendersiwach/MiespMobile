@@ -120,6 +120,7 @@ class _UserOutboundDeliveryWindowState
             ),
           );
   }
+
   Widget _list() {
     return SizedBox(
       height: Get.height,
@@ -147,7 +148,7 @@ class _UserOutboundDeliveryWindowState
                       .toString()
                       .toUpperCase()
                       .contains(_query.text.toUpperCase()))) {
-            return  const SizedBox.shrink();
+            return const SizedBox.shrink();
           }
 
           return InkWell(
@@ -183,101 +184,101 @@ class _UserOutboundDeliveryWindowState
                         children: [
                           Expanded(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Pick List id'),
-                                        getPoppinsTextSpanDetails(
-                                            text:
-                                            pickListModel.absEntry.toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Item Code'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.code),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(text: 'SO Id'),
-                                        getPoppinsTextSpanDetails(
-                                            text:
-                                            pickListModel.docEntry.toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Item Description'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.description),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )),
-                          Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(
+                                TextSpan(
                                   children: [
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'WHSE Code'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.whseCode),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Batch No.'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.batchNo),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Release Qty'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.releaseQty
-                                                  .toString()),
-                                        ],
-                                      ),
-                                    ),
-                                    Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          getPoppinsTextSpanHeading(
-                                              text: 'Picked Status'),
-                                          getPoppinsTextSpanDetails(
-                                              text: pickListModel.status),
-                                        ],
-                                      ),
-                                    ),
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Pick List id'),
+                                    getPoppinsTextSpanDetails(
+                                        text:
+                                            pickListModel.absEntry.toString()),
                                   ],
                                 ),
-                              )),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Item Code'),
+                                    getPoppinsTextSpanDetails(
+                                        text: pickListModel.code),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(text: 'SO Id'),
+                                    getPoppinsTextSpanDetails(
+                                        text:
+                                            pickListModel.docEntry.toString()),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Item Description'),
+                                    getPoppinsTextSpanDetails(
+                                        text: pickListModel.description),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'WHSE Code'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.whseCode),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Batch No.'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.batchNo),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Release Qty'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.releaseQty
+                                              .toString()),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Picked Status'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.status),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
                         ],
                       ),
                     ),
