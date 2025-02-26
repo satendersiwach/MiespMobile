@@ -85,18 +85,18 @@ class CustomDrawerState extends State<CustomDrawer> {
             ),
           ],
           if (UserModel.isUser()) ...[
-            ListTile(
-              title: getPoppinsText(
-                  text: 'Physical Inventory',
-                  textAlign: TextAlign.start,
-                  color: appPrimary,
-                  fontWeight: FontWeight.bold),
-              trailing:
-                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-              onTap: () {
-                Get.to(() => const PhysicalInventoryScreen());
-              },
-            ),
+            // ListTile(
+            //   title: getPoppinsText(
+            //       text: 'Physical Inventory',
+            //       textAlign: TextAlign.start,
+            //       color: appPrimary,
+            //       fontWeight: FontWeight.bold),
+            //   trailing:
+            //       const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+            //   onTap: () {
+            //     Get.to(() => const PhysicalInventoryScreen());
+            //   },
+            // ),
           ],
           // ListTile(
           //   title: getPoppinsText(
