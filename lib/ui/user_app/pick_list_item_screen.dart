@@ -326,7 +326,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                           color: Colors.grey,
                         ),
                       ),
-                      if(widget.pickListModel.status!='A')
+                      if(widget.pickListModel.status=='A')
                       _buttonContainer(pickListModel: pickListModel),
                     ],
                   ),
