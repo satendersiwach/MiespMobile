@@ -31,12 +31,12 @@ class LoginPageState extends State<LoginPage> {
   final ScrollController _scrollController = ScrollController();
   bool obscurePassword = true;
   bool isLoading = false;
-  // TextEditingController username = TextEditingController(text: 'supervisor');
-  // TextEditingController password = TextEditingController(text: '12345');
-  //
-  TextEditingController username = TextEditingController(text: 'HHT1');
+  TextEditingController username = TextEditingController(text: 'supervisor');
   TextEditingController password = TextEditingController(text: '12345');
 
+  // TextEditingController username = TextEditingController(text: 'HHT1');
+  // TextEditingController password = TextEditingController(text: '12345');
+  //
   //
   // TextEditingController username = TextEditingController();
   // TextEditingController password = TextEditingController();
@@ -76,8 +76,9 @@ class LoginPageState extends State<LoginPage> {
                       // width: MediaQuery.of(context).size.width/3,
                       // height: MediaQuery.of(context).size.height/15,
                       color: appPrimary,
-                      child: Image.asset('assets/icons/no-bg-logo.png',
-                        height: Get.height/5,
+                      child: Image.asset(
+                        'assets/icons/no-bg-logo.png',
+                        height: Get.height / 5,
                         fit: BoxFit.cover,
                       ),
                       // child: Image.asset(
@@ -249,7 +250,8 @@ class LoginPageState extends State<LoginPage> {
   }
 
   onError(Map responseMap) {
-    CustomSnackBar.errorSnackBar(responseMap['ValidationErrors'][0]);
+    CustomSnackBar.errorSnackBar(
+        responseMap['ValidationErrors'][0]['ErrorMessage']);
     setState(() {
       isLoading = false;
     });
