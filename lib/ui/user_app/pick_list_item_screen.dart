@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
@@ -25,6 +26,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   List<PickListItemDetailModel> pickListItems = [];
   final TextEditingController query = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  PickListStatusEnum pickListStatusEnum = PickListStatusEnum.notPicked;
   bool _isLoading = true;
   int _currentMax = 15;
   List myList = [];
@@ -51,7 +53,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
       _isLoading = true;
     });
     ServiceManager.getListingItems(
-        status: 'Y',
+        status: pickListStatusEnum == PickListStatusEnum.picked ? 'Y' : 'N',
         search: query.text,
         pickListId: [widget.pickListModel.absEntry],
         onSuccess: onSuccess,
@@ -109,12 +111,57 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
             ),
             child: SizedBox(
               height: 43,
-              child: loadingButton(
-                  isLoading: false,
-                  btnText: 'Search',
-                  onPress: () {
-                    setItemData();
-                  }),
+              child: FittedBox(
+                child: loadingButton(
+                    isLoading: false,
+                    btnText: 'Search',
+                    onPress: () {
+                      setItemData();
+                    }),
+              ),
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+
+  Widget _statusFilterWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, top: 4),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: getInterText(
+              text: 'Picklist Status',
+              textAlign: TextAlign.left,
+              color: const Color(0XFF0F3C4D),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
+            child: DropdownButton<PickListStatusEnum>(
+              value: pickListStatusEnum, // Currently selected value
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    pickListStatusEnum = newValue; // Update the selected value
+                  });
+                  setItemData();
+                }
+              },
+              items: PickListStatusEnum.values.map((PickListStatusEnum value) {
+                return DropdownMenuItem<PickListStatusEnum>(
+                  value: value,
+                  child:
+                      Text(getEnumLabel(value)), // Display user-friendly label
+                );
+              }).toList(), // Converts enum values to dropdown items
+              borderRadius: BorderRadius.circular(10),
             ),
           )),
         ],
@@ -142,6 +189,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                     const SizedBox(
                       height: 10,
                     ),
+                    _statusFilterWidget(),
                     _list(),
                   ],
                 ),
@@ -326,8 +374,8 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                           color: Colors.grey,
                         ),
                       ),
-                      if(widget.pickListModel.status=='A')
-                      _buttonContainer(pickListModel: pickListModel),
+                      if (widget.pickListModel.status == 'A')
+                        _buttonContainer(pickListModel: pickListModel),
                     ],
                   ),
                 ),

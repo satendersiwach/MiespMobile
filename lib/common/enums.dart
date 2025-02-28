@@ -1,5 +1,8 @@
 enum PickListStatusEnumForAdmin { assigned, closed, open, all }
-enum PickListStatusEnumForUser { notPicked,picked, all }
+
+enum PickListStatusEnumForUser { notPicked, picked, all }
+
+enum PickListStatusEnum { notPicked, picked }
 
 String getEnumLabel(var value) {
   switch (value) {
@@ -9,11 +12,11 @@ String getEnumLabel(var value) {
       return 'Closed';
     case PickListStatusEnumForAdmin.open:
       return 'Open';
-    case PickListStatusEnumForAdmin.all||PickListStatusEnumForUser.all:
+    case PickListStatusEnumForAdmin.all || PickListStatusEnumForUser.all:
       return 'All';
-      case PickListStatusEnumForUser.notPicked:
+    case PickListStatusEnumForUser.notPicked || PickListStatusEnum.notPicked:
       return 'Not Picked';
-    case PickListStatusEnumForUser.picked:
+    case PickListStatusEnumForUser.picked || PickListStatusEnum.picked:
       return 'Picked';
     default:
       return '';
