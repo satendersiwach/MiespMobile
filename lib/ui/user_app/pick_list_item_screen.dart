@@ -51,7 +51,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
       _isLoading = true;
     });
     ServiceManager.getListingItems(
-        status: 'A',
+        status: 'Y',
         search: query.text,
         pickListId: [widget.pickListModel.absEntry],
         onSuccess: onSuccess,
@@ -373,8 +373,12 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                   user: UserModel.getLoginCustomer().userCode ?? '');
               ServiceManager.updatePickingQuantity(
                   l: [updatePickingModel],
-                  onSuccess: (Map map) {},
-                  onError: (Map map) {});
+                  onSuccess: (Map map) {
+                    setItemData();
+                  },
+                  onError: (Map map) {
+                    print(map);
+                  });
             }
           });
         },

@@ -298,7 +298,7 @@ class ServiceManager {
           body: jsonEncode(l));
       print(res.body);
       Map responseMap = jsonDecode(res.body);
-      if (responseMap['Code'] == 0) {
+      if (!responseMap['IsError']) {
         onSuccess(responseMap);
       } else {
         onError(responseMap);

@@ -306,7 +306,7 @@ class _UserOutboundDeliveryWindowState
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 1,
             child: getInterText(
               text: 'Picklist Status',
               textAlign: TextAlign.left,
@@ -318,29 +318,26 @@ class _UserOutboundDeliveryWindowState
           Expanded(
               child: Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
-            child: SizedBox(
-              width: Get.width / 4,
-              child: DropdownButton<PickListStatusEnumForUser>(
-                value: pickListStatusEnum, // Currently selected value
-                onChanged: (newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      pickListStatusEnum =
-                          newValue; // Update the selected value
-                    });
-                    setUserData();
-                  }
-                },
-                items: PickListStatusEnumForUser.values
-                    .map((PickListStatusEnumForUser value) {
-                  return DropdownMenuItem<PickListStatusEnumForUser>(
-                    value: value,
-                    child: Text(
-                        getEnumLabel(value)), // Display user-friendly label
-                  );
-                }).toList(), // Converts enum values to dropdown items
-                borderRadius: BorderRadius.circular(10),
-              ),
+            child: DropdownButton<PickListStatusEnumForUser>(
+              value: pickListStatusEnum, // Currently selected value
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    pickListStatusEnum =
+                        newValue; // Update the selected value
+                  });
+                  setUserData();
+                }
+              },
+              items: PickListStatusEnumForUser.values
+                  .map((PickListStatusEnumForUser value) {
+                return DropdownMenuItem<PickListStatusEnumForUser>(
+                  value: value,
+                  child: Text(
+                      getEnumLabel(value)), // Display user-friendly label
+                );
+              }).toList(), // Converts enum values to dropdown items
+              borderRadius: BorderRadius.circular(10),
             ),
           )),
         ],
