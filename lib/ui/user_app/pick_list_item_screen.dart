@@ -53,7 +53,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
       _isLoading = true;
     });
     ServiceManager.getListingItems(
-        status: pickListStatusEnum == PickListStatusEnum.picked ? 'Y' : 'N',
+        status: pickListStatusEnum == PickListStatusEnum.picked ? 'Y' : 'A',
         search: query.text,
         pickListId: [widget.pickListModel.absEntry],
         onSuccess: onSuccess,
