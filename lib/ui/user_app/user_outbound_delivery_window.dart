@@ -171,135 +171,135 @@ class _UserOutboundDeliveryWindowState
               margin: const EdgeInsets.all(15),
               width: MediaQuery.of(context).size.width,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Column(
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Pick List id'),
+                                  getPoppinsTextSpanDetails(
+                                      text:
+                                          pickListModel.absEntry.toString()),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Item Code'),
+                                  getPoppinsTextSpanDetails(
+                                      text: pickListModel.code),
+                                ],
+                              ),
+                            ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  getPoppinsTextSpanHeading(text: 'SO Id'),
+                                  getPoppinsTextSpanDetails(
+                                      text:
+                                          pickListModel.docEntry.toString()),
+                                ],
+                              ),
+                            ),
+                            // Text.rich(
+                            //   TextSpan(
+                            //     children: [
+                            //       getPoppinsTextSpanHeading(
+                            //           text: 'Item Description'),
+                            //       getPoppinsTextSpanDetails(
+                            //           text: pickListModel.description),
+                            //     ],
+                            //   ),
+                            // ),
+                          ],
+                        )),
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0),
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    getPoppinsTextSpanHeading(
-                                        text: 'Pick List id'),
-                                    getPoppinsTextSpanDetails(
-                                        text:
-                                            pickListModel.absEntry.toString()),
-                                  ],
-                                ),
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    getPoppinsTextSpanHeading(
-                                        text: 'Item Code'),
-                                    getPoppinsTextSpanDetails(
-                                        text: pickListModel.code),
-                                  ],
-                                ),
-                              ),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    getPoppinsTextSpanHeading(text: 'SO Id'),
-                                    getPoppinsTextSpanDetails(
-                                        text:
-                                            pickListModel.docEntry.toString()),
-                                  ],
-                                ),
-                              ),
                               // Text.rich(
                               //   TextSpan(
                               //     children: [
                               //       getPoppinsTextSpanHeading(
-                              //           text: 'Item Description'),
+                              //           text: 'WHSE Code'),
                               //       getPoppinsTextSpanDetails(
-                              //           text: pickListModel.description),
+                              //           text: pickListModel.whseCode),
                               //     ],
                               //   ),
                               // ),
+                              // Text.rich(
+                              //   TextSpan(
+                              //     children: [
+                              //       getPoppinsTextSpanHeading(
+                              //           text: 'Batch No.'),
+                              //       getPoppinsTextSpanDetails(
+                              //           text: pickListModel.batchNo),
+                              //     ],
+                              //   ),
+                              // ),
+                              // Text.rich(
+                              //   TextSpan(
+                              //     children: [
+                              //       getPoppinsTextSpanHeading(
+                              //           text: 'Release Qty'),
+                              //       getPoppinsTextSpanDetails(
+                              //           text: pickListModel.releaseQty
+                              //               .toString()),
+                              //     ],
+                              //   ),
+                              // ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Picked Status'),
+                                    getPoppinsTextSpanDetails(
+                                        text: pickListModel.status=='P'?'Picked':'Assigned'),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Total Items'),
+                                    getPoppinsTextSpanDetails(
+                                        text: pickListModel.totalItems.toString()),
+                                  ],
+                                ),
+                              ),
                             ],
-                          )),
-                          Expanded(
-                              child: Padding(
-                            padding: const EdgeInsets.only(left: 4.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Text.rich(
-                                //   TextSpan(
-                                //     children: [
-                                //       getPoppinsTextSpanHeading(
-                                //           text: 'WHSE Code'),
-                                //       getPoppinsTextSpanDetails(
-                                //           text: pickListModel.whseCode),
-                                //     ],
-                                //   ),
-                                // ),
-                                // Text.rich(
-                                //   TextSpan(
-                                //     children: [
-                                //       getPoppinsTextSpanHeading(
-                                //           text: 'Batch No.'),
-                                //       getPoppinsTextSpanDetails(
-                                //           text: pickListModel.batchNo),
-                                //     ],
-                                //   ),
-                                // ),
-                                // Text.rich(
-                                //   TextSpan(
-                                //     children: [
-                                //       getPoppinsTextSpanHeading(
-                                //           text: 'Release Qty'),
-                                //       getPoppinsTextSpanDetails(
-                                //           text: pickListModel.releaseQty
-                                //               .toString()),
-                                //     ],
-                                //   ),
-                                // ),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      getPoppinsTextSpanHeading(
-                                          text: 'Picked Status'),
-                                      getPoppinsTextSpanDetails(
-                                          text: pickListModel.status=='P'?'Picked':'Assigned'),
-                                    ],
-                                  ),
-                                ),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      getPoppinsTextSpanHeading(
-                                          text: 'Total Items'),
-                                      getPoppinsTextSpanDetails(
-                                          text: pickListModel.totalItems.toString()),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )),
+                          ),
+                        )),
+                      ],
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          getPoppinsTextSpanHeading(
+                              text: 'Item Description'),
+                          getPoppinsTextSpanDetails(
+                              text:
+                              pickListModel.description.toString()),
                         ],
                       ),
                     ),
-                    // const Padding(
-                    //   padding: EdgeInsets.symmetric(horizontal: 12.0),
-                    //   child: Divider(
-                    //     thickness: 1,
-                    //     color: Colors.grey,
-                    //   ),
-                    // ),
-                    // _buttonContainer(),
                   ],
                 ),
               ),

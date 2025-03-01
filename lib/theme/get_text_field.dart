@@ -105,6 +105,13 @@ Widget getTextField(
         validator: validator,
         readOnly: readOnly,
         inputFormatters: inputFormatters,
+        textInputAction: textInputAction,
+        onFieldSubmitted: (value) {
+          if(onFieldSubmitted!=null)
+          {
+            onFieldSubmitted(value);
+          }
+        },
 
         decoration: InputDecoration(
           labelStyle: GoogleFonts.poppins(

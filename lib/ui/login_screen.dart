@@ -31,19 +31,27 @@ class LoginPageState extends State<LoginPage> {
   final ScrollController _scrollController = ScrollController();
   bool obscurePassword = true;
   bool isLoading = false;
-  TextEditingController username = TextEditingController(text: 'supervisor');
-  TextEditingController password = TextEditingController(text: '12345');
 
+  // TextEditingController username = TextEditingController(text: 'supervisor');
+  // TextEditingController password = TextEditingController(text: '12345');
+  //
   // TextEditingController username = TextEditingController(text: 'HHT1');
   // TextEditingController password = TextEditingController(text: '12345');
   //
-  //
-  // TextEditingController username = TextEditingController();
-  // TextEditingController password = TextEditingController();
+
+
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void _onFocusChange() {
+    if (username.text.isNotEmpty && password.text.isNotEmpty) {
+      _onLogin();
+    }
   }
 
   String getHashedPassword() {
@@ -104,6 +112,10 @@ class LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(top: 8.0, right: 8),
                 child: getTextField(
                   controller: username,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (value) {
+                    _onFocusChange();
+                  },
                   labelText: 'Username',
                   prefixIcon: Icon(
                     MdiIcons.accountOutline,
@@ -132,6 +144,10 @@ class LoginPageState extends State<LoginPage> {
                 child: getTextField(
                     labelText: 'Password',
                     controller: password,
+                    textInputAction: TextInputAction.done,
+                    onFieldSubmitted: (value) {
+                      _onFocusChange();
+                    },
                     fillColor: appPrimary,
                     cursorColor: Colors.white,
                     textColor: Colors.white,
@@ -224,7 +240,15 @@ class LoginPageState extends State<LoginPage> {
                     btnText: 'Log In',
                     onPress: () {
                       try {
-                        _onLogin();
+                        if (username.text.isEmpty) {
+                          CustomSnackBar.errorSnackBar(
+                              'Please enter the username');
+                        } else if (password.text.isEmpty) {
+                          CustomSnackBar.errorSnackBar(
+                              'Please enter the password');
+                        } else {
+                          _onLogin();
+                        }
                       } catch (e) {
                         CustomSnackBar.errorSnackBar('Something went wrong');
                       }
