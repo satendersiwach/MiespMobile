@@ -39,7 +39,6 @@ class LoginPageState extends State<LoginPage> {
   // TextEditingController password = TextEditingController(text: '12345');
   //
 
-
   TextEditingController username = TextEditingController();
   TextEditingController password = TextEditingController();
 
@@ -98,15 +97,15 @@ class LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
-                height: 40,
+                height: 10,
               ),
               _welcomeContainer(),
               const SizedBox(
-                height: 30,
+                height: 10,
               ),
               _loginTextContainer(),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8),
@@ -222,7 +221,7 @@ class LoginPageState extends State<LoginPage> {
   Widget _buttonContainer() {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height / 13,
+      height: MediaQuery.of(context).size.height / 11,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Material(
@@ -282,6 +281,9 @@ class LoginPageState extends State<LoginPage> {
   }
 
   _onLogin() async {
+    if (isLoading) {
+      return;
+    }
     if (await ServiceManager.isInternetAvailable()) {
       setState(() {
         isLoading = true;
