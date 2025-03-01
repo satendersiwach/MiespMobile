@@ -53,7 +53,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
       _isLoading = true;
     });
     ServiceManager.getListingItems(
-        status: pickListStatusEnum == PickListStatusEnum.picked ? 'Y' : 'A',
+        status: pickListStatusEnum == PickListStatusEnum.picked ? 'Y' : 'N',
         search: query.text,
         pickListId: [widget.pickListModel.absEntry],
         onSuccess: onSuccess,
@@ -190,6 +190,9 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                       height: 10,
                     ),
                     _statusFilterWidget(),
+                    const SizedBox(
+                      height: 4,
+                    ),
                     _list(),
                   ],
                 ),
@@ -241,29 +244,89 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                 margin: const EdgeInsets.all(15),
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      Text.rich(
+                        TextSpan(
                           children: [
-                            Expanded(
-                                child: Column(
+                            getPoppinsTextSpanHeading(text: 'Item Name'),
+                            getPoppinsTextSpanDetails(
+                                text: pickListModel.itemName),
+                          ],
+                        ),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            getPoppinsTextSpanHeading(text: 'Dist Number'),
+                            getPoppinsTextSpanDetails(
+                                text: pickListModel.distNumber.toString()),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Item Code'),
+                                    getPoppinsTextSpanDetails(
+                                        text:
+                                            pickListModel.itemCode.toString()),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Doc Entry'),
+                                    getPoppinsTextSpanDetails(
+                                        text:
+                                            pickListModel.docEntry.toString()),
+                                  ],
+                                ),
+                              ),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    getPoppinsTextSpanHeading(
+                                        text: 'Abs Entry'),
+                                    getPoppinsTextSpanDetails(
+                                        text:
+                                            pickListModel.absEntry.toString()),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
+                          Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text.rich(
                                   TextSpan(
                                     children: [
                                       getPoppinsTextSpanHeading(
-                                          text: 'Item Code'),
+                                          text: 'Rel Qtty'),
                                       getPoppinsTextSpanDetails(
-                                          text: pickListModel.itemCode
-                                              .toString()),
+                                          text:
+                                              pickListModel.relQtty.toString()),
                                     ],
                                   ),
                                 ),
@@ -271,111 +334,40 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                                   TextSpan(
                                     children: [
                                       getPoppinsTextSpanHeading(
-                                          text: 'Item Name'),
+                                          text: 'Whs Code'),
                                       getPoppinsTextSpanDetails(
-                                          text: pickListModel.itemName),
+                                          text:
+                                              pickListModel.whsCode.toString()),
                                     ],
                                   ),
                                 ),
                                 Text.rich(
                                   TextSpan(
                                     children: [
-                                      getPoppinsTextSpanHeading(
-                                          text: 'Dist Number'),
+                                      getPoppinsTextSpanHeading(text: 'Picked'),
                                       getPoppinsTextSpanDetails(
-                                          text: pickListModel.distNumber
-                                              .toString()),
+                                          text: pickListModel.picked),
                                     ],
                                   ),
                                 ),
                               ],
-                            )),
-                            Expanded(
-                                child: Padding(
-                              padding: const EdgeInsets.only(left: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Doc Entry'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.docEntry
-                                                .toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Abs Entry'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.absEntry
-                                                .toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Rel Qtty'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.relQtty
-                                                .toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Assigned User'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.assignedUser
-                                                .toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Whs Code'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.whsCode
-                                                .toString()),
-                                      ],
-                                    ),
-                                  ),
-                                  Text.rich(
-                                    TextSpan(
-                                      children: [
-                                        getPoppinsTextSpanHeading(
-                                            text: 'Picked'),
-                                        getPoppinsTextSpanDetails(
-                                            text: pickListModel.picked),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                          ],
-                        ),
+                            ),
+                          )),
+                        ],
                       ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12.0),
-                        child: Divider(
-                          thickness: 1,
-                          color: Colors.grey,
+                      if (pickListModel.picked == 'N') ...[
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      if (pickListModel.picked == 'N')
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Divider(
+                            thickness: 1,
+                            color: Colors.grey,
+                          ),
+                        ),
                         _buttonContainer(pickListModel: pickListModel),
+                      ],
                     ],
                   ),
                 ),

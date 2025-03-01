@@ -23,7 +23,7 @@ class _UserDashboardState extends State<UserDashboard> {
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
-      title: 'Scanner App',
+      title: 'Pick List',
       drawer: const CustomDrawer(),
       body: SingleChildScrollView(
         child: Column(

@@ -198,16 +198,6 @@ class _UserOutboundDeliveryWindowState
                             Text.rich(
                               TextSpan(
                                 children: [
-                                  getPoppinsTextSpanHeading(
-                                      text: 'Item Code'),
-                                  getPoppinsTextSpanDetails(
-                                      text: pickListModel.code),
-                                ],
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
                                   getPoppinsTextSpanHeading(text: 'SO Id'),
                                   getPoppinsTextSpanDetails(
                                       text:
@@ -268,7 +258,7 @@ class _UserOutboundDeliveryWindowState
                                 TextSpan(
                                   children: [
                                     getPoppinsTextSpanHeading(
-                                        text: 'Picked Status'),
+                                        text: 'Status'),
                                     getPoppinsTextSpanDetails(
                                         text: pickListModel.status=='P'?'Picked':'Assigned'),
                                   ],
@@ -288,17 +278,6 @@ class _UserOutboundDeliveryWindowState
                           ),
                         )),
                       ],
-                    ),
-                    Text.rich(
-                      TextSpan(
-                        children: [
-                          getPoppinsTextSpanHeading(
-                              text: 'Item Description'),
-                          getPoppinsTextSpanDetails(
-                              text:
-                              pickListModel.description.toString()),
-                        ],
-                      ),
                     ),
                   ],
                 ),
