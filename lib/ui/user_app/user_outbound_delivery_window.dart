@@ -153,6 +153,13 @@ class _UserOutboundDeliveryWindowState
 
           return InkWell(
             onTap: () {
+              if (pickListModel.status == 'P') {
+                PickListItemScreen.pickListStatusEnum =
+                    PickListStatusEnum.picked;
+              } else {
+                PickListItemScreen.pickListStatusEnum =
+                    PickListStatusEnum.notPicked;
+              }
               Get.to(() => PickListItemScreen(pickListModel: pickListModel));
             },
             child: Container(
@@ -190,8 +197,7 @@ class _UserOutboundDeliveryWindowState
                                   getPoppinsTextSpanHeading(
                                       text: 'Pick List id'),
                                   getPoppinsTextSpanDetails(
-                                      text:
-                                          pickListModel.absEntry.toString()),
+                                      text: pickListModel.absEntry.toString()),
                                 ],
                               ),
                             ),
@@ -200,8 +206,7 @@ class _UserOutboundDeliveryWindowState
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'SO Id'),
                                   getPoppinsTextSpanDetails(
-                                      text:
-                                          pickListModel.docEntry.toString()),
+                                      text: pickListModel.docEntry.toString()),
                                 ],
                               ),
                             ),
@@ -257,10 +262,11 @@ class _UserOutboundDeliveryWindowState
                               Text.rich(
                                 TextSpan(
                                   children: [
-                                    getPoppinsTextSpanHeading(
-                                        text: 'Status'),
+                                    getPoppinsTextSpanHeading(text: 'Status'),
                                     getPoppinsTextSpanDetails(
-                                        text: pickListModel.status=='P'?'Picked':'Assigned'),
+                                        text: pickListModel.status == 'P'
+                                            ? 'Picked'
+                                            : 'Assigned'),
                                   ],
                                 ),
                               ),
@@ -270,7 +276,8 @@ class _UserOutboundDeliveryWindowState
                                     getPoppinsTextSpanHeading(
                                         text: 'Total Items'),
                                     getPoppinsTextSpanDetails(
-                                        text: pickListModel.totalItems.toString()),
+                                        text: pickListModel.totalItems
+                                            .toString()),
                                   ],
                                 ),
                               ),
@@ -312,8 +319,7 @@ class _UserOutboundDeliveryWindowState
               onChanged: (newValue) {
                 if (newValue != null) {
                   setState(() {
-                    pickListStatusEnum =
-                        newValue; // Update the selected value
+                    pickListStatusEnum = newValue; // Update the selected value
                   });
                   setUserData();
                 }
@@ -322,8 +328,8 @@ class _UserOutboundDeliveryWindowState
                   .map((PickListStatusEnumForUser value) {
                 return DropdownMenuItem<PickListStatusEnumForUser>(
                   value: value,
-                  child: Text(
-                      getEnumLabel(value)), // Display user-friendly label
+                  child:
+                      Text(getEnumLabel(value)), // Display user-friendly label
                 );
               }).toList(), // Converts enum values to dropdown items
               borderRadius: BorderRadius.circular(10),

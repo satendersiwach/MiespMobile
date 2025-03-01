@@ -15,6 +15,7 @@ import 'package:scanner/ui/components/element_button.dart';
 
 class PickListItemScreen extends StatefulWidget {
   final PickListModel pickListModel;
+  static PickListStatusEnum pickListStatusEnum = PickListStatusEnum.notPicked;
 
   const PickListItemScreen({super.key, required this.pickListModel});
 
@@ -26,7 +27,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   List<PickListItemDetailModel> pickListItems = [];
   final TextEditingController query = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  PickListStatusEnum pickListStatusEnum = PickListStatusEnum.notPicked;
+
   bool _isLoading = true;
   int _currentMax = 15;
   List myList = [];
@@ -53,7 +54,10 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
       _isLoading = true;
     });
     ServiceManager.getListingItems(
-        status: pickListStatusEnum == PickListStatusEnum.picked ? 'Y' : 'N',
+        status:
+            PickListItemScreen.pickListStatusEnum == PickListStatusEnum.picked
+                ? 'Y'
+                : 'N',
         search: query.text,
         pickListId: [widget.pickListModel.absEntry],
         onSuccess: onSuccess,
@@ -145,11 +149,13 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
               child: Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
             child: DropdownButton<PickListStatusEnum>(
-              value: pickListStatusEnum, // Currently selected value
+              value: PickListItemScreen.pickListStatusEnum,
+              // Currently selected value
               onChanged: (newValue) {
                 if (newValue != null) {
                   setState(() {
-                    pickListStatusEnum = newValue; // Update the selected value
+                    PickListItemScreen.pickListStatusEnum =
+                        newValue; // Update the selected value
                   });
                   setItemData();
                 }
@@ -160,7 +166,8 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                   child:
                       Text(getEnumLabel(value)), // Display user-friendly label
                 );
-              }).toList(), // Converts enum values to dropdown items
+              }).toList(),
+              // Converts enum values to dropdown items
               borderRadius: BorderRadius.circular(10),
             ),
           )),
