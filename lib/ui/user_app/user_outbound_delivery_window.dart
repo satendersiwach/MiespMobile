@@ -217,16 +217,16 @@ class _UserOutboundDeliveryWindowState
                                   ],
                                 ),
                               ),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    getPoppinsTextSpanHeading(
-                                        text: 'Item Description'),
-                                    getPoppinsTextSpanDetails(
-                                        text: pickListModel.description),
-                                  ],
-                                ),
-                              ),
+                              // Text.rich(
+                              //   TextSpan(
+                              //     children: [
+                              //       getPoppinsTextSpanHeading(
+                              //           text: 'Item Description'),
+                              //       getPoppinsTextSpanDetails(
+                              //           text: pickListModel.description),
+                              //     ],
+                              //   ),
+                              // ),
                             ],
                           )),
                           Expanded(
@@ -235,44 +235,54 @@ class _UserOutboundDeliveryWindowState
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      getPoppinsTextSpanHeading(
-                                          text: 'WHSE Code'),
-                                      getPoppinsTextSpanDetails(
-                                          text: pickListModel.whseCode),
-                                    ],
-                                  ),
-                                ),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      getPoppinsTextSpanHeading(
-                                          text: 'Batch No.'),
-                                      getPoppinsTextSpanDetails(
-                                          text: pickListModel.batchNo),
-                                    ],
-                                  ),
-                                ),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      getPoppinsTextSpanHeading(
-                                          text: 'Release Qty'),
-                                      getPoppinsTextSpanDetails(
-                                          text: pickListModel.releaseQty
-                                              .toString()),
-                                    ],
-                                  ),
-                                ),
+                                // Text.rich(
+                                //   TextSpan(
+                                //     children: [
+                                //       getPoppinsTextSpanHeading(
+                                //           text: 'WHSE Code'),
+                                //       getPoppinsTextSpanDetails(
+                                //           text: pickListModel.whseCode),
+                                //     ],
+                                //   ),
+                                // ),
+                                // Text.rich(
+                                //   TextSpan(
+                                //     children: [
+                                //       getPoppinsTextSpanHeading(
+                                //           text: 'Batch No.'),
+                                //       getPoppinsTextSpanDetails(
+                                //           text: pickListModel.batchNo),
+                                //     ],
+                                //   ),
+                                // ),
+                                // Text.rich(
+                                //   TextSpan(
+                                //     children: [
+                                //       getPoppinsTextSpanHeading(
+                                //           text: 'Release Qty'),
+                                //       getPoppinsTextSpanDetails(
+                                //           text: pickListModel.releaseQty
+                                //               .toString()),
+                                //     ],
+                                //   ),
+                                // ),
                                 Text.rich(
                                   TextSpan(
                                     children: [
                                       getPoppinsTextSpanHeading(
                                           text: 'Picked Status'),
                                       getPoppinsTextSpanDetails(
-                                          text: pickListModel.status),
+                                          text: pickListModel.status=='P'?'Picked':'Assigned'),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      getPoppinsTextSpanHeading(
+                                          text: 'Total Items'),
+                                      getPoppinsTextSpanDetails(
+                                          text: pickListModel.totalItems.toString()),
                                     ],
                                   ),
                                 ),
