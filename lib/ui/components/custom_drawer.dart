@@ -44,7 +44,7 @@ class CustomDrawerState extends State<CustomDrawer> {
                 children: [
                   const Spacer(),
                   getHeadingText(
-                      text: 'Hi, Username',
+                      text: 'Hi, ${UserModel.getLoginCustomer().username}',
                       textAlign: TextAlign.start,
                       fontSize: 22,
                       color: Colors.white),
