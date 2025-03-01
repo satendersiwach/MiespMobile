@@ -57,11 +57,13 @@ Widget setUpButtonChild(bool isLoading, String btnText, Color textColor,{
           valueColor: AlwaysStoppedAnimation<Color>(textColor)),
     );
   } else {
-    return getRedHatDisplayText(
-        text: btnText,
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight);
+    return FittedBox(
+      child: getRedHatDisplayText(
+          text: btnText,
+          color: textColor,
+          fontSize: fontSize,
+          fontWeight: fontWeight),
+    );
     return textLabelRegularWithCustomSize(text: btnText, color: textColor);
   }
 }
