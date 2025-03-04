@@ -86,12 +86,23 @@ class ServiceManager {
   }) async {
     String scanResult = '';
     try {
-      final result = await platform.invokeMethod('configureRFID');
+      var result = await platform.invokeMethod('configureRFID');
       print("RFID_sample is configured $result");
-      if (result != null && result!='') {
-        List l = result.split(":");
-        if (l.length >= 2) {
-          scanResult = l[1];
+
+      if (result != null && result != '') {
+        if (result.contains('\n')) {
+          result = result.split('\n')[0];
+        }
+
+        if (result.contains(':')) {
+          List l = result.split(":");
+          if (l.length >= 2) {
+            scanResult = l[1];
+            onSuccess(scanResult);
+            return;
+          }
+        } else {
+          scanResult = result;
           onSuccess(scanResult);
           return;
         }

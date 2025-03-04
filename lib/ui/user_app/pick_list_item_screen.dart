@@ -410,6 +410,11 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
           ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
             if (!mounted) return;
             String barCode = scanResult;
+            if (barCode != pickListModel.distNumber) {
+              CustomSnackBar.errorSnackBar(
+                  '$barCode does not belong to this item');
+              return;
+            }
             if (await ServiceManager.isInternetAvailable()) {
               UpdatePickingModel updatePickingModel = UpdatePickingModel(
                   batchNumber: barCode,
