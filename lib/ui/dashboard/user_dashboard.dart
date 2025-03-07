@@ -29,10 +29,10 @@ class _UserDashboardState extends State<UserDashboard> {
         child: Column(
           children: [
             appVersionWidget(),
-            getPoppinsText(
-                text: 'Welcome, ${UserModel.getLoginCustomer().username}',
-                fontWeight: FontWeight.w700,
-                fontSize: 20),
+            // getPoppinsText(
+            //     text: 'Welcome, ${UserModel.getLoginCustomer().username}',
+            //     fontWeight: FontWeight.w700,
+            //     fontSize: 20),
             const UserOutboundDeliveryWindow(),
           ],
         ),

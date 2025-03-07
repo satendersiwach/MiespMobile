@@ -25,7 +25,7 @@ class _UserOutboundDeliveryWindowState
   bool _isMoreLoading = false;
   final TextEditingController _query = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  int itemsPerPage = 10; // Number of items to load per batch
+  int itemsPerPage = 20; // Number of items to load per batch
   int currentPage = 0;
 
   PickListStatusEnumForUser pickListStatusEnum =
@@ -144,7 +144,7 @@ class _UserOutboundDeliveryWindowState
                       .toString()
                       .toUpperCase()
                       .contains(_query.text.toUpperCase()) ||
-                  pickListModel.code
+                  pickListModel.docEntry
                       .toString()
                       .toUpperCase()
                       .contains(_query.text.toUpperCase()))) {
