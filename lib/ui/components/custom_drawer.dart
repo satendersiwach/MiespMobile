@@ -4,6 +4,7 @@ import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
+import 'package:scanner/ui/components/element_common_widget.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
 import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
@@ -222,6 +223,8 @@ class CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
+          const Divider(),
+          appVersionWidget(),
         ],
       ),
     );

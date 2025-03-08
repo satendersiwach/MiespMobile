@@ -150,11 +150,11 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              appVersionWidget(),
-              getPoppinsText(
-                  text: 'Welcome, Supervisor',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20),
+              // appVersionWidget(),
+              // getPoppinsText(
+              //     text: 'Welcome, Supervisor',
+              //     fontWeight: FontWeight.w700,
+              //     fontSize: 20),
               //todo: implement search
               _statusFilterWidget(),
               if (_isLoading)
