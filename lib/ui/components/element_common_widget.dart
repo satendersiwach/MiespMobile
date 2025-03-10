@@ -13,38 +13,27 @@ Widget appVersionWidget() {
           {
             return const SizedBox(height: 0,width: 0,);
           }
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  getPoppinsText(
-                      text: 'Current app version',
-                      color: appPrimary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4),
-                    child: getPoppinsText(
-                        text:
-                            ' - ${snapshot.data?.version ?? ''}(${snapshot.data?.buildNumber ?? ''})',
-                        color: Colors.red,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
+        return Padding(
+          padding: const EdgeInsets.only(top: 5.0,left: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              getPoppinsText(
+                  text: 'Current app version : ',
+                  color: appPrimary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: getPoppinsText(
+                    text:
+                    ' ${snapshot.data?.version ?? ''} (${snapshot.data?.buildNumber ?? ''})',
+                    color: Colors.red,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
               ),
-            ),
-            const Divider(
-              thickness: 1,
-              color: Colors.grey,
-            ),
-            const SizedBox(
-              height: 10,
-            )
-          ],
+            ],
+          ),
         );
       });
 }

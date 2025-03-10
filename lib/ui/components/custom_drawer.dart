@@ -8,7 +8,6 @@ import 'package:scanner/ui/components/element_common_widget.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
 import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
-import 'package:scanner/zzz.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -86,18 +85,18 @@ class CustomDrawerState extends State<CustomDrawer> {
             ),
           ],
           if (UserModel.isUser()) ...[
-            // ListTile(
-            //   title: getPoppinsText(
-            //       text: 'Physical Inventory',
-            //       textAlign: TextAlign.start,
-            //       color: appPrimary,
-            //       fontWeight: FontWeight.bold),
-            //   trailing:
-            //       const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-            //   onTap: () {
-            //     Get.to(() => const PhysicalInventoryScreen());
-            //   },
-            // ),
+            ListTile(
+              title: getPoppinsText(
+                  text: 'Physical Inventory',
+                  textAlign: TextAlign.start,
+                  color: appPrimary,
+                  fontWeight: FontWeight.bold),
+              trailing:
+                  const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+              onTap: () {
+                Get.to(() => const PhysicalInventoryScreen());
+              },
+            ),
           ],
           // ListTile(
           //   title: getPoppinsText(
@@ -223,7 +222,10 @@ class CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
-          const Divider(),
+          const Divider(
+            thickness: 1,
+            color: Colors.grey,
+          ),
           appVersionWidget(),
         ],
       ),
