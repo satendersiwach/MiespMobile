@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:scanner/models/remove_inventory_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
+
 class UserInventory extends StatefulWidget {
   const UserInventory({super.key});
 
@@ -33,10 +35,8 @@ class _UserInventoryState extends State<UserInventory> {
                         shrinkWrap: true,
                         physics: const ScrollPhysics(),
                         itemBuilder: (context, index) {
-                          UserInventoryModel userInventoryModel = snapshot.data![index];
-
-
-
+                          UserInventoryModel userInventoryModel =
+                              snapshot.data![index];
 
                           return Container(
                             decoration: BoxDecoration(
@@ -61,97 +61,106 @@ class _UserInventoryState extends State<UserInventory> {
                                 children: [
                                   Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Expanded(
                                           child: Column(
-                                            crossAxisAlignment:
+                                        crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                            children: [
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Username'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel.user ??
-                                                            ''),
-                                                  ],
-                                                ),
-                                              ),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Name'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel.name ?? ''),
-                                                  ],
-                                                ),
-                                              ),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Whs Code'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel.whsCode ?? ''),
-                                                  ],
-                                                ),
-                                              ),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Item Code'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel.itemCode ?? ''),
-                                                  ],
-                                                ),
-                                              ),
-
-
-                                            ],
-                                          )),
+                                        children: [
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Username'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                            .user ??
+                                                        ''),
+                                              ],
+                                            ),
+                                          ),
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Name'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                            .name ??
+                                                        ''),
+                                              ],
+                                            ),
+                                          ),
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Whs Code'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                            .whsCode ??
+                                                        ''),
+                                              ],
+                                            ),
+                                          ),
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Item Code'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                            .itemCode ??
+                                                        ''),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                       Expanded(
                                           child: Column(
-                                            crossAxisAlignment:
+                                        crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                            children: [
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Code'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel
-                                                            .code),
-                                                  ],
-                                                ),
-                                              ),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Item Name'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel.itemName ?? ''),
-                                                  ],
-                                                ),
-                                              ),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    getPoppinsTextSpanHeading(
-                                                        text: 'Whs Name'),
-                                                    getPoppinsTextSpanDetails(
-                                                        text: userInventoryModel.whsName ?? ''),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          )),
+                                        children: [
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Code'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                        .code),
+                                              ],
+                                            ),
+                                          ),
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Item Name'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                            .itemName ??
+                                                        ''),
+                                              ],
+                                            ),
+                                          ),
+                                          Text.rich(
+                                            TextSpan(
+                                              children: [
+                                                getPoppinsTextSpanHeading(
+                                                    text: 'Whs Name'),
+                                                getPoppinsTextSpanDetails(
+                                                    text: userInventoryModel
+                                                            .whsName ??
+                                                        ''),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      )),
                                     ],
                                   ),
                                   const Divider(
@@ -164,13 +173,105 @@ class _UserInventoryState extends State<UserInventory> {
                                       children: [
                                         Expanded(
                                             child: InkWell(
+                                          onTap: () {},
+                                          child: getPoppinsText(
+                                              text: 'Update',
+                                              color: appPrimary,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                                        Expanded(
+                                            child: InkWell(
+                                          onTap: () {
+                                            List<Widget> titleRowWidgets = [
+                                              getPoppinsText(
+                                                  text: 'Remove',
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ];
+                                            List<Widget> actions = [
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  alignment: Alignment.center,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      // if (!isShowNegative)
+                                                      const Spacer(),
 
-                                              child: getPoppinsText(
-                                                  text: 'Assign',
-                                                  color: appPrimary,
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold),
-                                            )),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          RemoveInventoryModel
+                                                              removeInventoryModel =
+                                                              RemoveInventoryModel(
+                                                                  // batchNumber: userInventoryModel.batchNumber,
+                                                                  itemCode:
+                                                                      userInventoryModel
+                                                                          .itemCode,
+                                                                  whsCode:
+                                                                      userInventoryModel
+                                                                          .whsCode);
+                                                          ServiceManager.removeInventoryCounting(
+                                                              removeInventoryModel:
+                                                                  removeInventoryModel,
+                                                              onSuccess:
+                                                                  (res) {},
+                                                              onError:
+                                                                  (error) {});
+                                                        },
+                                                        child: getPoppinsText(
+                                                            text: 'Remove',
+                                                            color: Colors.red,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: getPoppinsText(
+                                                            text: 'No',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16,
+                                                            color: appPrimary),
+                                                      ),
+                                                    ],
+                                                  )),
+                                            ];
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Row(
+                                                    children: titleRowWidgets,
+                                                  ),
+                                                  content: getPoppinsText(
+                                                      text:
+                                                          'Are you sure you want to remove?',
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  actions: actions,
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: getPoppinsText(
+                                              text: 'Remove',
+                                              color: Colors.red,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold),
+                                        )),
                                       ],
                                     ),
                                   )
