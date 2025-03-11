@@ -5,7 +5,7 @@ import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/user_app/user_outbound_delivery_window.dart';
-import 'package:scanner/ui/user_app/physical_inventory_screen.dart';
+import 'package:scanner/ui/user_app/physical_inventory/physical_inventory_screen.dart';
 
 class UserAppScreen extends StatefulWidget {
   const UserAppScreen({super.key});

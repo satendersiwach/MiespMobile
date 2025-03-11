@@ -18,6 +18,7 @@ import 'package:scanner/models/stock_counting_detail_model.dart';
 import 'package:scanner/models/uom_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/models/update_picking_qty_model.dart';
+import 'package:scanner/models/user_inventory_model.dart';
 import 'package:scanner/models/warehouse_model.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/translations/custom_locale.dart';
@@ -195,6 +196,29 @@ class ServiceManager {
 
         for (var user in l) {
           userList.add(UserModel.fromJson(user));
+        }
+      }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+    return userList;
+  }
+
+  static Future<List<UserInventoryModel>> getUserInventoryList() async {
+    List<UserInventoryModel> userList = [];
+    try {
+      UserModel customerModel = UserModel.getLoginCustomer();
+      var res = await http.get(
+        Uri.parse('${baseURL}Inventory/GetInventoryByUser?user=${customerModel.userCode}'),
+        headers: header,
+      );
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
+        List l = responseMap['Result'];
+
+        for (var user in l) {
+          userList.add(UserInventoryModel.fromJson(user));
         }
       }
     } catch (e) {
