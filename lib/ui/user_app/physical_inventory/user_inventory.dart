@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/remove_inventory_model.dart';
+import 'package:scanner/models/update_inventory_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
@@ -173,7 +175,30 @@ class _UserInventoryState extends State<UserInventory> {
                                       children: [
                                         Expanded(
                                             child: InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            UpdateInventoryModel
+                                                removeInventoryModel =
+                                                UpdateInventoryModel(
+                                                    // batchNumber: userInventoryModel.batchNumber,
+                                                    itemCode: userInventoryModel
+                                                        .itemCode,
+                                                    quantity: userInventoryModel
+                                                        .quantity,
+                                                    remark: userInventoryModel
+                                                        .remark,
+                                                    user: UserModel
+                                                            .getLoginCustomer()
+                                                        .userCode,
+                                                    isManEntry: 'True',
+                                                    whsCode: userInventoryModel
+                                                        .whsCode);
+                                            ServiceManager
+                                                .updateInventoryCounting(
+                                                    updateInventoryModel:
+                                                        removeInventoryModel,
+                                                    onSuccess: (res) {},
+                                                    onError: (error) {});
+                                          },
                                           child: getPoppinsText(
                                               text: 'Update',
                                               color: appPrimary,
