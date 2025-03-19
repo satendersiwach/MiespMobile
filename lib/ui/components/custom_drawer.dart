@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scanner/LogFile/LogFileScreen.dart';
+import 'package:scanner/LogFile/log_file_screen.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_colors.dart';

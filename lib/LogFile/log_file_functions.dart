@@ -16,8 +16,7 @@ Future<void> writeToLogFile(
     {required String text,
     required String fileName,
     var db,
-    String heading = 'Error',
-    int? lineNo}) async {
+    String heading = 'Error'}) async {
   UserModel userModel = UserModel.getLoginCustomer();
   // DateTime? syncDate = getDataSyncDate();
   String companyName = 'MIESP';
@@ -72,8 +71,7 @@ Future<void> writeToLogFile(
   } catch (e) {
     writeToLogFile(
         text: e.toString(),
-        fileName: StackTrace.current.toString(),
-        lineNo: 141);
+        fileName: StackTrace.current.toString());
     print('Error writing to file: $e');
   }
 }
@@ -100,8 +98,7 @@ Future<String> readLogFile() async {
   } catch (e) {
     writeToLogFile(
         text: e.toString(),
-        fileName: StackTrace.current.toString(),
-        lineNo: 141);
+        fileName: StackTrace.current.toString());
     return "Error reading file: $e";
   }
 }

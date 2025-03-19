@@ -22,7 +22,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:scanner/LogFile/LogFileFunctions.dart';
+import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';

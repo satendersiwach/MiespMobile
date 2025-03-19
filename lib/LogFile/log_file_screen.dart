@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:scanner/LogFile/LogFileFunctions.dart';
+import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/LogFile/view_log_file.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/services/service_manager.dart';
@@ -33,8 +33,7 @@ class _LogFileScreenState extends State<LogFileScreen> {
               onPressed: () {
                 writeToLogFile(
                     text: "Hello, this text is written to a file!",
-                    fileName: 'ODLN.dart',
-                    lineNo: 28);
+                    fileName: StackTrace.current.toString());
               },
               child: const Text('Create Log',
               style: TextStyle(
