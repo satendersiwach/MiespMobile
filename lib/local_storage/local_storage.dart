@@ -22,6 +22,13 @@ class LocalStorage {
     _ls?.localStorage?.setString(key, value);
   }
 
+  static setInt({
+    required String key,
+    required int value,
+  }) {
+    _ls?.localStorage?.setInt(key, value);
+  }
+
   static setBool({
     required String key,
     required bool value,
@@ -31,6 +38,10 @@ class LocalStorage {
 
   static String? getString({required String key}) {
     return _ls?.localStorage?.getString(key);
+  }
+
+  static int? getInt({required String key}) {
+    return _ls?.localStorage?.getInt(key);
   }
 
   static bool? getBool({required String key}) {

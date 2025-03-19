@@ -1,10 +1,28 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:async/async.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
 
 // import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:scanner/LogFile/LogFileFunctions.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
@@ -377,6 +395,109 @@ class ServiceManager {
     } catch (e) {
       CustomSnackBar.errorSnackBar(e.toString());
     }
+  }
+
+  static Future<List<File>> splitFile(String filePath, int chunkSize) async {
+    List<File> files = [];
+    File file = File(filePath);
+    int fileSize = await file.length();
+
+    // Calculate the number of chunks
+    int numChunks = (fileSize / chunkSize).ceil();
+
+    RandomAccessFile raf = await file.open();
+
+    for (int i = 0; i < numChunks; i++) {
+      // Set the start position
+      int startPosition = i * chunkSize;
+      // Calculate the remaining size
+      int endPosition = startPosition + chunkSize;
+      if (endPosition > fileSize) {
+        endPosition = fileSize;
+      }
+      int currentChunkSize = endPosition - startPosition;
+
+      // Read the chunk
+      raf.setPositionSync(startPosition);
+      List<int> chunkData = raf.readSync(currentChunkSize);
+
+      // Write the chunk to a new file
+      File chunkFile = File('${filePath}${i + 1}');
+      await chunkFile.writeAsBytes(chunkData);
+      files.add(chunkFile);
+      print('Created: ${chunkFile.path}');
+    }
+
+    await raf.close();
+    return files;
+  }
+
+  static Future<bool> uploadLogFileToServer() async {
+    String path = "";
+    final directory = await getApplicationDocumentsDirectory();
+    String? filePath = LocalStorage.getString(key: logFileName);
+
+    File imageFile = File(
+      '${directory.path}/$filePath.txt',
+    );
+    print(await imageFile.exists());
+    bool fileExists = await imageFile.exists();
+    if (!fileExists) {
+      return false;
+    }
+
+    try {
+      int chunkSize = 10 * 1024 * 1024; // 10MB in bytes
+      List<File> logFiles = await splitFile(imageFile.path, chunkSize);
+      for (File imageFile in logFiles) {
+        var stream =
+        http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+        var length = await imageFile.length();
+
+        String MobDocPAth = "LITPL_OAC1/UploadLogFile";
+        var request =
+        http.MultipartRequest("POST", Uri.parse(baseURL + MobDocPAth));
+
+        var picture = http.MultipartFile('file', stream, length,
+            filename: basename(imageFile.path));
+
+        request.files.add(picture);
+
+        credentials = "getCredentials()";
+        String encoded = stringToBase64.encode(credentials );
+        header = {
+          'Authorization': 'Basic $encoded',
+          "content-type": "application/json",
+          "connection": "keep-alive"
+        };
+        request.headers['Authorization'] = header!['Authorization']!;
+        request.headers['content-type'] = header!['content-type']!;
+        var response = await request.send();
+
+        var responseData = await response.stream.toBytes();
+
+        var result = String.fromCharCodes(responseData);
+
+        print(result);
+        Map map = json.decode(result);
+        if (map['dbPath'] != null && map['dbPath'] != "") {
+          // var res=await http.post(Uri.parse(prefix + "LITPL_OAC1/DownloadFile",),
+          // body: jsonEncode({
+          //   'model':'Attachment\\Documents\\a3c13b7b-f950-4dec-b1a1-3ccebe19fb15181182899660113005625b5aa6a-7ea9-4172-8e86-bb3c64b9a963.jpg'
+          // }));
+          // print(res.body);
+          imageFile.delete();
+          LocalStorage.setInt(key: 'LogId', value: 0);
+          LocalStorage.setString(key: logFileName, value: '');
+
+          path = map['dbPath'];
+          print(path);
+          return true;
+        }
+      }
+      await imageFile.delete();
+    } on Exception catch (e) {}
+    return false;
   }
 
 

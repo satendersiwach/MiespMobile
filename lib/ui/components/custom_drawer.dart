@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/LogFile/LogFileScreen.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
@@ -220,6 +221,17 @@ class CustomDrawerState extends State<CustomDrawer> {
                   );
                 },
               );
+            },
+          ),
+          ListTile(
+            title: getPoppinsText(
+                text: 'Log File Screen',
+                textAlign: TextAlign.start,
+                color: Colors.red,
+                fontWeight: FontWeight.bold),
+            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+            onTap: () {
+              Get.to(()=>const LogFileScreen());
             },
           ),
           const Divider(

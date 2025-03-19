@@ -3,6 +3,16 @@ import 'package:intl/intl.dart';
 String dateFormat = 'yyyy-M-d';
 // String dateFormat = 'M/d/yyyy';
 
+String getFormattedDateAndTimeForLog(DateTime? now) {
+  DateFormat formatter = DateFormat('$dateFormat HH:mm:ss a');
+  if (now != null) {
+    String formatted = formatter.format(now);
+    return formatted;
+  }
+  String formatted = "";
+  return formatted;
+}
+
 String getFormattedDate(DateTime? now) {
   if (now == null) {
     now = DateTime.parse("1900-01-01");
