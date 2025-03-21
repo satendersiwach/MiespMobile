@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
@@ -406,13 +407,28 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     return SizedBox(
       height: 30,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
+          String text = '''
+    Scanning
+    -----------------
+    Calling scan function
+    ''';
+          await writeToLogFile(
+          text: text, heading: 'Value', fileName: StackTrace.current.toString());
           ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
             if (!mounted) return;
             String barCode = scanResult;
             if (barCode != pickListModel.distNumber) {
               CustomSnackBar.errorSnackBar(
                   '$barCode does not belong to this item');
+              String text = '''
+    $barCode does not belong to this item
+    -----------------
+    Bar Code : $barCode
+    Dis Number : ${pickListModel.distNumber}
+    ''';
+              await writeToLogFile(
+                  text: text, heading: 'Value', fileName: StackTrace.current.toString());
               return;
             }
             if (await ServiceManager.isInternetAvailable()) {
