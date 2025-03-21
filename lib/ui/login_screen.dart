@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/common/app_assets.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/services/service_manager.dart';
@@ -259,6 +260,15 @@ class LoginPageState extends State<LoginPage> {
   }
 
   void onSuccess(UserModel customerModel) async {
+    String text='''
+    User has logged in successfully
+    -----------------------------------
+    Customer data : ${customerModel.toJson()}
+    ''';
+    await writeToLogFile(
+        text: text,
+        heading: 'Value',
+        fileName: StackTrace.current.toString());
     CustomSnackBar.successSnackBar('Login successful');
     UserModel.setLoginCustomer(customerModel: customerModel);
     setState(() {
@@ -266,8 +276,26 @@ class LoginPageState extends State<LoginPage> {
     });
     await Future.delayed(const Duration(milliseconds: 500));
     if (UserModel.isUser()) {
+      String text='''
+    Navigation
+    -----------------
+    Navigating to user dashboard
+    ''';
+      await writeToLogFile(
+          text: text,
+          heading: 'Value',
+          fileName: StackTrace.current.toString());
       Get.offAll(() => const UserDashboard());
     } else {
+      String text='''
+    Navigation
+    -----------------
+    Navigating to super admin dashboard
+    ''';
+      await writeToLogFile(
+          text: text,
+          heading: 'Value',
+          fileName: StackTrace.current.toString());
       Get.offAll(() => const SuperAdminDashboard());
     }
   }
@@ -284,6 +312,18 @@ class LoginPageState extends State<LoginPage> {
     if (isLoading) {
       return;
     }
+    String text='''
+    Logging in with the following details
+    -----------------------------------
+    Username :  ${username.text}
+    Password :  ${password.text}
+    ''';
+    await writeToLogFile(
+        text: text,
+        heading: 'Value',
+        fileName: StackTrace.current.toString());
+
+
     if (await ServiceManager.isInternetAvailable()) {
       setState(() {
         isLoading = true;
