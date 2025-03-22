@@ -437,7 +437,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                   itemCode: pickListModel.itemCode,
                   pickQty: pickListModel.relQtty,
                   soId: widget.pickListModel.docEntry,
-                  pickListId: widget.pickListModel.docEntry,
+                  pickListId: widget.pickListModel.absEntry,
                   user: UserModel.getLoginCustomer().userCode ?? '');
               ServiceManager.updatePickingQuantity(
                   l: [updatePickingModel],
