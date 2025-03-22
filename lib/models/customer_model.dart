@@ -21,7 +21,7 @@ class UserModel {
   UserModel({
     this.userId,
     this.userCode,
-    this.isSupervisor=false,
+    this.isSupervisor = false,
     this.username,
     this.email,
     this.name,
@@ -63,6 +63,9 @@ class UserModel {
   static UserModel getLoginCustomer() {
     String customer =
         LocalStorage.getInstance()?.localStorage?.getString(keyObjUser) ?? '';
+    if (customer == '') {
+      return UserModel();
+    }
     return UserModel.fromJson(jsonDecode(customer));
   }
 
