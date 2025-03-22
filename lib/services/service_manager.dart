@@ -91,7 +91,8 @@ class ServiceManager {
 
   static scanQRCode({
     required Function(String) onSuccess,
-  }) async {
+  })
+  async {
     String text = '''
     Scanning
     -----------------
@@ -157,13 +158,6 @@ class ServiceManager {
     Get.updateLocale(CustomLocale.toLocale(locale));
   }
 
-  // static Future<bool> checkInternet() async {
-  //   var connectivityResult = await Connectivity().checkConnectivity();
-  //   if (connectivityResult == ConnectivityResult.none) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
 
   static launchInBrowser(Uri? uri) async {
     try {
@@ -177,20 +171,6 @@ class ServiceManager {
     }
   }
 
-  static launchCSV() async {
-    try {
-      File file = File('/storage/emulated/0/Download/report.csv');
-      print(await file.exists());
-      if (await canLaunchUrl(
-          Uri.parse('/storage/emulated/0/Download/report.csv'))) {
-        await launchUrl(Uri.parse('/storage/emulated/0/Download/report.csv'));
-      } else {
-        print('Cant launch');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
 
   static Future<void> login({
     required String Username,
@@ -200,81 +180,81 @@ class ServiceManager {
   }) async {
     try {
       UserModel? customerModel;
-      String text = '''
-    API call
-    -----------------
-    Calling Login API with the following parameters
-    Username : $Username
-    Password : $Password
-    Header : $header
-    Body :  ${{"Code": Username, "Password": Password}}
-    URL : ${baseURL}logindetails/login
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Calling Login API with the following parameters
+    // Username : $Username
+    // Password : $Password
+    // Header : $header
+    // Body :  ${{"Code": Username, "Password": Password}}
+    // URL : ${baseURL}logindetails/login
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       var res = await http.post(Uri.parse('${baseURL}logindetails/login'),
           headers: header,
           body: jsonEncode({"Code": Username, "Password": Password}));
 
-      String resText = '''
-    API call response for URL : ${baseURL}logindetails/login
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // API call response for URL : ${baseURL}logindetails/login
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
         customerModel = UserModel.fromJson(jsonDecode(res.body)['Result']);
 
-        String resText = '''
-    Calling success function
-    -------------------------
-    Response : ${customerModel.toJson()}
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling success function
+    // -------------------------
+    // Response : ${customerModel.toJson()}
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onSuccess(customerModel);
       } else {
-        String resText = '''
-    Calling error function
-    -------------------------
-    Response : $responseMap
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling error function
+    // -------------------------
+    // Response : $responseMap
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onError(responseMap);
       }
     } catch (e) {
       CustomSnackBar.errorSnackBar(e.toString());
-      await writeToLogFile(
-          text: e.toString(), fileName: StackTrace.current.toString());
+      // await writeToLogFile(
+      //     text: e.toString(), fileName: StackTrace.current.toString());
     }
   }
 
   static Future<List<UserModel>> getUserList() async {
     List<UserModel> userList = [];
     try {
-      String text = '''
-    API call
-    -----------------
-    Calling Get User API
-    Header : $header
-    URL : ${baseURL}master/getusers
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Calling Get User API
+    // Header : $header
+    // URL : ${baseURL}master/getusers
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
 
       var res = await http.get(
         Uri.parse('${baseURL}master/getusers'),
@@ -294,15 +274,15 @@ class ServiceManager {
           text: e.toString(), fileName: StackTrace.current.toString());
       CustomSnackBar.errorSnackBar(e.toString());
     }
-    String resText = '''
-    Returning User list
-    -------------------------
-    Length =  : ${userList.length}
-    ''';
-    await writeToLogFile(
-        text: resText,
-        heading: 'Value',
-        fileName: StackTrace.current.toString());
+    // String resText = '''
+    // Returning User list
+    // -------------------------
+    // Length =  : ${userList.length}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
     return userList;
   }
 
@@ -313,32 +293,32 @@ class ServiceManager {
       String url =
           '${baseURL}Inventory/GetInventoryByUser?user=${customerModel.userCode}';
 
-      String text = '''
-    API call
-    -----------------
-    Calling Get Inventory By User API with the following parameters
-    Header : $header
-    URL : $url
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Calling Get Inventory By User API with the following parameters
+    // Header : $header
+    // URL : $url
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
 
       var res = await http.get(
         Uri.parse(url),
         headers: header,
       );
       print(res.body);
-      String resText = '''
-    API call response for URL : ${baseURL}Inventory/GetInventoryByUser?user=${customerModel.userCode}
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // API call response for URL : ${baseURL}Inventory/GetInventoryByUser?user=${customerModel.userCode}
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
         List l = responseMap['Result'];
@@ -353,15 +333,15 @@ class ServiceManager {
       CustomSnackBar.errorSnackBar(e.toString());
     }
 
-    String resText = '''
-    Returning User Inventory list
-    -------------------------
-    Length =  : ${userInventoryList.length}
-    ''';
-    await writeToLogFile(
-        text: resText,
-        heading: 'Value',
-        fileName: StackTrace.current.toString());
+    // String resText = '''
+    // Returning User Inventory list
+    // -------------------------
+    // Length =  : ${userInventoryList.length}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
     return userInventoryList;
   }
 
@@ -373,58 +353,58 @@ class ServiceManager {
     try {
       String url = '${baseURL}PickList/GetPicklistByStatus?status=$status';
       List<PickListModel> pickList = [];
-      String text = '''
-    API call
-    -----------------
-    Calling Get Picklist By Status with the following parameters
-    Header : $header
-    URL : $url
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Calling Get Picklist By Status with the following parameters
+    // Header : $header
+    // URL : $url
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       var res = await http.get(
         Uri.parse(url),
         headers: header,
       );
       print(res.body);
-      String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
         List open = responseMap['Result'];
         for (Map<String, dynamic> map in open) {
           pickList.add(PickListModel.fromJson(map));
         }
-        String resText = '''
-    Calling success function
-    -------------------------
-    Pick List length : ${pickList.length}
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling success function
+    // -------------------------
+    // Pick List length : ${pickList.length}
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
 
         onSuccess(pickList);
       } else {
-        String resText = '''
-    Calling error function
-    -------------------------
-    Response : $responseMap
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling error function
+    // -------------------------
+    // Response : $responseMap
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onError(responseMap);
       }
     } catch (e) {
@@ -444,31 +424,31 @@ class ServiceManager {
       List<PickListModel> pickList = [];
       String url =
           '${baseURL}PickList/GetPickListByUser?status=$status&user=$username';
-      String text = '''
-    API call
-    -----------------
-    Get Pick List By User with the following parameters
-    Header : $header
-    URL : $url
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Get Pick List By User with the following parameters
+    // Header : $header
+    // URL : $url
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       var res = await http.get(
         Uri.parse(url),
         headers: header,
       );
       print(res.body);
-      String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
         List open = responseMap['Result'];
@@ -476,26 +456,26 @@ class ServiceManager {
           pickList.add(PickListModel.fromJson(map));
         }
 
-        String resText = '''
-    Calling success function
-    -------------------------
-    Pick List length : ${pickList.length}
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling success function
+    // -------------------------
+    // Pick List length : ${pickList.length}
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onSuccess(pickList);
       } else {
-        String resText = '''
-    Calling error function
-    -------------------------
-    Response : $responseMap
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling error function
+    // -------------------------
+    // Response : $responseMap
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onError(responseMap);
       }
     } catch (e) {
@@ -886,52 +866,52 @@ class ServiceManager {
   }) async {
     try {
       String url = '${baseURL}picklist/AssignPickList';
-      String text = '''
-    API call
-    -----------------
-    Calling Assign Pick List API with the following parameters
-    Header : $header
-    Body :  ${jsonEncode(l)}
-    URL : $url
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Calling Assign Pick List API with the following parameters
+    // Header : $header
+    // Body :  ${jsonEncode(l)}
+    // URL : $url
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       var res =
           await http.post(Uri.parse(url), headers: header, body: jsonEncode(l));
-      String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
-        String resText = '''
-    Calling success function
-    -------------------------
-    Response : $responseMap
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling success function
+    // -------------------------
+    // Response : $responseMap
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onSuccess(responseMap);
       } else {
-        String resText = '''
-    Calling error function
-    -------------------------
-    Response : $responseMap
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling error function
+    // -------------------------
+    // Response : $responseMap
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onError(responseMap);
       }
       // if (res.statusCode == 200) {
@@ -961,29 +941,29 @@ class ServiceManager {
         "PickList": pickListId
       };
       String url = '${baseURL}picklist/GetListingItems';
-      String text = '''
-    API call
-    -----------------
-    Calling Get Listing Items API with the following parameters
-    Header : $header
-    Body :  ${jsonEncode(map)}
-    URL : $url
-    ''';
-      await writeToLogFile(
-          text: text,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String text = '''
+    // API call
+    // -----------------
+    // Calling Get Listing Items API with the following parameters
+    // Header : $header
+    // Body :  ${jsonEncode(map)}
+    // URL : $url
+    // ''';
+    //   await writeToLogFile(
+    //       text: text,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       var res = await http.post(Uri.parse(url),
           headers: header, body: jsonEncode(map));
-      String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       print(res.body);
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
@@ -991,27 +971,27 @@ class ServiceManager {
         for (Map<String, dynamic> map in open) {
           pickListItems.add(PickListItemDetailModel.fromJson(map));
         }
-        String resText = '''
-    Calling success function
-    -------------------------
-    Response : $responseMap
-    Length : ${pickListItems.length}
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling success function
+    // -------------------------
+    // Response : $responseMap
+    // Length : ${pickListItems.length}
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onSuccess(pickListItems);
       } else {
-        String resText = '''
-    Calling error function
-    -------------------------
-    Response : $responseMap
-    ''';
-        await writeToLogFile(
-            text: resText,
-            heading: 'Value',
-            fileName: StackTrace.current.toString());
+    //     String resText = '''
+    // Calling error function
+    // -------------------------
+    // Response : $responseMap
+    // ''';
+    //     await writeToLogFile(
+    //         text: resText,
+    //         heading: 'Value',
+    //         fileName: StackTrace.current.toString());
         onError(responseMap);
       }
     } catch (e) {
@@ -1086,34 +1066,35 @@ class ServiceManager {
   static Future<void> getWarehouseList({
     required Function(List<WarehouseModel>) onSuccess,
     required Function onError,
-  }) async {
+  })
+  async {
     List<WarehouseModel>? warehouseList = [];
     String url = '${baseURL}Items/GetWarehouseList';
     var res = await http.get(
       Uri.parse(url),
       headers: header,
     );
-    String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-    await writeToLogFile(
-        text: resText,
-        heading: 'Value',
-        fileName: StackTrace.current.toString());
+    // String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
     print(res.body);
     if (res.statusCode == 200) {
       warehouseList = warehouseModelFromJson(res.body);
-      String resText = '''
-    Calling success function
-    -------------------------
-    Length : ${warehouseList.length}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // Calling success function
+    // -------------------------
+    // Length : ${warehouseList.length}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       onSuccess(warehouseList);
     } else {
       onError();
@@ -1126,40 +1107,40 @@ class ServiceManager {
   }) async {
     List<UomModel>? uomList = [];
     String url = '${baseURL}Items/GetUOM';
-    String text = '''
-    API call
-    -----------------
-    Calling Get UOM API with the following parameters
-    Header : $header
-    URL : $url
-    ''';
-    await writeToLogFile(
-        text: text, heading: 'Value', fileName: StackTrace.current.toString());
+    // String text = '''
+    // API call
+    // -----------------
+    // Calling Get UOM API with the following parameters
+    // Header : $header
+    // URL : $url
+    // ''';
+    // await writeToLogFile(
+    //     text: text, heading: 'Value', fileName: StackTrace.current.toString());
     var res = await http.get(
       Uri.parse(url),
       headers: header,
     );
-    String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-    await writeToLogFile(
-        text: resText,
-        heading: 'Value',
-        fileName: StackTrace.current.toString());
+    // String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
     print(res.body);
     if (res.statusCode == 200) {
       uomList = uomModelFromJson(res.body);
-      String resText = '''
-    Calling success function
-    -------------------------
-    Response : ${uomList.length}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // Calling success function
+    // -------------------------
+    // Response : ${uomList.length}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       onSuccess(uomList);
     } else {
       onError();
@@ -1219,30 +1200,30 @@ class ServiceManager {
       "WarehouseCode": warehouseModel?.warehouseCode ?? ''
     };
 
-    String text = '''
-    API call
-    -----------------
-    Calling Get Item Detail API with the following parameters
-    Header : $header
-    Body :  ${jsonEncode(map)}
-    URL : $url
-    ''';
-    await writeToLogFile(
-        text: text, heading: 'Value', fileName: StackTrace.current.toString());
+    // String text = '''
+    // API call
+    // -----------------
+    // Calling Get Item Detail API with the following parameters
+    // Header : $header
+    // Body :  ${jsonEncode(map)}
+    // URL : $url
+    // ''';
+    // await writeToLogFile(
+    //     text: text, heading: 'Value', fileName: StackTrace.current.toString());
     var res = await http.post(
       Uri.parse(url),
       body: jsonEncode(map),
       headers: header,
     );
-    String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-    await writeToLogFile(
-        text: resText,
-        heading: 'Value',
-        fileName: StackTrace.current.toString());
+    // String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
     print(res.body);
     if (res.statusCode == 200) {
       if (res.body == 'null') {
@@ -1250,25 +1231,25 @@ class ServiceManager {
         return;
       }
       warehouseList = itemDetailModelFromJson(res.body);
-      String resText = '''
-    Calling success function
-    -------------------------
-    Response data : ${warehouseList.toJson()}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // Calling success function
+    // -------------------------
+    // Response data : ${warehouseList.toJson()}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       onSuccess(warehouseList);
     } else {
-      String resText = '''
-    Calling error function
-    -------------------------
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // Calling error function
+    // -------------------------
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       onError();
     }
   }
@@ -1287,30 +1268,30 @@ class ServiceManager {
       "UserId": customerModel.userId ?? 0,
       "WarehouseCode": warehouseModel?.warehouseCode ?? ''
     };
-    String text = '''
-    API call
-    -----------------
-    Calling Get Stock Counting Detail API with the following parameters
-    Header : $header
-    Body :  ${jsonEncode(map)}
-    URL : $url
-    ''';
-    await writeToLogFile(
-        text: text, heading: 'Value', fileName: StackTrace.current.toString());
+    // String text = '''
+    // API call
+    // -----------------
+    // Calling Get Stock Counting Detail API with the following parameters
+    // Header : $header
+    // Body :  ${jsonEncode(map)}
+    // URL : $url
+    // ''';
+    // await writeToLogFile(
+    //     text: text, heading: 'Value', fileName: StackTrace.current.toString());
     var res = await http.post(
       Uri.parse(url),
       body: jsonEncode(map),
       headers: header,
     );
-    String resText = '''
-    API call response for URL : $url
-    -------------------------------------------------------------------------------------
-    Response : ${res.body}
-    ''';
-    await writeToLogFile(
-        text: resText,
-        heading: 'Value',
-        fileName: StackTrace.current.toString());
+    // String resText = '''
+    // API call response for URL : $url
+    // -------------------------------------------------------------------------------------
+    // Response : ${res.body}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
     print(res.body);
     if (res.statusCode == 200) {
       if (res.body == 'null') {
@@ -1319,25 +1300,25 @@ class ServiceManager {
       }
       stockCountingDetail = stockCountingDetailModelFromJson(res.body);
 
-      String resText = '''
-    Calling success function
-    -------------------------
-    Response : ${stockCountingDetail.toJson()}
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // Calling success function
+    // -------------------------
+    // Response : ${stockCountingDetail.toJson()}
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
       onSuccess(stockCountingDetail);
     } else {
-      String resText = '''
-    Calling error function
-    -------------------------
-    ''';
-      await writeToLogFile(
-          text: resText,
-          heading: 'Value',
-          fileName: StackTrace.current.toString());
+    //   String resText = '''
+    // Calling error function
+    // -------------------------
+    // ''';
+    //   await writeToLogFile(
+    //       text: resText,
+    //       heading: 'Value',
+    //       fileName: StackTrace.current.toString());
 
       onError();
     }
