@@ -10,6 +10,7 @@ import 'package:scanner/ui/components/element_common_widget.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
 import 'package:scanner/ui/user_app/physical_inventory/physical_inventory_screen.dart';
+import 'package:scanner/zzz.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -235,6 +236,8 @@ class CustomDrawerState extends State<CustomDrawer> {
           //     Get.to(()=>const LogFileScreen());
           //   },
           // ),
+          //
+
           ListTile(
             title: getPoppinsText(
                 text: 'View Log File',
@@ -246,6 +249,17 @@ class CustomDrawerState extends State<CustomDrawer> {
               Get.to(()=>const ViewLogFile());
             },
           ),
+          // ListTile(
+          //   title: getPoppinsText(
+          //       text: 'Test Scanner',
+          //       textAlign: TextAlign.start,
+          //       color: Colors.red,
+          //       fontWeight: FontWeight.bold),
+          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+          //   onTap: () {
+          //     Get.to(()=>const ScannerTesting());
+          //   },
+          // ),
           const Divider(
             thickness: 1,
             color: Colors.grey,

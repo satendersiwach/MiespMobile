@@ -1,49 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/ui/components/element_button.dart';
 
-
-class BarcodeScanner {
-  static const platform = MethodChannel('com.example.temp/barcode_scanner');
-
-  Future<String?> scanBarcode() async {
-    try {
-      final String? result = await platform.invokeMethod('scanBarcode');
-      return result;
-    } on PlatformException catch (e) {
-      print("Failed to get barcode: '${e.message}'.");
-      return null;
-    }
-  }
-}
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  static const platform = MethodChannel('com.example.temp/rfid');
-
-  // Call onCreate from Flutter
-  Future<void> callOnCreate() async {
-    try {
-      final result = await platform.invokeMethod('configureRFID');
-      print("RFID_sample is configured $result");
-    } catch (e) {
-      print("Failed to configure RFID: $e");
-    }
-  }
+class ScannerTesting extends StatelessWidget {
+  const ScannerTesting({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text("MIESP Scanner")),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: callOnCreate,
-            child: const Text("Configure RFID"),
-          ),
-        ),
+    return Scaffold(
+      appBar: AppBar(title: const Text("MIESP Scanner")),
+      body: Center(
+        child: loadingButton(
+            isLoading: false,
+            btnText: 'Test Scanning',
+            onPress: () {
+              ServiceManager.scanQRCode(onSuccess: (String res) async {
+                String text = '''
+    Final Scanned result
+    -----------------
+    Result : $res
+    ''';
+                await writeToLogFile(
+                    text: text,
+                    heading: 'Value',
+                    fileName: StackTrace.current.toString());
+              });
+            }),
+        // child: ElevatedButton(
+        //   onPressed: () {
+        //     ServiceManager.scanQRCode(onSuccess: (String res) {});
+        //   },
+        //   child: getHeadingText(text: 'Test Scanning'),
+        // ),
       ),
     );
   }
