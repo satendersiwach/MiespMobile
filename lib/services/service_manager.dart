@@ -88,6 +88,11 @@ class ServiceManager {
   //   //   onSuccess(scanResult);
   //   // }
   // }
+  static String removeSpecialCharacters(String input) {
+    String cleanedString = input.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+    print(cleanedString);
+    return cleanedString;
+  }
 
   static scanQRCode({
     required Function(String) onSuccess,

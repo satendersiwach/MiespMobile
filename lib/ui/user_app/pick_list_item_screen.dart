@@ -417,8 +417,8 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
           text: text, heading: 'Value', fileName: StackTrace.current.toString());
           ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
             if (!mounted) return;
-            String barCode = scanResult;
-            if (barCode != pickListModel.distNumber) {
+            String barCode = ServiceManager.removeSpecialCharacters(scanResult);
+            if (barCode != ServiceManager.removeSpecialCharacters(pickListModel.distNumber)) {
               CustomSnackBar.errorSnackBar(
                   '$barCode does not belong to this item');
               String text = '''
@@ -433,7 +433,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
             }
             if (await ServiceManager.isInternetAvailable()) {
               UpdatePickingModel updatePickingModel = UpdatePickingModel(
-                  batchNumber: barCode,
+                  batchNumber: pickListModel.distNumber,
                   itemCode: pickListModel.itemCode,
                   pickQty: pickListModel.relQtty,
                   soId: widget.pickListModel.docEntry,
