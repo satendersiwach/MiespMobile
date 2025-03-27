@@ -78,6 +78,106 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
 
     private void ExeSampleCode()
     {
+        {
+            if (mReaderManager != null)
+            {
+                BcReaderType myReaderType =  mReaderManager.GetReaderType();
+
+                // step1: new a class, the object is set to default value
+                UserPreference settings = new UserPreference();
+
+                // step2: this action does mean get current settings of UserPreference
+                mReaderManager.Get_UserPreferences(settings);
+
+                // step3: items are not supported exactly, so user can check...
+                if (Enable_State.NotSupport == settings.displayMode)
+                {
+                    //1D does not support
+                }
+
+                //settings.addonSecurityLevel = 7;
+                settings.laserOnTime = 3000;
+                //settings.negativeBarcodes = InverseType.AutoDetect;
+                //settings.scanAngle = ScanAngleType.Wide;
+                //settings.securityLevel = SecurityLevel.Three;
+                //settings.pickListMode = Enable_State.FALSE;
+                //settings.timeoutBetweenSameSymbol = 2000;
+                //settings.displayMode = Enable_State.FALSE;
+                //settings.redundancyLevel = RedundancyLevel.Four;
+                //settings.transmitCodeIdChar = TransmitCodeIDType.AimCodeId;
+                //settings.triggerMode = TriggerType.ContinuousMode;
+                //settings.triggerMode = TriggerType.AutoAimMode;
+                //settings.triggerMode = TriggerType.LevelMode;
+
+                // Change to Trigger Presentation Mode
+                settings.triggerMode = TriggerType.PresentationMode;
+                settings.timeoutPresentationMode = 10 * 60 * 1000; // ms
+                settings.triggerPresentationMode = Enable_State.TRUE;
+
+                // Change to Level Mode
+                settings.triggerMode = TriggerType.LevelMode;
+                settings.triggerPresentationMode = Enable_State.FALSE;
+
+                //settings.interCharGapSize = InterCharacterGapSize.Normal;
+                //settings.decodingAimingPattern = Enable_State.TRUE;
+                //settings.decodingIllumination  = Enable_State.TRUE;
+                //settings.decodingIlluminationPowerLevel = IlluminationPowerLevel.Zero;
+
+
+                // step4
+                // Set settings and check retrun value, if user get ClResult.S_ERR, it means failed,
+                // if user get Err_InvalidParameter, it means user put wrong value into items
+                // if user get Err_NotSupport, it means the barcode reader does not support this kind of settings
+                // if user get S_OK, it means set settings is successful.
+                ClResult clRet = mReaderManager.Set_UserPreferences(settings);
+                if (ClResult.S_ERR == clRet)
+                    Toast.makeText(this, "Get_UserPreferences was failed", Toast.LENGTH_SHORT).show();
+                else if (ClResult.Err_InvalidParameter == clRet)
+                    Toast.makeText(this, "Get_UserPreferences was InvalidParameter",	Toast.LENGTH_SHORT).show();
+                else if (ClResult.Err_NotSupport == clRet)
+                    Toast.makeText(this, "Get_UserPreferences was NotSupport", Toast.LENGTH_SHORT).show();
+                else if (ClResult.S_OK == clRet)
+                    Toast.makeText(this, "Get_UserPreferences was successful", Toast.LENGTH_SHORT).show();
+            }
+        }
+        {
+            if (mReaderManager != null)
+            {
+
+                // step1: new a class, the object is set to default value
+                Code39 settings = new Code39();
+
+                // step2: to check does barcode scanner support this symbology
+                if (ClResult.Err_NotSupport == mReaderManager.Get_Symbology(settings))
+                {
+                    // barcode scanner of device does not support this kind of symbology
+                    return;
+                }
+
+                // step3: if barcode scanner support this symbology�Athen user can change attribute
+                settings.enable = Enable_State.TRUE;
+                settings.fullASCII = Enable_State.TRUE;
+                settings.checkDigitVerification = Enable_State.FALSE;
+                settings.transmitCheckDigit = Enable_State.FALSE;
+                settings.convertToCode32 = Enable_State.FALSE;
+                settings.convertToCode32Prefix = Enable_State.FALSE;
+
+                // step4
+                // Set settings and check retrun value, if user get ClResult.S_ERR, it means failed,
+                // if user get Err_InvalidParameter, it means user put wrong value into items
+                // if user get Err_NotSupport, it means the barcode reader does not support this kind of settings
+                // if user get S_OK, it means set settings is successful.
+                ClResult clRet = mReaderManager.Set_Symbology(settings);
+                if (ClResult.S_ERR == clRet)
+                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was failed", Toast.LENGTH_SHORT).show();
+                else if (ClResult.Err_InvalidParameter == clRet)
+                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was InvalidParameter",	Toast.LENGTH_SHORT).show();
+                else if (ClResult.Err_NotSupport == clRet)
+                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was NotSupport", Toast.LENGTH_SHORT).show();
+                else if (ClResult.S_OK == clRet)
+                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was successful", Toast.LENGTH_SHORT).show();
+            }
+        }
         if (mReaderManager != null)
         {
             Thread sThread = new Thread(new Runnable() {
