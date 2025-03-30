@@ -249,17 +249,17 @@ class CustomDrawerState extends State<CustomDrawer> {
               Get.to(()=>const ViewLogFile());
             },
           ),
-          // ListTile(
-          //   title: getPoppinsText(
-          //       text: 'Test Scanner',
-          //       textAlign: TextAlign.start,
-          //       color: Colors.red,
-          //       fontWeight: FontWeight.bold),
-          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-          //   onTap: () {
-          //     Get.to(()=>const ScannerTesting());
-          //   },
-          // ),
+          ListTile(
+            title: getPoppinsText(
+                text: 'Test Scanner',
+                textAlign: TextAlign.start,
+                color: Colors.red,
+                fontWeight: FontWeight.bold),
+            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+            onTap: () {
+              Get.to(()=>const ScannerTesting());
+            },
+          ),
           const Divider(
             thickness: 1,
             color: Colors.grey,

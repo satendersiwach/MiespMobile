@@ -1,0 +1,2 @@
+/Users/ayushpratiksrivastava/Desktop/personal/scanner/android/app/.cxx/Debug/6d684e6h/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/ayushpratiksrivastava/Desktop/personal/scanner/android/app/.cxx/Debug/6d684e6h/armeabi-v7a/CMakeFiles/rebuild_cache.dir
