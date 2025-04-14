@@ -374,7 +374,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                             color: Colors.grey,
                           ),
                         ),
-                        _buttonContainer(pickListModel: pickListModel),
+                        _buttonContainer(),
                       ],
                     ],
                   ),
@@ -403,7 +403,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     );
   }
 
-  Widget _buttonContainer({required PickListItemDetailModel pickListModel}) {
+  Widget _buttonContainer() {
     return SizedBox(
       height: 30,
       child: InkWell(
@@ -414,21 +414,33 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     Calling scan function
     ''';
           await writeToLogFile(
-          text: text, heading: 'Value', fileName: StackTrace.current.toString());
+              text: text,
+              heading: 'Value',
+              fileName: StackTrace.current.toString());
           ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
             if (!mounted) return;
             String barCode = scanResult;
-            if (barCode != pickListModel.distNumber) {
+            PickListItemDetailModel? pickListModel;
+            for (PickListItemDetailModel pickListItemDetailModel
+                in pickListItems) {
+              if (barCode == pickListItemDetailModel.distNumber) {
+                pickListModel = pickListItemDetailModel;
+                break;
+              }
+            }
+            if (pickListModel == null) {
               CustomSnackBar.errorSnackBar(
                   '$barCode does not belong to this item');
               String text = '''
     $barCode does not belong to this item
     -----------------
     Bar Code : $barCode
-    Dis Number : ${pickListModel.distNumber}
+    Dis Number : ${pickListModel?.distNumber}
     ''';
               await writeToLogFile(
-                  text: text, heading: 'Value', fileName: StackTrace.current.toString());
+                  text: text,
+                  heading: 'Value',
+                  fileName: StackTrace.current.toString());
               return;
             }
             if (await ServiceManager.isInternetAvailable()) {
