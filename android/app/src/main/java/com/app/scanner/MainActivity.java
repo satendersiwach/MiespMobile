@@ -18,6 +18,9 @@ import android.widget.Toast;
 import io.flutter.embedding.android.FlutterActivity;
 import androidx.annotation.NonNull;
 import  io.flutter.plugins.GeneratedPluginRegistrant;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.EventSink;
+import android.os.Handler;
 
 public class MainActivity extends FlutterActivity implements ReaderCallback {
     public String decoded_data=null;
@@ -28,6 +31,9 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
     private boolean mIsRunning = false;
     private ReaderCallback mReaderCallback = null;
     private MethodChannel.Result pendingResult;
+
+    private static final String CHANNEL2 = "scannerStream";
+    private EventSink eventSink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -2294,11 +2300,14 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                 // extra string from intent
                 decoded_data = intent.getStringExtra(GeneralString.BcReaderData);
                 Log.d("ScannerData", "Intent_PASS_TO_APP Decoded Data: " + decoded_data);
-
-                if (pendingResult != null) {
-                    pendingResult.success(decoded_data);
-                    pendingResult = null; // Reset after sending response
+                if (eventSink != null) {
+                    eventSink.success(decoded_data); // Send data to Flutter
                 }
+
+//                if (pendingResult != null) {
+//                    pendingResult.success(decoded_data);
+//                    pendingResult = null; // Reset after sending response
+//                }
 
 //                // show decoded data
 //                mDecodeCount++;
@@ -2389,6 +2398,21 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                         configureRFID();
                     } else {
                         result.notImplemented();
+                    }
+                });
+
+        new EventChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL2)
+                .setStreamHandler(new EventChannel.StreamHandler() {
+                    @Override
+                    public void onListen(Object arguments, EventSink events) {
+                        eventSink = events;
+                        registerReceiver(myDataReceiver, new IntentFilter(GeneralString.Intent_PASS_TO_APP));
+                    }
+
+                    @Override
+                    public void onCancel(Object arguments) {
+                        unregisterReceiver(myDataReceiver);
+                        eventSink = null;
                     }
                 });
     }
