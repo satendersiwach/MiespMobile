@@ -2279,7 +2279,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
 
                 // extra string from intent
                 decoded_data = intent.getStringExtra(GeneralString.BcReaderData);
-                Log.d("ScannerData", "Decoded Data: " + decoded_data);
+                Log.d("ScannerData", "Intent_SOFTTRIGGER_DATA Decoded Data: " + decoded_data);
 
                 if (pendingResult != null) {
                     pendingResult.success(decoded_data);
@@ -2293,7 +2293,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
 
                 // extra string from intent
                 decoded_data = intent.getStringExtra(GeneralString.BcReaderData);
-                Log.d("ScannerData", "Decoded Data: " + decoded_data);
+                Log.d("ScannerData", "Intent_PASS_TO_APP Decoded Data: " + decoded_data);
 
                 if (pendingResult != null) {
                     pendingResult.success(decoded_data);
