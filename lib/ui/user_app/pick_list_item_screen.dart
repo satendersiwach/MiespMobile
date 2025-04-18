@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/common/enums.dart';
@@ -25,6 +26,7 @@ class PickListItemScreen extends StatefulWidget {
 }
 
 class _PickListItemScreenState extends State<PickListItemScreen> {
+  static const EventChannel _eventChannel = EventChannel('scannerStream');
   List<PickListItemDetailModel> pickListItems = [];
   final TextEditingController query = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -36,6 +38,24 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   @override
   void initState() {
     super.initState();
+    _eventChannel.receiveBroadcastStream().listen((result) {
+      print('Scanned result on Flutter side : $result');
+      if (result != null && result != '') {
+        if (result.contains('\n')) {
+          result = result.split('\n')[0];
+        }
+
+        if (result.contains(':')) {
+          List l = result.split(":");
+          if (l.length >= 2) {
+            result = l[1];
+          }
+        }
+        updatePickingQty(barCode: result);
+      }
+    }, onError: (error) {
+      CustomSnackBar.errorSnackBar('Error: $error');
+    });
     setItemData();
   }
 
@@ -403,6 +423,47 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     );
   }
 
+  updatePickingQty({required String barCode}) async {
+    PickListItemDetailModel? pickListModel;
+    for (PickListItemDetailModel pickListItemDetailModel in pickListItems) {
+      if (barCode == pickListItemDetailModel.distNumber) {
+        pickListModel = pickListItemDetailModel;
+        break;
+      }
+    }
+    if (pickListModel == null) {
+      CustomSnackBar.errorSnackBar('$barCode does not belong to these items');
+      String text = '''
+    $barCode does not belong to this item
+    -----------------
+    Bar Code : $barCode
+    Dis Number : ${pickListModel?.distNumber}
+    ''';
+      await writeToLogFile(
+          text: text,
+          heading: 'Value',
+          fileName: StackTrace.current.toString());
+      return;
+    }
+    if (await ServiceManager.isInternetAvailable()) {
+      UpdatePickingModel updatePickingModel = UpdatePickingModel(
+          batchNumber: barCode,
+          itemCode: pickListModel.itemCode,
+          pickQty: pickListModel.relQtty,
+          soId: widget.pickListModel.docEntry,
+          pickListId: widget.pickListModel.absEntry,
+          user: UserModel.getLoginCustomer().userCode ?? '');
+      ServiceManager.updatePickingQuantity(
+          l: [updatePickingModel],
+          onSuccess: (Map map) {
+            setItemData();
+          },
+          onError: (Map map) {
+            print(map);
+          });
+    }
+  }
+
   Widget _buttonContainer() {
     return SizedBox(
       height: 30,
@@ -419,47 +480,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
               fileName: StackTrace.current.toString());
           ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
             if (!mounted) return;
-            String barCode = scanResult;
-            PickListItemDetailModel? pickListModel;
-            for (PickListItemDetailModel pickListItemDetailModel
-                in pickListItems) {
-              if (barCode == pickListItemDetailModel.distNumber) {
-                pickListModel = pickListItemDetailModel;
-                break;
-              }
-            }
-            if (pickListModel == null) {
-              CustomSnackBar.errorSnackBar(
-                  '$barCode does not belong to this item');
-              String text = '''
-    $barCode does not belong to this item
-    -----------------
-    Bar Code : $barCode
-    Dis Number : ${pickListModel?.distNumber}
-    ''';
-              await writeToLogFile(
-                  text: text,
-                  heading: 'Value',
-                  fileName: StackTrace.current.toString());
-              return;
-            }
-            if (await ServiceManager.isInternetAvailable()) {
-              UpdatePickingModel updatePickingModel = UpdatePickingModel(
-                  batchNumber: barCode,
-                  itemCode: pickListModel.itemCode,
-                  pickQty: pickListModel.relQtty,
-                  soId: widget.pickListModel.docEntry,
-                  pickListId: widget.pickListModel.absEntry,
-                  user: UserModel.getLoginCustomer().userCode ?? '');
-              ServiceManager.updatePickingQuantity(
-                  l: [updatePickingModel],
-                  onSuccess: (Map map) {
-                    setItemData();
-                  },
-                  onError: (Map map) {
-                    print(map);
-                  });
-            }
+            updatePickingQty(barCode: scanResult);
           });
         },
         child: Row(
