@@ -22,7 +22,8 @@ class _InventoryReportState extends State<InventoryReport> {
   int itemsPerPage = 10;
   int currentPage = 1;
 
-  String filter = 'All';
+  String selectedItemGroup = 'All';
+  List<String> itemGroupList=[];
 
   final ScrollController _scrollController = ScrollController();
 
@@ -31,6 +32,11 @@ class _InventoryReportState extends State<InventoryReport> {
     super.initState();
     _scrollController.addListener(_onScroll);
     data.clear();
+    setFilterList();
+
+  }
+  setFilterList()async{
+    itemGroupList=await ServiceManager.getItemGroups();
     setInventoryReport();
   }
 
@@ -55,6 +61,7 @@ class _InventoryReportState extends State<InventoryReport> {
       pageNum: currentPage,
       searchTerm: _query.text,
       pageSize: itemsPerPage,
+      itemGroup: selectedItemGroup,
       onSuccess: (inventoryReport) {
         setState(() {
           // ❌ Don't overwrite currentPage here
@@ -107,8 +114,8 @@ class _InventoryReportState extends State<InventoryReport> {
           // const SizedBox(height: 25),
           _queryWidget(),
           const SizedBox(height: 5),
-          // _statusFilterWidget(),
-          // const SizedBox(height: 5),
+          _statusFilterWidget(),
+          const SizedBox(height: 5),
           Expanded(
             child: ListView.builder(
               controller: _scrollController, // ✅ scroll attached here
@@ -273,6 +280,50 @@ class _InventoryReportState extends State<InventoryReport> {
       ),
     );
   }
+  Widget _statusFilterWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, top: 4, right: 18.0, bottom: 8),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: getInterText(
+              text: 'Filter',
+              textAlign: TextAlign.left,
+              color: const Color(0XFF0F3C4D),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: DropdownButton<String>(
+              value: selectedItemGroup, // currently selected filter
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedItemGroup = newValue; // update selection
+                    currentPage = 1; // reset pagination
+                    data.clear(); // clear old data
+                  });
+                  setInventoryReport(); // fetch filtered data
+                }
+              },
+              items: itemGroupList.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, overflow: TextOverflow.ellipsis),
+                );
+              }).toList(),
+              isExpanded: true,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   // Widget _statusFilterWidget() {
   //   return Padding(

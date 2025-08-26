@@ -179,13 +179,16 @@ class ServiceManager {
     required int pageNum,
     required int pageSize,
     required String searchTerm,
+    required String itemGroup,
     required String filter,
     required Function(InventoryReportModel) onSuccess,
     required Function(Map) onError,
-  }) async {
+  })
+  async {
     Map map={
       "PageNum": pageNum,
       "PageSize": pageSize,
+      "ItemGroup": itemGroup,
       "SearchTerm": searchTerm,
       "Filter": filter
     };
@@ -223,6 +226,51 @@ class ServiceManager {
       //         fileName: StackTrace.current.toString());
       onError(responseMap);
     }
+  }
+
+  static Future<List<String>> getItemGroups() async {
+    List<String> l=[];
+    try {
+      //   String text = '''
+      // API call
+      // -----------------
+      // Calling Get User API
+      // Header : $header
+      // URL : ${baseURL}master/getusers
+      // ''';
+      //   await writeToLogFile(
+      //       text: text,
+      //       heading: 'Value',
+      //       fileName: StackTrace.current.toString());
+
+      var res = await http.get(
+        Uri.parse('${baseURL}Inventory/GetItemGroups'),
+        headers: header,
+      );
+      print("GetItemGroups = "+res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
+        for(var i in responseMap['Result'])
+          {
+            l.add(i.toString());
+          }
+
+      }
+    } catch (e) {
+      await writeToLogFile(
+          text: e.toString(), fileName: StackTrace.current.toString());
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
+    // String resText = '''
+    // Returning User list
+    // -------------------------
+    // Length =  : ${userList.length}
+    // ''';
+    // await writeToLogFile(
+    //     text: resText,
+    //     heading: 'Value',
+    //     fileName: StackTrace.current.toString());
+    return l;
   }
 
   static Future<void> login({
