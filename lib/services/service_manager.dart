@@ -183,15 +183,18 @@ class ServiceManager {
     required Function(InventoryReportModel) onSuccess,
     required Function(Map) onError,
   }) async {
+    Map map={
+      "PageNum": pageNum,
+      "PageSize": pageSize,
+      "SearchTerm": searchTerm,
+      "Filter": filter
+    };
+    print("Map = ");
+    print(map);
     var res = await http.post(
         Uri.parse('${baseURL}Inventory/GetPaginatedInventoryReport'),
         headers: header,
-        body: jsonEncode({
-          "PageNum": pageNum,
-          "PageSize": pageSize,
-          "SearchTerm": searchTerm,
-          "Filter": filter
-        }));
+        body: jsonEncode(map));
     print(res.body);
     Map responseMap = jsonDecode(res.body);
     if (!responseMap['IsError']) {

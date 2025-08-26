@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:scanner/models/inventory_report_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -15,15 +14,17 @@ class InventoryReport extends StatefulWidget {
 
 class _InventoryReportState extends State<InventoryReport> {
   InventoryReportModel? inventoryReport;
-  List<Datum> data=[];
+  List<Datum> data = [];
   bool _isLoading = false;
   bool _isMoreLoading = false;
   final TextEditingController _query = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
+
   int itemsPerPage = 10;
   int currentPage = 1;
 
   String filter = 'All';
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -41,7 +42,10 @@ class _InventoryReportState extends State<InventoryReport> {
 
   Future<void> setInventoryReport() async {
     setState(() {
-      _isLoading = true;
+      if (currentPage == 1) {
+        // Only show main loader for first page
+        _isLoading = true;
+      }
       this.inventoryReport = null;
     });
 
@@ -53,17 +57,17 @@ class _InventoryReportState extends State<InventoryReport> {
       pageSize: itemsPerPage,
       onSuccess: (inventoryReport) {
         setState(() {
-          currentPage=inventoryReport.pageNum??currentPage;
-          currentPage++;
+          // ❌ Don't overwrite currentPage here
           this.inventoryReport = inventoryReport;
-          data.addAll(inventoryReport.data??[]);
-          // _loadMoreData(); // Load the first batch
+          data.addAll(inventoryReport.data ?? []);
           _isLoading = false;
+          _isMoreLoading = false; // reset after successful load
         });
       },
       onError: (Map map) {
         setState(() {
           _isLoading = false;
+          _isMoreLoading = false;
         });
       },
     );
@@ -72,34 +76,20 @@ class _InventoryReportState extends State<InventoryReport> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      _loadMoreData();
+      if (currentPage < (inventoryReport?.totalPages ?? 0) &&
+          !_isMoreLoading) {
+        _loadMoreData();
+      }
     }
   }
 
   void _loadMoreData() {
-    if (_isMoreLoading ||
-        (currentPage * itemsPerPage) >= (inventoryReport?.data?.length ?? 0)) {
-      return;
-    }
-    currentPage++;
+    if (_isMoreLoading) return;
+    setState(() {
+      _isMoreLoading = true;
+      currentPage++;
+    });
     setInventoryReport();
-
-
-    // setState(() {
-    //   _isMoreLoading = true;
-    // });
-
-    //todo:
-    // Future.delayed(const Duration(seconds: 1), () {
-    //   setState(() {
-    //     int start = currentPage * itemsPerPage;
-    //     int end = start + itemsPerPage;
-    //     inventoryReport
-    //         .addAll(pickList.sublist(start, end.clamp(0, pickList.length)));
-    //     currentPage++;
-    //     _isMoreLoading = false;
-    //   });
-    // });
   }
 
   @override
@@ -108,93 +98,82 @@ class _InventoryReportState extends State<InventoryReport> {
       appBar: AppBar(
         title: Text("Inventory Report"),
       ),
-      body: _isLoading
+      body: _isLoading && data.isEmpty
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                // _assignCountContainer(),
-                // const SizedBox(height: 25),
-                _queryWidget(),
-                const SizedBox(height: 5),
-                // _statusFilterWidget(),
-                // const SizedBox(height: 5),
-                _list(),
-              ],
+          : Column(
+        children: [
+          const SizedBox(height: 10),
+          // _assignCountContainer(),
+          // const SizedBox(height: 25),
+          _queryWidget(),
+          const SizedBox(height: 5),
+          // _statusFilterWidget(),
+          // const SizedBox(height: 5),
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController, // ✅ scroll attached here
+              itemCount: data.length + 1, // loader at bottom
+              itemBuilder: (context, index) {
+                if (index < data.length) {
+                  Datum dataModel = data[index];
+                  return _buildItem(dataModel);
+                } else {
+                  return _isMoreLoading
+                      ? const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                        child: CircularProgressIndicator()),
+                  )
+                      : const SizedBox();
+                }
+              },
             ),
           ),
+        ],
+      ),
     );
   }
 
-  Widget _list() {
-    return ListView.builder(
-      controller: _scrollController,
-      shrinkWrap: true,
-      physics: const ScrollPhysics(),
-      itemCount: (data?.length ?? 0) + 1,
-      itemBuilder: (context, index) {
-        if (index == data.length) {
-          return _isMoreLoading
-              ? const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : const SizedBox.shrink();
-        }
-
-        Datum? dataModel = data[index];
-
-        // if (_query.text.isNotEmpty &&
-        //     !(pickListModel.absEntry
-        //         .toString()
-        //         .toUpperCase()
-        //         .contains(_query.text.toUpperCase()) ||
-        //         pickListModel.docEntry
-        //             .toString()
-        //             .toUpperCase()
-        //             .contains(_query.text.toUpperCase()))) {
-        //   return const SizedBox.shrink();
+  /// Extracted list item widget
+  Widget _buildItem(Datum dataModel) {
+    return InkWell(
+      onTap: () {
+        // if (pickListModel.status == 'P') {
+        //   PickListItemScreen.pickListStatusEnum =
+        //       PickListStatusEnum.picked;
+        // } else {
+        //   PickListItemScreen.pickListStatusEnum =
+        //       PickListStatusEnum.notPicked;
         // }
-
-        return InkWell(
-          onTap: () {
-            // if (pickListModel.status == 'P') {
-            //   PickListItemScreen.pickListStatusEnum =
-            //       PickListStatusEnum.picked;
-            // } else {
-            //   PickListItemScreen.pickListStatusEnum =
-            //       PickListStatusEnum.notPicked;
-            // }
-            // Get.to(() => PickListItemScreen(pickListModel: pickListModel));
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4.0,
-                  offset: Offset(2.0, 2.0),
-                ),
-              ],
+        // Get.to(() => PickListItemScreen(pickListModel: pickListModel));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(16.0),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 4.0,
+              offset: Offset(2.0, 2.0),
             ),
-            margin: const EdgeInsets.all(15),
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
+          ],
+        ),
+        margin: const EdgeInsets.all(15),
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: Column(
+                  Expanded(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text.rich(
@@ -202,17 +181,16 @@ class _InventoryReportState extends State<InventoryReport> {
                               children: [
                                 getPoppinsTextSpanHeading(text: 'Item Code'),
                                 getPoppinsTextSpanDetails(
-                                    text: dataModel?.itemCode?.toString() ?? ''),
+                                    text: dataModel.itemCode?.toString() ?? ''),
                               ],
                             ),
                           ),
                           Text.rich(
                             TextSpan(
                               children: [
-                                getPoppinsTextSpanHeading(
-                                    text: 'Batch Number'),
+                                getPoppinsTextSpanHeading(text: 'Batch Number'),
                                 getPoppinsTextSpanDetails(
-                                    text: dataModel?.batchNum?.toString() ?? ''),
+                                    text: dataModel.batchNum?.toString() ?? ''),
                               ],
                             ),
                           ),
@@ -228,8 +206,8 @@ class _InventoryReportState extends State<InventoryReport> {
                           // ),
                         ],
                       )),
-                      Expanded(
-                          child: Padding(
+                  Expanded(
+                      child: Padding(
                         padding: const EdgeInsets.only(left: 4.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,18 +248,16 @@ class _InventoryReportState extends State<InventoryReport> {
                                 children: [
                                   getPoppinsTextSpanHeading(text: 'Quantity'),
                                   getPoppinsTextSpanDetails(
-                                      text:
-                                      dataModel?.quantity?.toString() ?? '0'),
+                                      text: dataModel.quantity?.toString() ?? '0'),
                                 ],
                               ),
                             ),
                             Text.rich(
                               TextSpan(
                                 children: [
-                                  getPoppinsTextSpanHeading(
-                                      text: 'SAP Quantity'),
+                                  getPoppinsTextSpanHeading(text: 'SAP Quantity'),
                                   getPoppinsTextSpanDetails(
-                                      text: dataModel?.sapQuantity?.toString() ??
+                                      text: dataModel.sapQuantity?.toString() ??
                                           '0'),
                                 ],
                               ),
@@ -289,14 +265,12 @@ class _InventoryReportState extends State<InventoryReport> {
                           ],
                         ),
                       )),
-                    ],
-                  ),
                 ],
               ),
-            ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -384,18 +358,22 @@ class _InventoryReportState extends State<InventoryReport> {
           ),
           Expanded(
               child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: 8,
-              top: 2,
-            ),
-            child: SizedBox(
-              height: 43,
-              child: loadingButton(
-                  isLoading: false, btnText: 'Search', onPress: () {
-                    setInventoryReport();
-              }),
-            ),
-          )),
+                padding: const EdgeInsets.only(
+                  bottom: 8,
+                  top: 2,
+                ),
+                child: SizedBox(
+                  height: 43,
+                  child: loadingButton(
+                      isLoading: false,
+                      btnText: 'Search',
+                      onPress: () {
+                        currentPage = 1; // reset to first page on search
+                        data.clear();
+                        setInventoryReport();
+                      }),
+                ),
+              )),
         ],
       ),
     );

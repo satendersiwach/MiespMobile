@@ -9,11 +9,13 @@ String inventoryReportModelToJson(InventoryReportModel data) =>
 class InventoryReportModel {
   int? pageNum;
   int? pageSize;
+  int? totalPages;
   String? searchTerm;
   List<Datum>? data;
 
   InventoryReportModel({
     this.pageNum,
+    this.totalPages,
     this.pageSize,
     this.searchTerm,
     this.data,
@@ -22,6 +24,7 @@ class InventoryReportModel {
   factory InventoryReportModel.fromJson(Map<String, dynamic> json) =>
       InventoryReportModel(
         pageNum: int.tryParse(json["PageNum"]?.toString() ?? '0'),
+        totalPages: int.tryParse(json["TotalPages"]?.toString() ?? '0'),
         pageSize: int.tryParse(json["PageSize"]?.toString() ?? '0'),
         searchTerm: json["SearchTerm"]?.toString(),
         data: json["Data"] == null
@@ -30,6 +33,7 @@ class InventoryReportModel {
       );
 
   Map<String, dynamic> toJson() => {
+        "TotalPages": totalPages,
         "PageNum": pageNum,
         "PageSize": pageSize,
         "SearchTerm": searchTerm,
