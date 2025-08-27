@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scanner/LogFile/log_file_screen.dart';
 import 'package:scanner/LogFile/view_log_file.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
@@ -11,7 +10,6 @@ import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_screen.dart';
 import 'package:scanner/ui/user_app/physical_inventory/physical_inventory_screen.dart';
 import 'package:scanner/ui/user_app/report/inventory_report.dart';
-import 'package:scanner/zzz.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -61,6 +59,17 @@ class CustomDrawerState extends State<CustomDrawer> {
           ),
           const SizedBox(
             height: 20,
+          ),
+          ListTile(
+            title: getPoppinsText(
+                text: 'Pick List',
+                textAlign: TextAlign.start,
+                color: appPrimary,
+                fontWeight: FontWeight.bold),
+            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+            onTap: () {
+              Get.back();
+            },
           ),
           if (!UserModel.isUser()) ...[
             ListTile(
@@ -259,20 +268,20 @@ class CustomDrawerState extends State<CustomDrawer> {
                 fontWeight: FontWeight.bold),
             trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
             onTap: () {
-              Get.to(()=>const ViewLogFile());
+              Get.to(() => const ViewLogFile());
             },
           ),
-          ListTile(
-            title: getPoppinsText(
-                text: 'Test Scanner',
-                textAlign: TextAlign.start,
-                color: Colors.red,
-                fontWeight: FontWeight.bold),
-            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-            onTap: () {
-              Get.to(()=>const ScannerTesting());
-            },
-          ),
+          // ListTile(
+          //   title: getPoppinsText(
+          //       text: 'Test Scanner',
+          //       textAlign: TextAlign.start,
+          //       color: Colors.red,
+          //       fontWeight: FontWeight.bold),
+          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
+          //   onTap: () {
+          //     Get.to(() => const ScannerTesting());
+          //   },
+          // ),
           const Divider(
             thickness: 1,
             color: Colors.grey,
