@@ -183,9 +183,8 @@ class ServiceManager {
     required String filter,
     required Function(InventoryReportModel) onSuccess,
     required Function(Map) onError,
-  })
-  async {
-    Map map={
+  }) async {
+    Map map = {
       "PageNum": pageNum,
       "PageSize": pageSize,
       "ItemGroup": itemGroup,
@@ -202,7 +201,7 @@ class ServiceManager {
     Map responseMap = jsonDecode(res.body);
     if (!responseMap['IsError']) {
       InventoryReportModel inventoryReportModel =
-      InventoryReportModel.fromJson(jsonDecode(res.body)['Result']);
+          InventoryReportModel.fromJson(jsonDecode(res.body)['Result']);
 
       //     String resText = '''
       // Calling success function
@@ -229,7 +228,7 @@ class ServiceManager {
   }
 
   static Future<List<String>> getItemGroups() async {
-    List<String> l=[];
+    List<String> l = [];
     try {
       //   String text = '''
       // API call
@@ -247,14 +246,12 @@ class ServiceManager {
         Uri.parse('${baseURL}Inventory/GetItemGroups'),
         headers: header,
       );
-      print("GetItemGroups = "+res.body);
+      print("GetItemGroups = " + res.body);
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
-        for(var i in responseMap['Result'])
-          {
-            l.add(i.toString());
-          }
-
+        for (var i in responseMap['Result']) {
+          l.add(i.toString());
+        }
       }
     } catch (e) {
       await writeToLogFile(
@@ -1443,6 +1440,22 @@ class ServiceManager {
       return 'All';
     } else {
       return '';
+    }
+  }
+
+  static String getInventoryStatus(
+      {required InventoryStatusEnum pickListStatusEnum}) {
+    if (pickListStatusEnum == InventoryStatusEnum.onlyInInventory) {
+      return 'OnlyInInventory';
+    }
+    if (pickListStatusEnum == InventoryStatusEnum.onlyInSAP) {
+      return 'OnlyInSAP';
+    }
+
+    if (pickListStatusEnum == InventoryStatusEnum.quantityMismatch) {
+      return 'QuantityMismatch';
+    } else {
+      return 'All';
     }
   }
 }

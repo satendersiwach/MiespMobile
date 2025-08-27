@@ -1,6 +1,7 @@
 enum PickListStatusEnumForAdmin { assigned, closed, open, all }
 
 enum PickListStatusEnumForUser { notPicked, picked, all }
+enum InventoryStatusEnum { all, onlyInInventory, onlyInSAP, quantityMismatch }
 
 enum PickListStatusEnum { notPicked, picked }
 

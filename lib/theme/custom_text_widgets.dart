@@ -89,7 +89,7 @@ Text getInterText(
 
 TextSpan getPoppinsTextSpanHeading(
     {required text,
-    double fontSize = 15.0,
+    double fontSize = 13.0,
     FontWeight? fontWeight,
     TextAlign textAlign = TextAlign.center,
     int? maxLines,
@@ -118,7 +118,7 @@ TextSpan getPoppinsTextSpanHeading(
 
 TextSpan getPoppinsTextSpanDetails(
     {required text,
-    double? fontSize = 14.0,
+    double? fontSize = 12.0,
     FontWeight? fontWeight,
     TextAlign textAlign = TextAlign.center,
     int? maxLines,

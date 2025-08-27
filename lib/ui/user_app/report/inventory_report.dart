@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/inventory_report_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -23,7 +24,8 @@ class _InventoryReportState extends State<InventoryReport> {
   int currentPage = 1;
 
   String selectedItemGroup = 'All';
-  List<String> itemGroupList=[];
+  List<String> itemGroupList = [];
+  InventoryStatusEnum _selectedInventoryStatus = InventoryStatusEnum.all;
 
   final ScrollController _scrollController = ScrollController();
 
@@ -33,10 +35,10 @@ class _InventoryReportState extends State<InventoryReport> {
     _scrollController.addListener(_onScroll);
     data.clear();
     setFilterList();
-
   }
-  setFilterList()async{
-    itemGroupList=await ServiceManager.getItemGroups();
+
+  setFilterList() async {
+    itemGroupList = await ServiceManager.getItemGroups();
     setInventoryReport();
   }
 
@@ -49,7 +51,6 @@ class _InventoryReportState extends State<InventoryReport> {
   Future<void> setInventoryReport() async {
     setState(() {
       if (currentPage == 1) {
-        // Only show main loader for first page
         _isLoading = true;
       }
       this.inventoryReport = null;
@@ -57,14 +58,14 @@ class _InventoryReportState extends State<InventoryReport> {
 
     // UserModel userModel = UserModel.getLoginCustomer();
     await ServiceManager.getPaginatedInventoryReport(
-      filter: 'All',
+      filter: ServiceManager.getInventoryStatus(
+          pickListStatusEnum: _selectedInventoryStatus),
       pageNum: currentPage,
       searchTerm: _query.text,
       pageSize: itemsPerPage,
       itemGroup: selectedItemGroup,
       onSuccess: (inventoryReport) {
         setState(() {
-          // ❌ Don't overwrite currentPage here
           this.inventoryReport = inventoryReport;
           data.addAll(inventoryReport.data ?? []);
           _isLoading = false;
@@ -83,8 +84,7 @@ class _InventoryReportState extends State<InventoryReport> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      if (currentPage < (inventoryReport?.totalPages ?? 0) &&
-          !_isMoreLoading) {
+      if (currentPage < (inventoryReport?.totalPages ?? 0) && !_isMoreLoading) {
         _loadMoreData();
       }
     }
@@ -103,39 +103,70 @@ class _InventoryReportState extends State<InventoryReport> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inventory Report"),
+        title: const Text("Inventory Report"),
       ),
-      body: _isLoading && data.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
           // _assignCountContainer(),
           // const SizedBox(height: 25),
           _queryWidget(),
           const SizedBox(height: 5),
-          _statusFilterWidget(),
-          const SizedBox(height: 5),
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController, // ✅ scroll attached here
-              itemCount: data.length + 1, // loader at bottom
-              itemBuilder: (context, index) {
-                if (index < data.length) {
-                  Datum dataModel = data[index];
-                  return _buildItem(dataModel);
-                } else {
-                  return _isMoreLoading
-                      ? const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                        child: CircularProgressIndicator()),
-                  )
-                      : const SizedBox();
-                }
-              },
+         SizedBox(
+           height: 70,
+           child: Row(
+             children: [
+               Expanded(child: _itemGroupFilterWidget(),),
+               const VerticalDivider(
+                 color: Colors.black,
+                 thickness: .5,
+               ),
+               Expanded(child: _statusFilterWidget(),),
+             ],
+           ),
+         ),
+          const SizedBox(height: 8),
+          if (data.isNotEmpty)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 24.0,
+                  top: 8,
+                  bottom: 8
+                ),
+                child: getHeadingText(
+                    text: 'Note : SAP Qty is in red',
+                    fontSize: 11,
+                    color: Colors.red),
+              ),
             ),
-          ),
+          if (_isLoading && data.isEmpty)
+            const Padding(
+              padding: EdgeInsets.only(top: 70.0),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController, // ✅ scroll attached here
+                itemCount: data.length + 1, // loader at bottom
+                itemBuilder: (context, index) {
+                  if (index < data.length) {
+                    Datum dataModel = data[index];
+                    return _buildItem(dataModel);
+                  } else {
+                    return _isMoreLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          )
+                        : const SizedBox();
+                  }
+                },
+              ),
+            ),
         ],
       ),
     );
@@ -181,97 +212,52 @@ class _InventoryReportState extends State<InventoryReport> {
                 children: [
                   Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Item Code'),
-                                getPoppinsTextSpanDetails(
-                                    text: dataModel.itemCode?.toString() ?? ''),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Batch Number'),
-                                getPoppinsTextSpanDetails(
-                                    text: dataModel.batchNum?.toString() ?? ''),
-                              ],
-                            ),
-                          ),
-                          // Text.rich(
-                          //   TextSpan(
-                          //     children: [
-                          //       getPoppinsTextSpanHeading(
-                          //           text: 'Item Description'),
-                          //       getPoppinsTextSpanDetails(
-                          //           text: pickListModel.description),
-                          //     ],
-                          //   ),
-                          // ),
-                        ],
-                      )),
-                  Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text.rich(
+                        TextSpan(
                           children: [
-                            // Text.rich(
-                            //   TextSpan(
-                            //     children: [
-                            //       getPoppinsTextSpanHeading(
-                            //           text: 'WHSE Code'),
-                            //       getPoppinsTextSpanDetails(
-                            //           text: pickListModel.whseCode),
-                            //     ],
-                            //   ),
-                            // ),
-                            // Text.rich(
-                            //   TextSpan(
-                            //     children: [
-                            //       getPoppinsTextSpanHeading(
-                            //           text: 'Batch No.'),
-                            //       getPoppinsTextSpanDetails(
-                            //           text: pickListModel.batchNo),
-                            //     ],
-                            //   ),
-                            // ),
-                            // Text.rich(
-                            //   TextSpan(
-                            //     children: [
-                            //       getPoppinsTextSpanHeading(
-                            //           text: 'Release Qty'),
-                            //       getPoppinsTextSpanDetails(
-                            //           text: pickListModel.releaseQty
-                            //               .toString()),
-                            //     ],
-                            //   ),
-                            // ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  getPoppinsTextSpanHeading(text: 'Quantity'),
-                                  getPoppinsTextSpanDetails(
-                                      text: dataModel.quantity?.toString() ?? '0'),
-                                ],
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  getPoppinsTextSpanHeading(text: 'SAP Quantity'),
-                                  getPoppinsTextSpanDetails(
-                                      text: dataModel.sapQuantity?.toString() ??
-                                          '0'),
-                                ],
-                              ),
-                            ),
+                            getPoppinsTextSpanHeading(text: 'Item'),
+                            getPoppinsTextSpanDetails(
+                                text: dataModel.itemCode?.toString() ?? ''),
                           ],
                         ),
-                      )),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            getPoppinsTextSpanHeading(text: 'Quantity'),
+                            getPoppinsTextSpanDetails(
+                              text: dataModel.quantity?.toString() ?? '0',
+                            ),
+                            getPoppinsTextSpanDetails(text: '/'),
+                            getPoppinsTextSpanDetails(
+                                text: dataModel.sapQuantity?.toString() ?? '0',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              getPoppinsTextSpanHeading(text: 'Batch'),
+                              getPoppinsTextSpanDetails(
+                                  text: dataModel.batchNum?.toString() ?? ''),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
                 ],
               ),
             ],
@@ -280,13 +266,65 @@ class _InventoryReportState extends State<InventoryReport> {
       ),
     );
   }
-  Widget _statusFilterWidget() {
+
+  Widget _itemGroupFilterWidget() {
     return Padding(
-      padding: const EdgeInsets.only(left: 18.0, top: 4, right: 18.0, bottom: 8),
-      child: Row(
+      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 1,
+            child: getInterText(
+              text: 'Item Group',
+              textAlign: TextAlign.left,
+              color: const Color(0XFF0F3C4D),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const Divider(
+            thickness: .5,
+            color: Colors.black,
+          ),
+          Expanded(
+            flex: 2,
+            child: DropdownButton<String>(
+              value: selectedItemGroup,
+              isExpanded: true,
+              borderRadius: BorderRadius.circular(10),
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedItemGroup = newValue; // Update selection
+                    currentPage = 1; // Reset pagination
+                    data.clear(); // Clear old data
+                  });
+                  setInventoryReport(); // Fetch filtered data
+                }
+              },
+              items: itemGroupList.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statusFilterWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, right: 18.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
             child: getInterText(
               text: 'Filter',
               textAlign: TextAlign.left,
@@ -295,28 +333,36 @@ class _InventoryReportState extends State<InventoryReport> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          const Divider(
+            thickness: .5,
+            color: Colors.black,
+          ),
           Expanded(
             flex: 2,
-            child: DropdownButton<String>(
-              value: selectedItemGroup, // currently selected filter
+            child: DropdownButton<InventoryStatusEnum>(
+              value: _selectedInventoryStatus,
+              borderRadius: BorderRadius.circular(10),
+              isExpanded: true,
               onChanged: (newValue) {
                 if (newValue != null) {
                   setState(() {
-                    selectedItemGroup = newValue; // update selection
-                    currentPage = 1; // reset pagination
-                    data.clear(); // clear old data
+                    _selectedInventoryStatus = newValue; // Update selection
+                    currentPage = 1; // Reset pagination
+                    data.clear(); // Clear old data
                   });
-                  setInventoryReport(); // fetch filtered data
+                  setInventoryReport(); // Fetch filtered data
                 }
               },
-              items: itemGroupList.map((String value) {
-                return DropdownMenuItem<String>(
+              items: InventoryStatusEnum.values.map((value) {
+                return DropdownMenuItem<InventoryStatusEnum>(
                   value: value,
-                  child: Text(value, overflow: TextOverflow.ellipsis),
+                  child: Text(
+                    ServiceManager.getInventoryStatus(
+                      pickListStatusEnum: value,
+                    ),
+                  ),
                 );
               }).toList(),
-              isExpanded: true,
-              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ],
@@ -324,50 +370,6 @@ class _InventoryReportState extends State<InventoryReport> {
     );
   }
 
-
-  // Widget _statusFilterWidget() {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(left: 18.0, top: 4),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           flex: 1,
-  //           child: getInterText(
-  //             text: 'Picklist Status',
-  //             textAlign: TextAlign.left,
-  //             color: const Color(0XFF0F3C4D),
-  //             fontSize: 14,
-  //             fontWeight: FontWeight.w500,
-  //           ),
-  //         ),
-  //         Expanded(
-  //             child: Padding(
-  //               padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
-  //               child: DropdownButton<PickListStatusEnumForUser>(
-  //                 value: pickListStatusEnum, // Currently selected value
-  //                 onChanged: (newValue) {
-  //                   if (newValue != null) {
-  //                     setState(() {
-  //                       pickListStatusEnum = newValue; // Update the selected value
-  //                     });
-  //                     setUserData();
-  //                   }
-  //                 },
-  //                 items: PickListStatusEnumForUser.values
-  //                     .map((PickListStatusEnumForUser value) {
-  //                   return DropdownMenuItem<PickListStatusEnumForUser>(
-  //                     value: value,
-  //                     child:
-  //                     Text(getEnumLabel(value)), // Display user-friendly label
-  //                   );
-  //                 }).toList(), // Converts enum values to dropdown items
-  //                 borderRadius: BorderRadius.circular(10),
-  //               ),
-  //             )),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   // Widget _assignCountContainer() {
   //   return Align(
@@ -409,22 +411,22 @@ class _InventoryReportState extends State<InventoryReport> {
           ),
           Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 8,
-                  top: 2,
-                ),
-                child: SizedBox(
-                  height: 43,
-                  child: loadingButton(
-                      isLoading: false,
-                      btnText: 'Search',
-                      onPress: () {
-                        currentPage = 1; // reset to first page on search
-                        data.clear();
-                        setInventoryReport();
-                      }),
-                ),
-              )),
+            padding: const EdgeInsets.only(
+              bottom: 8,
+              top: 2,
+            ),
+            child: SizedBox(
+              height: 43,
+              child: loadingButton(
+                  isLoading: false,
+                  btnText: 'Search',
+                  onPress: () {
+                    currentPage = 1; // reset to first page on search
+                    data.clear();
+                    setInventoryReport();
+                  }),
+            ),
+          )),
         ],
       ),
     );
