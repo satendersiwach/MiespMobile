@@ -15,6 +15,7 @@ import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/assign_pick_list_model.dart';
 import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/inventory_report_model.dart';
 import 'package:scanner/models/item_details_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
@@ -179,7 +180,7 @@ class ServiceManager {
     required int pageNum,
     required int pageSize,
     required String searchTerm,
-    required String itemGroup,
+    required int itemGroup,
     required String filter,
     required Function(InventoryReportModel) onSuccess,
     required Function(Map) onError,
@@ -227,8 +228,8 @@ class ServiceManager {
     }
   }
 
-  static Future<List<String>> getItemGroups() async {
-    List<String> l = [];
+  static Future<List<GroupModel>> getItemGroups() async {
+    List<GroupModel> l = [];
     try {
       //   String text = '''
       // API call
@@ -249,8 +250,8 @@ class ServiceManager {
       print("GetItemGroups = " + res.body);
       Map responseMap = jsonDecode(res.body);
       if (!responseMap['IsError']) {
-        for (var i in responseMap['Result']) {
-          l.add(i.toString());
+        for (Map<String, dynamic> i in responseMap['Result']) {
+          l.add(GroupModel.fromJson(i));
         }
       }
     } catch (e) {

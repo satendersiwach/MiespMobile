@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanner/common/enums.dart';
+import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/inventory_report_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -23,8 +24,8 @@ class _InventoryReportState extends State<InventoryReport> {
   int itemsPerPage = 10;
   int currentPage = 1;
 
-  String selectedItemGroup = 'All';
-  List<String> itemGroupList = [];
+  GroupModel? selectedItemGroup;
+  List<GroupModel> itemGroupList = [];
   InventoryStatusEnum _selectedInventoryStatus = InventoryStatusEnum.all;
 
   final ScrollController _scrollController = ScrollController();
@@ -39,6 +40,9 @@ class _InventoryReportState extends State<InventoryReport> {
 
   setFilterList() async {
     itemGroupList = await ServiceManager.getItemGroups();
+    if (itemGroupList.isNotEmpty) {
+      selectedItemGroup = itemGroupList[0];
+    }
     setInventoryReport();
   }
 
@@ -49,6 +53,7 @@ class _InventoryReportState extends State<InventoryReport> {
   }
 
   Future<void> setInventoryReport() async {
+    if (_isLoading) return;
     setState(() {
       if (currentPage == 1) {
         _isLoading = true;
@@ -63,7 +68,7 @@ class _InventoryReportState extends State<InventoryReport> {
       pageNum: currentPage,
       searchTerm: _query.text,
       pageSize: itemsPerPage,
-      itemGroup: selectedItemGroup,
+      itemGroup: selectedItemGroup?.groupCode ?? 0,
       onSuccess: (inventoryReport) {
         setState(() {
           this.inventoryReport = inventoryReport;
@@ -113,29 +118,29 @@ class _InventoryReportState extends State<InventoryReport> {
           // const SizedBox(height: 25),
           _queryWidget(),
           const SizedBox(height: 5),
-         SizedBox(
-           height: 70,
-           child: Row(
-             children: [
-               Expanded(child: _itemGroupFilterWidget(),),
-               const VerticalDivider(
-                 color: Colors.black,
-                 thickness: .5,
-               ),
-               Expanded(child: _statusFilterWidget(),),
-             ],
-           ),
-         ),
+          SizedBox(
+            height: 70,
+            child: Row(
+              children: [
+                Expanded(
+                  child: _itemGroupFilterWidget(),
+                ),
+                const VerticalDivider(
+                  color: Colors.black,
+                  thickness: .5,
+                ),
+                Expanded(
+                  child: _statusFilterWidget(),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 8),
           if (data.isNotEmpty)
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 24.0,
-                  top: 8,
-                  bottom: 8
-                ),
+                padding: const EdgeInsets.only(right: 24.0, top: 8, bottom: 8),
                 child: getHeadingText(
                     text: 'Note : SAP Qty is in red',
                     fontSize: 11,
@@ -286,33 +291,65 @@ class _InventoryReportState extends State<InventoryReport> {
             thickness: .5,
             color: Colors.black,
           ),
+          // Expanded(
+          //   flex: 2,
+          //   child: DropdownButton<String>(
+          //     value: selectedItemGroup,
+          //     isExpanded: true,
+          //     borderRadius: BorderRadius.circular(10),
+          //     onChanged: (newValue) {
+          //       if (newValue != null) {
+          //         setState(() {
+          //           selectedItemGroup = newValue; // Update selection
+          //           currentPage = 1; // Reset pagination
+          //           data.clear(); // Clear old data
+          //         });
+          //         setInventoryReport(); // Fetch filtered data
+          //       }
+          //     },
+          //     items: itemGroupList.map((String value) {
+          //       return DropdownMenuItem<String>(
+          //         value: value,
+          //         child: Text(
+          //           value,
+          //           overflow: TextOverflow.ellipsis,
+          //         ),
+          //       );
+          //     }).toList(),
+          //   ),
+          // ),
           Expanded(
-            flex: 2,
-            child: DropdownButton<String>(
-              value: selectedItemGroup,
-              isExpanded: true,
-              borderRadius: BorderRadius.circular(10),
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  setState(() {
-                    selectedItemGroup = newValue; // Update selection
-                    currentPage = 1; // Reset pagination
-                    data.clear(); // Clear old data
-                  });
-                  setInventoryReport(); // Fetch filtered data
-                }
-              },
-              items: itemGroupList.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    overflow: TextOverflow.ellipsis,
+              flex: 2,
+              child: DropdownButtonFormField<GroupModel>(
+                decoration: InputDecoration(
+                  labelText: "Select Group",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              }).toList(),
-            ),
-          ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+                value: selectedItemGroup,
+                hint: const Text("Choose a group"),
+                isExpanded: true,
+                items: itemGroupList.map((group) {
+                  return DropdownMenuItem<GroupModel>(
+                    value: group,
+                    child: Text(group.groupName),
+                  );
+                }).toList(),
+                onChanged: (GroupModel? value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedItemGroup = value;
+                      currentPage = 1; // Reset pagination
+                      data.clear(); // Clear old data
+                    });
+                    setInventoryReport(); // Fetch filtered data
+                  }
+                  setState(() {});
+                },
+              )),
         ],
       ),
     );
@@ -369,7 +406,6 @@ class _InventoryReportState extends State<InventoryReport> {
       ),
     );
   }
-
 
   // Widget _assignCountContainer() {
   //   return Align(
