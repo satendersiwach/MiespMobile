@@ -18,6 +18,7 @@ import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/inventory_report_model.dart';
 import 'package:scanner/models/item_details_model.dart';
+import 'package:scanner/models/pending_item_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/remove_inventory_model.dart';
@@ -203,6 +204,54 @@ class ServiceManager {
     if (!responseMap['IsError']) {
       InventoryReportModel inventoryReportModel =
           InventoryReportModel.fromJson(jsonDecode(res.body)['Result']);
+
+      //     String resText = '''
+      // Calling success function
+      // -------------------------
+      // Response : ${customerModel.toJson()}
+      // ''';
+      //     await writeToLogFile(
+      //         text: resText,
+      //         heading: 'Value',
+      //         fileName: StackTrace.current.toString());
+      onSuccess(inventoryReportModel);
+    } else {
+      //     String resText = '''
+      // Calling error function
+      // -------------------------
+      // Response : $responseMap
+      // ''';
+      //     await writeToLogFile(
+      //         text: resText,
+      //         heading: 'Value',
+      //         fileName: StackTrace.current.toString());
+      onError(responseMap);
+    }
+  }
+
+  static getItemsPendingForInventory({
+    required int pageNum,
+    required int pageSize,
+    required int itemGroup,
+    required Function(PendingItemModel) onSuccess,
+    required Function(Map) onError,
+  }) async {
+    Map map = {
+      "PageNum": pageNum,
+      "PageSize": pageSize,
+      "ItemGroupCod": itemGroup
+    };
+    print("Map = ");
+    print(map);
+    var res = await http.post(
+        Uri.parse('${baseURL}Inventory/GetItemsPendingForInventory'),
+        headers: header,
+        body: jsonEncode(map));
+    print(res.body);
+    Map responseMap = jsonDecode(res.body);
+    if (!responseMap['IsError']) {
+      PendingItemModel inventoryReportModel =
+          PendingItemModel.fromJson(jsonDecode(res.body)['Result']);
 
       //     String resText = '''
       // Calling success function

@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart' show SpinKitFadingCube;
+import 'package:intl/intl.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_theme.dart';
 import 'package:scanner/theme/element_style.dart';
 import 'package:scanner/theme/elements_text.dart';
 import 'package:scanner/translations/custom_locale.dart';
 import 'package:scanner/translations/locale_constants.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart' show SpinKitFadingCube;
-import 'package:intl/intl.dart';
 
 Widget screenWithAppBar(
     {var title,
@@ -21,6 +21,8 @@ Widget screenWithAppBar(
     Color appBarBackgroundColor = appPrimary,
     double? leadingWidth,
     Widget? bottomNavigationBar,
+    FloatingActionButton? floatingActionButton,
+    FloatingActionButtonLocation? floatingActionButtonLocation,
     Key? key,
     bool centerTitle = true,
     Widget? drawer}) {
@@ -79,6 +81,8 @@ Widget screenWithAppBar(
     ),
     body: body,
     bottomNavigationBar: bottomNavigationBar,
+    floatingActionButtonLocation: floatingActionButtonLocation,
+    floatingActionButton: floatingActionButton,
   );
 }
 
