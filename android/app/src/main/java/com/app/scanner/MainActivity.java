@@ -50,7 +50,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
         filter.addAction(GeneralString.Intent_READERSERVICE_CONNECTED);
 
         // Register the receiver to listen for scanner data
-        registerReceiver(myDataReceiver, filter);
+        registerReceiver(myDataReceiver, filter,Context.RECEIVER_NOT_EXPORTED);
     }
 
     @Override
@@ -2406,7 +2406,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                     @Override
                     public void onListen(Object arguments, EventSink events) {
                         eventSink = events;
-                        registerReceiver(myDataReceiver, new IntentFilter(GeneralString.Intent_PASS_TO_APP));
+                        registerReceiver(myDataReceiver, new IntentFilter(GeneralString.Intent_PASS_TO_APP),Context.RECEIVER_NOT_EXPORTED);
                     }
 
                     @Override
