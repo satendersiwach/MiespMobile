@@ -24,7 +24,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   bool _isLoading = false;
   bool _isMoreLoading = false;
   List<Datum> data = [];
-  PendingItemModel? _pendingItemModel=null;
+  PendingItemModel? _pendingItemModel = null;
   int currentPage = 1;
 
   @override
@@ -37,7 +37,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
 
   setFilterList() async {
     itemGroupList = await ServiceManager.getItemGroups();
-    itemGroupList.removeWhere((itemGroup)=>itemGroup.groupName=='All');
+    itemGroupList.removeWhere((itemGroup) => itemGroup.groupName == 'All');
     if (itemGroupList.isNotEmpty) {
       selectedItemGroup = itemGroupList[0];
     }
@@ -61,7 +61,6 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
 
     // UserModel userModel = UserModel.getLoginCustomer();
     await ServiceManager.getItemsPendingForInventory(
-
       pageNum: currentPage,
       pageSize: 10,
       itemGroup: selectedItemGroup?.groupCode ?? 0,
@@ -85,7 +84,8 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      if (currentPage < (_pendingItemModel?.totalPages ?? 0) && !_isMoreLoading) {
+      if (currentPage < (_pendingItemModel?.totalPages ?? 0) &&
+          !_isMoreLoading) {
         _loadMoreData();
       }
     }
@@ -125,7 +125,6 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
               height: 20,
             ),
             SizedBox(height: 70, child: _itemGroupFilterWidget()),
-
             if (_isLoading && data.isEmpty)
               const Padding(
                 padding: EdgeInsets.only(top: 70.0),
@@ -143,17 +142,16 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                     } else {
                       return _isMoreLoading
                           ? const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      )
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            )
                           : const SizedBox(
-                        height: 70,
-                      );
+                              height: 70,
+                            );
                     }
                   },
                 ),
               ),
-
           ],
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -164,14 +162,22 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
               String barCode = scanResult;
               if (barCode != '') {
                 print(barCode);
-                Get.back();
-                CustomSnackBar.successSnackBar('Scanned result: $barCode');
-                // if (await ServiceManager.isInternetAvailable()) {
-                //   ServiceManager.getItemDetails(
-                //       barCode: barCode,
-                //       onSuccess: onSuccess,
-                //       onError: onError);
-                // }
+                if (await ServiceManager.isInternetAvailable()) {
+                  ServiceManager.addInventoryCounting(
+                      batchNumber: barCode,
+                      onSuccess: (xx) {
+                        currentPage = 1;
+                        setFilterList();
+                        CustomSnackBar.successSnackBar(xx['Message'] ??
+                            'Inventory counting added successfully');
+                      },
+                      onError: (vv) {
+                        currentPage = 1;
+                        setFilterList();
+                        CustomSnackBar.errorSnackBar(
+                            vv['ValidationErrors'][0].toString());
+                      });
+                }
               }
             });
           },
@@ -179,9 +185,9 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
             Icons.barcode_reader,
             color: Colors.white,
           ),
-        )
-        );
+        ));
   }
+
   /// Extracted list item widget
   Widget _buildItem(Datum dataModel) {
     return InkWell(
@@ -222,56 +228,56 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                 children: [
                   Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Item'),
-                                getPoppinsTextSpanDetails(
-                                    text: dataModel.itemCode?.toString() ?? ''),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                getPoppinsTextSpanHeading(text: 'Name'),
-                                getPoppinsTextSpanDetails(
-                                  text: dataModel.itemName?.toString() ?? '',
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                  Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text.rich(
+                        TextSpan(
                           children: [
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  getPoppinsTextSpanHeading(text: 'Group Code'),
-                                  getPoppinsTextSpanDetails(
-                                      text: dataModel.itmsGrpCod?.toString() ?? ''),
-                                ],
-                              ),
-                            ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  getPoppinsTextSpanHeading(text: 'Warehouse'),
-                                  getPoppinsTextSpanDetails(
-                                      text: dataModel.whsName?.toString() ?? ''),
-                                ],
-                              ),
-                            ),
+                            getPoppinsTextSpanHeading(text: 'Item'),
+                            getPoppinsTextSpanDetails(
+                                text: dataModel.itemCode?.toString() ?? ''),
                           ],
                         ),
-                      )),
+                      ),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            getPoppinsTextSpanHeading(text: 'Name'),
+                            getPoppinsTextSpanDetails(
+                              text: dataModel.itemName?.toString() ?? '',
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              getPoppinsTextSpanHeading(text: 'Group Code'),
+                              getPoppinsTextSpanDetails(
+                                  text: dataModel.itmsGrpCod?.toString() ?? ''),
+                            ],
+                          ),
+                        ),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              getPoppinsTextSpanHeading(text: 'Warehouse'),
+                              getPoppinsTextSpanDetails(
+                                  text: dataModel.whsName?.toString() ?? ''),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
                 ],
               ),
             ],

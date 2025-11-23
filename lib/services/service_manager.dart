@@ -325,7 +325,8 @@ class ServiceManager {
     required String Password,
     required Function(UserModel) onSuccess,
     required Function(Map) onError,
-  }) async {
+  })
+  async {
     try {
       UserModel? customerModel;
       //   String text = '''
@@ -370,6 +371,74 @@ class ServiceManager {
         //         heading: 'Value',
         //         fileName: StackTrace.current.toString());
         onSuccess(customerModel);
+      } else {
+        //     String resText = '''
+        // Calling error function
+        // -------------------------
+        // Response : $responseMap
+        // ''';
+        //     await writeToLogFile(
+        //         text: resText,
+        //         heading: 'Value',
+        //         fileName: StackTrace.current.toString());
+        onError(responseMap);
+      }
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
+      // await writeToLogFile(
+      //     text: e.toString(), fileName: StackTrace.current.toString());
+    }
+  }
+
+  static Future<void> addInventoryCounting({
+    required String batchNumber,
+    required Function(dynamic) onSuccess,
+    required Function(Map) onError,
+  })
+  async {
+    try {
+      UserModel customerModel = UserModel.getLoginCustomer();
+        String text = '''
+      API call
+      -----------------
+      Calling Login API with the following parameters
+      Username : ${customerModel.username}
+      Header : $header
+      Body :  ${{"batchNumber": batchNumber, "user": customerModel.userCode}}
+      URL : ${baseURL}Inventory/AddInventoryCounting
+      ''';
+        await writeToLogFile(
+            text: text,
+            heading: 'Value',
+            fileName: StackTrace.current.toString());
+      var res = await http.post(Uri.parse('${baseURL}Inventory/AddInventoryCounting'),
+          headers: header,
+          body: jsonEncode({"batchNumber": batchNumber, "user": customerModel.userCode}));
+
+        String resText = '''
+      API call response for URL : ${baseURL}Inventory/AddInventoryCounting
+      -------------------------------------------------------------------------------------
+      Response : ${res.body}
+      ''';
+        await writeToLogFile(
+            text: resText,
+            heading: 'Value',
+            fileName: StackTrace.current.toString());
+      print(res.body);
+      Map responseMap = jsonDecode(res.body);
+      if (!responseMap['IsError']) {
+
+
+        //     String resText = '''
+        // Calling success function
+        // -------------------------
+        // Response : ${customerModel.toJson()}
+        // ''';
+        //     await writeToLogFile(
+        //         text: resText,
+        //         heading: 'Value',
+        //         fileName: StackTrace.current.toString());
+        onSuccess(responseMap['Result']);
       } else {
         //     String resText = '''
         // Calling error function
