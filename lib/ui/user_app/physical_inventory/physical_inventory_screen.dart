@@ -4,6 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/pending_item_model.dart';
 import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -132,24 +133,41 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
               )
             else
               Expanded(
-                child: ListView.builder(
-                  controller: _scrollController, // ✅ scroll attached here
-                  itemCount: data.length + 1, // loader at bottom
-                  itemBuilder: (context, index) {
-                    if (index < data.length) {
-                      Datum dataModel = data[index];
-                      return _buildItem(dataModel);
-                    } else {
-                      return _isMoreLoading
-                          ? const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            )
-                          : const SizedBox(
-                              height: 70,
-                            );
-                    }
-                  },
+                child: Column(
+                  children: [
+                     Padding(
+                       padding: const EdgeInsets.only(left: 24.0,right: 24,top: 16),
+                       child: Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: [
+                           getHeadingText(text: 'Total Count : ',color: appPrimary),
+                           getHeadingText(text: '(${_pendingItemModel?.totalCount?.toStringAsFixed(0)??''})',
+                           color: Colors.red)
+                         ],
+                       ),
+                     ),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController, // ✅ scroll attached here
+                        itemCount: data.length + 1, // loader at bottom
+                        itemBuilder: (context, index) {
+                          if (index < data.length) {
+                            Datum dataModel = data[index];
+                            return _buildItem(dataModel);
+                          } else {
+                            return _isMoreLoading
+                                ? const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(child: CircularProgressIndicator()),
+                                  )
+                                : const SizedBox(
+                                    height: 70,
+                                  );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ],
