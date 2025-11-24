@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/pending_item_model.dart';
 import 'package:scanner/services/service_manager.dart';
@@ -19,6 +21,7 @@ class PhysicalInventoryScreen extends StatefulWidget {
 }
 
 class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
+  static const EventChannel _eventChannel = EventChannel('scannerStream');
   GroupModel? selectedItemGroup;
   List<GroupModel> itemGroupList = [];
   final ScrollController _scrollController = ScrollController();
@@ -31,6 +34,28 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   @override
   void initState() {
     super.initState();
+
+    _eventChannel.receiveBroadcastStream().listen((result) {
+      print('Scanned result on Flutter side : $result');
+      writeToLogFile(
+          text: 'Scanned result on Flutter side through side button : $result',
+          fileName: StackTrace.current.toString());
+      if (result != null && result != '') {
+        if (result.contains('\n')) {
+          result = result.split('\n')[0];
+        }
+
+        if (result.contains(':')) {
+          List l = result.split(":");
+          if (l.length >= 2) {
+            result = l[1];
+          }
+        }
+        addInventoryCountry(result);
+      }
+    }, onError: (error) {
+      CustomSnackBar.errorSnackBar('Error: $error');
+    });
 
     _scrollController.addListener(_onScroll);
     setFilterList();
@@ -101,6 +126,30 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
     setInventoryReport();
   }
 
+  addInventoryCountry(String barCode) async {
+    if (await ServiceManager.isInternetAvailable()) {
+      ServiceManager.addInventoryCounting(
+          batchNumber: barCode,
+          onSuccess: (xx) {
+            currentPage = 1;
+            setInventoryReport();
+            CustomSnackBar.successSnackBar(
+                xx['Message'] ?? 'Inventory counting added successfully');
+          },
+          onError: (vv) {
+            currentPage = 1;
+            setInventoryReport();
+            if (vv['ValidationErrors'].length > 0) {
+              CustomSnackBar.errorSnackBar(
+                  vv['ValidationErrors'][0]['ErrorMessage']?.toString() ??
+                      'Something went wrong!');
+            } else {
+              CustomSnackBar.errorSnackBar('Something went wrong!');
+            }
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
@@ -135,17 +184,22 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
               Expanded(
                 child: Column(
                   children: [
-                     Padding(
-                       padding: const EdgeInsets.only(left: 24.0,right: 24,top: 16),
-                       child: Row(
-                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                         children: [
-                           getHeadingText(text: 'Total Count : ',color: appPrimary),
-                           getHeadingText(text: '(${_pendingItemModel?.totalCount?.toStringAsFixed(0)??''})',
-                           color: Colors.red)
-                         ],
-                       ),
-                     ),
+                    if (data.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 24.0, right: 24, top: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            getHeadingText(
+                                text: 'Total Count : ', color: appPrimary),
+                            getHeadingText(
+                                text:
+                                    '(${_pendingItemModel?.totalCount?.toStringAsFixed(0) ?? ''})',
+                                color: Colors.red)
+                          ],
+                        ),
+                      ),
                     Expanded(
                       child: ListView.builder(
                         controller: _scrollController, // ✅ scroll attached here
@@ -158,7 +212,8 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                             return _isMoreLoading
                                 ? const Padding(
                                     padding: EdgeInsets.all(8.0),
-                                    child: Center(child: CircularProgressIndicator()),
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
                                   )
                                 : const SizedBox(
                                     height: 70,
@@ -180,27 +235,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
               String barCode = scanResult;
               if (barCode != '') {
                 print(barCode);
-                if (await ServiceManager.isInternetAvailable()) {
-                  ServiceManager.addInventoryCounting(
-                      batchNumber: barCode,
-                      onSuccess: (xx) {
-                        currentPage = 1;
-                        setInventoryReport();
-                        CustomSnackBar.successSnackBar(xx['Message'] ??
-                            'Inventory counting added successfully');
-                      },
-                      onError: (vv) {
-                        currentPage = 1;
-                        setInventoryReport();
-                        if (vv['ValidationErrors'].length > 0) {
-                          CustomSnackBar.errorSnackBar(vv['ValidationErrors'][0]
-                                  ['ErrorMessage']?.toString()??'Something went wrong!');
-                        }
-                        else{
-                          CustomSnackBar.errorSnackBar('Something went wrong!');
-                        }
-                      });
-                }
+                addInventoryCountry(barCode);
               }
             });
           },
