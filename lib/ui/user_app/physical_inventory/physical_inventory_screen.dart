@@ -174,8 +174,13 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                       onError: (vv) {
                         currentPage = 1;
                         setFilterList();
-                        CustomSnackBar.errorSnackBar(
-                            vv['ValidationErrors'][0].toString());
+                        if (vv['ValidationErrors'].length > 0) {
+                          CustomSnackBar.errorSnackBar(vv['ValidationErrors'][0]
+                                  ['ErrorMessage']?.toString()??'Something went wrong!');
+                        }
+                        else{
+                          CustomSnackBar.errorSnackBar('Something went wrong!');
+                        }
                       });
                 }
               }
