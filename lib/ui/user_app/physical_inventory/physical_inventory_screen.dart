@@ -185,13 +185,13 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
                       batchNumber: barCode,
                       onSuccess: (xx) {
                         currentPage = 1;
-                        setFilterList();
+                        setInventoryReport();
                         CustomSnackBar.successSnackBar(xx['Message'] ??
                             'Inventory counting added successfully');
                       },
                       onError: (vv) {
                         currentPage = 1;
-                        setFilterList();
+                        setInventoryReport();
                         if (vv['ValidationErrors'].length > 0) {
                           CustomSnackBar.errorSnackBar(vv['ValidationErrors'][0]
                                   ['ErrorMessage']?.toString()??'Something went wrong!');
