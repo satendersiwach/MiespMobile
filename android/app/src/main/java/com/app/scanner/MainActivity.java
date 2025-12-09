@@ -257,8 +257,8 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                     Toast.makeText(this, "Get_UserPreferences was InvalidParameter",	Toast.LENGTH_SHORT).show();
                 else if (ClResult.Err_NotSupport == clRet)
                     Toast.makeText(this, "Get_UserPreferences was NotSupport", Toast.LENGTH_SHORT).show();
-                else if (ClResult.S_OK == clRet)
-                    Toast.makeText(this, "Get_UserPreferences was successful", Toast.LENGTH_SHORT).show();
+//                else if (ClResult.S_OK == clRet)
+//                    Toast.makeText(this, "Get_UserPreferences was successful", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -651,8 +651,8 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                     Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was InvalidParameter",	Toast.LENGTH_SHORT).show();
                 else if (ClResult.Err_NotSupport == clRet)
                     Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was NotSupport", Toast.LENGTH_SHORT).show();
-                else if (ClResult.S_OK == clRet)
-                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was successful", Toast.LENGTH_SHORT).show();
+//                else if (ClResult.S_OK == clRet)
+//                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was successful", Toast.LENGTH_SHORT).show();
             }
         }
 
