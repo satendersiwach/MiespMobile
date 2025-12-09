@@ -5,8 +5,10 @@ import 'package:scanner/models/update_inventory_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';
 import 'package:scanner/services/service_manager.dart';
 import 'package:scanner/theme/custom_colors.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
+import 'package:scanner/theme/get_text_field.dart';
 
 class UserInventory extends StatefulWidget {
   const UserInventory({super.key});
@@ -16,6 +18,8 @@ class UserInventory extends StatefulWidget {
 }
 
 class _UserInventoryState extends State<UserInventory> {
+  final TextEditingController _remark = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
@@ -176,28 +180,104 @@ class _UserInventoryState extends State<UserInventory> {
                                         Expanded(
                                             child: InkWell(
                                           onTap: () {
-                                            UpdateInventoryModel
-                                                removeInventoryModel =
-                                                UpdateInventoryModel(
-                                                    batchNumber: userInventoryModel.name,
-                                                    itemCode: userInventoryModel
-                                                        .itemCode,
-                                                    quantity: userInventoryModel
-                                                        .quantity,
-                                                    remark: userInventoryModel
-                                                        .remark,
-                                                    user: UserModel
-                                                            .getLoginCustomer()
-                                                        .userCode,
-                                                    isManEntry: 'True',
-                                                    whsCode: userInventoryModel
-                                                        .whsCode);
-                                            ServiceManager
-                                                .updateInventoryCounting(
-                                                    updateInventoryModel:
-                                                        removeInventoryModel,
-                                                    onSuccess: (res) {},
-                                                    onError: (error) {});
+                                            List<Widget> titleRowWidgets = [
+                                              getPoppinsText(
+                                                  text: 'Remove',
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ];
+                                            List<Widget> actions = [
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  alignment: Alignment.center,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      // if (!isShowNegative)
+                                                      const Spacer(),
+
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          UpdateInventoryModel removeInventoryModel = UpdateInventoryModel(
+                                                              batchNumber:
+                                                                  userInventoryModel
+                                                                      .name,
+                                                              itemCode:
+                                                                  userInventoryModel
+                                                                      .itemCode,
+                                                              quantity:
+                                                                  userInventoryModel
+                                                                      .quantity,
+                                                              remark:
+                                                                  _remark.text,
+                                                              user: UserModel
+                                                                      .getLoginCustomer()
+                                                                  .userCode,
+                                                              isManEntry: 'Y',
+                                                              whsCode:
+                                                                  userInventoryModel
+                                                                      .whsCode,
+                                                              mode: 'Manual');
+                                                          ServiceManager
+                                                              .updateInventoryCounting(
+                                                                  updateInventoryModel:
+                                                                      removeInventoryModel,
+                                                                  onSuccess:
+                                                                      (res) {
+                                                                    CustomSnackBar.successSnackBar(
+                                                                        res['Result'] ??
+                                                                            'Inventory Updated');
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    _remark
+                                                                        .clear();
+                                                                  },
+                                                                  onError:
+                                                                      (error) {});
+                                                        },
+                                                        child: getPoppinsText(
+                                                            text: 'Update',
+                                                            color: appPrimary,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: getPoppinsText(
+                                                            text: 'No',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 16,
+                                                            color: appPrimary),
+                                                      ),
+                                                    ],
+                                                  )),
+                                            ];
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Row(
+                                                    children: titleRowWidgets,
+                                                  ),
+                                                  content: getTextField(
+                                                      controller: _remark,
+                                                      maxLines: 4,
+                                                      height: null,
+                                                      labelText: 'Remark'),
+                                                  actions: actions,
+                                                );
+                                              },
+                                            );
                                           },
                                           child: getPoppinsText(
                                               text: 'Update',
@@ -234,20 +314,31 @@ class _UserInventoryState extends State<UserInventory> {
                                                           RemoveInventoryModel
                                                               removeInventoryModel =
                                                               RemoveInventoryModel(
-                                                                  batchNumber: userInventoryModel.name,
+                                                                  batchNumber:
+                                                                      userInventoryModel
+                                                                          .name,
                                                                   itemCode:
                                                                       userInventoryModel
                                                                           .itemCode,
                                                                   whsCode:
                                                                       userInventoryModel
                                                                           .whsCode);
-                                                          ServiceManager.removeInventoryCounting(
-                                                              removeInventoryModel:
-                                                                  removeInventoryModel,
-                                                              onSuccess:
-                                                                  (res) {},
-                                                              onError:
-                                                                  (error) {});
+                                                          ServiceManager
+                                                              .removeInventoryCounting(
+                                                                  removeInventoryModel:
+                                                                      removeInventoryModel,
+                                                                  onSuccess:
+                                                                      (res) {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    CustomSnackBar.successSnackBar(
+                                                                        res['Result'] ??
+                                                                            'Inventory Removed');
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  onError:
+                                                                      (error) {});
                                                         },
                                                         child: getPoppinsText(
                                                             text: 'Remove',
