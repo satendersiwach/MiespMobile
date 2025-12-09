@@ -48,7 +48,7 @@ class UserInventoryModel {
         itemCode: json["ItemCode"],
         itemName: json["ItemName"],
         whsName: json["WhsName"],
-        code: json["Code"],
+        code: json["Code"]?.toString()??'',
         remark: json["Remark"],
         isLocked: json["IsLocked"],
       );
