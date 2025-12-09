@@ -179,7 +179,7 @@ class _UserInventoryState extends State<UserInventory> {
                                             UpdateInventoryModel
                                                 removeInventoryModel =
                                                 UpdateInventoryModel(
-                                                    // batchNumber: userInventoryModel.batchNumber,
+                                                    batchNumber: userInventoryModel.name,
                                                     itemCode: userInventoryModel
                                                         .itemCode,
                                                     quantity: userInventoryModel
@@ -234,7 +234,7 @@ class _UserInventoryState extends State<UserInventory> {
                                                           RemoveInventoryModel
                                                               removeInventoryModel =
                                                               RemoveInventoryModel(
-                                                                  // batchNumber: userInventoryModel.batchNumber,
+                                                                  batchNumber: userInventoryModel.name,
                                                                   itemCode:
                                                                       userInventoryModel
                                                                           .itemCode,
