@@ -134,7 +134,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
             currentPage = 1;
             setInventoryReport();
             CustomSnackBar.successSnackBar(
-                xx['Message'] ?? 'Inventory counting added successfully');
+                xx['Result'] ?? 'Inventory counting added successfully');
           },
           onError: (vv) {
             currentPage = 1;

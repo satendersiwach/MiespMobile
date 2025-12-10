@@ -438,7 +438,7 @@ class ServiceManager {
         //         text: resText,
         //         heading: 'Value',
         //         fileName: StackTrace.current.toString());
-        onSuccess(responseMap['Result']);
+        onSuccess(responseMap);
       } else {
         //     String resText = '''
         // Calling error function
