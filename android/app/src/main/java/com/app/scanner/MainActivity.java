@@ -1,10 +1,13 @@
 package com.app.scanner;
+
 import com.cipherlab.barcode.*;
 import com.cipherlab.barcode.decoder.*;
 import com.cipherlab.barcode.decoderparams.*;
 import com.cipherlab.barcodebase.*;
+
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,15 +18,19 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
+
 import io.flutter.embedding.android.FlutterActivity;
+
 import androidx.annotation.NonNull;
-import  io.flutter.plugins.GeneratedPluginRegistrant;
+
+import io.flutter.plugins.GeneratedPluginRegistrant;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.EventSink;
+
 import android.os.Handler;
 
 public class MainActivity extends FlutterActivity implements ReaderCallback {
-    public String decoded_data=null;
+    public String decoded_data = null;
     private static final String CHANNEL = "com.example.temp/rfid";
     private IntentFilter filter;
     private ReaderManager mReaderManager;
@@ -34,6 +41,9 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
 
     private static final String CHANNEL2 = "scannerStream";
     private EventSink eventSink;
+
+    private boolean isScannerActive = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +54,13 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
         mReaderCallback = this;
 
         // Set up the filter for actions related to scanner data
-        filter = new IntentFilter();
-        filter.addAction(GeneralString.Intent_SOFTTRIGGER_DATA);
-        filter.addAction(GeneralString.Intent_PASS_TO_APP);
-        filter.addAction(GeneralString.Intent_READERSERVICE_CONNECTED);
-
-        // Register the receiver to listen for scanner data
-        registerReceiver(myDataReceiver, filter,Context.RECEIVER_NOT_EXPORTED);
+//        filter = new IntentFilter();
+//        filter.addAction(GeneralString.Intent_SOFTTRIGGER_DATA);
+//        filter.addAction(GeneralString.Intent_PASS_TO_APP);
+//        filter.addAction(GeneralString.Intent_READERSERVICE_CONNECTED);
+//
+//        // Register the receiver to listen for scanner data
+//        registerReceiver(myDataReceiver, filter,Context.RECEIVER_NOT_EXPORTED);
     }
 
     @Override
@@ -72,7 +82,11 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
         // ***************************************************//
         // Unregister BroadcastReceiver before app closes
         // ***************************************************//
-        unregisterReceiver(myDataReceiver);
+        try {
+            unregisterReceiver(myDataReceiver);
+        } catch (Exception ignored) {
+        }
+
 
         // ***************************************************//
         // Release resources related to ReaderManager before app closes
@@ -82,8 +96,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
         }
     }
 
-    private void ExeSampleCode()
-    {
+    private void ExeSampleCode() {
 
         // ***************************************************//
         // 1. Get barcode scanner type
@@ -200,9 +213,8 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
         //    For example, get/set scan duration time、security level、redundancy level…etc
         // ***************************************************//
         {
-            if (mReaderManager != null)
-            {
-                BcReaderType myReaderType =  mReaderManager.GetReaderType();
+            if (mReaderManager != null) {
+                BcReaderType myReaderType = mReaderManager.GetReaderType();
 
                 // step1: new a class, the object is set to default value
                 UserPreference settings = new UserPreference();
@@ -211,8 +223,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                 mReaderManager.Get_UserPreferences(settings);
 
                 // step3: items are not supported exactly, so user can check...
-                if (Enable_State.NotSupport == settings.displayMode)
-                {
+                if (Enable_State.NotSupport == settings.displayMode) {
                     //1D does not support
                 }
 
@@ -254,7 +265,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                 if (ClResult.S_ERR == clRet)
                     Toast.makeText(this, "Get_UserPreferences was failed", Toast.LENGTH_SHORT).show();
                 else if (ClResult.Err_InvalidParameter == clRet)
-                    Toast.makeText(this, "Get_UserPreferences was InvalidParameter",	Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Get_UserPreferences was InvalidParameter", Toast.LENGTH_SHORT).show();
                 else if (ClResult.Err_NotSupport == clRet)
                     Toast.makeText(this, "Get_UserPreferences was NotSupport", Toast.LENGTH_SHORT).show();
 //                else if (ClResult.S_OK == clRet)
@@ -618,15 +629,13 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
         //  7-6. get/set Code 39(same usage as above)
         // ***************************************************//
         {
-            if (mReaderManager != null)
-            {
+            if (mReaderManager != null) {
 
                 // step1: new a class, the object is set to default value
                 Code39 settings = new Code39();
 
                 // step2: to check does barcode scanner support this symbology
-                if (ClResult.Err_NotSupport == mReaderManager.Get_Symbology(settings))
-                {
+                if (ClResult.Err_NotSupport == mReaderManager.Get_Symbology(settings)) {
                     // barcode scanner of device does not support this kind of symbology
                     return;
                 }
@@ -648,7 +657,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                 if (ClResult.S_ERR == clRet)
                     Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was failed", Toast.LENGTH_SHORT).show();
                 else if (ClResult.Err_InvalidParameter == clRet)
-                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was InvalidParameter",	Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was InvalidParameter", Toast.LENGTH_SHORT).show();
                 else if (ClResult.Err_NotSupport == clRet)
                     Toast.makeText(this, "Set_Symbology " + settings.getClass().getSimpleName() + " was NotSupport", Toast.LENGTH_SHORT).show();
 //                else if (ClResult.S_OK == clRet)
@@ -2087,8 +2096,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
             // software way to scan barcode (ex, create a button (call this API inside onClick))
             // if decode barcode successfully, app will get an intent "Intent_SOFTTRIGGER_DATA"
             // get decoded data from intent.getStringExtra() (it does need to implement a BroadcastReceiver (see below))
-            if (mReaderManager != null)
-            {
+            if (isScannerActive && mReaderManager != null) {
                 Thread sThread = new Thread(new Runnable() {
 
                     @Override
@@ -2096,7 +2104,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                         mReaderManager.SoftScanTrigger();
                     }
                 });
-                sThread.setPriority( Thread.MAX_PRIORITY );
+                sThread.setPriority(Thread.MAX_PRIORITY);
                 sThread.start();
 
             }
@@ -2293,28 +2301,40 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
                 }
 
 
-            }
-            else if (intent.getAction().equals(GeneralString.Intent_PASS_TO_APP)){
-                // If user disable KeyboardEmulation, barcode reader service will broadcast Intent_PASS_TO_APP
+            } else if (intent.getAction().equals(GeneralString.Intent_PASS_TO_APP)) {
 
-                // extra string from intent
+                if (!isScannerActive) return; // 🔥 PREVENT cross-device leaks
+
                 decoded_data = intent.getStringExtra(GeneralString.BcReaderData);
-                Log.d("ScannerData", "Intent_PASS_TO_APP Decoded Data: " + decoded_data);
+
+                Log.d("ScannerData", "Decoded Data: " + decoded_data);
+
                 if (eventSink != null) {
-                    eventSink.success(decoded_data); // Send data to Flutter
+                    eventSink.success(decoded_data);
                 }
-
-//                if (pendingResult != null) {
-//                    pendingResult.success(decoded_data);
-//                    pendingResult = null; // Reset after sending response
-//                }
-
-//                // show decoded data
-//                mDecodeCount++;
-//                e1.setText("[" + mDecodeCount + "]   " + data);
-
             }
-            else if(intent.getAction().equals(GeneralString.Intent_READERSERVICE_CONNECTED)){
+
+//            else if (intent.getAction().equals(GeneralString.Intent_PASS_TO_APP)){
+//                // If user disable KeyboardEmulation, barcode reader service will broadcast Intent_PASS_TO_APP
+//
+//                // extra string from intent
+//                decoded_data = intent.getStringExtra(GeneralString.BcReaderData);
+//                Log.d("ScannerData", "Intent_PASS_TO_APP Decoded Data: " + decoded_data);
+//                if (eventSink != null) {
+//                    eventSink.success(decoded_data); // Send data to Flutter
+//                }
+//
+////                if (pendingResult != null) {
+////                    pendingResult.success(decoded_data);
+////                    pendingResult = null; // Reset after sending response
+////                }
+//
+////                // show decoded data
+////                mDecodeCount++;
+////                e1.setText("[" + mDecodeCount + "]   " + data);
+//
+//            }
+            else if (intent.getAction().equals(GeneralString.Intent_READERSERVICE_CONNECTED)) {
                 // Make sure this app bind to barcode reader service , then user can use APIs to get/set settings from barcode reader service
 
                 BcReaderType myReaderType = mReaderManager.GetReaderType();
@@ -2334,7 +2354,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
 
                 mReaderManager.Set_ReaderOutputConfiguration(settings);
 
-                mReaderManager.SetActive(true);
+//                mReaderManager.SetActive(true);
 
                 Log.d("ScannerData", "Intent_READERSERVICE_CONNECTED Called ");
 
@@ -2373,6 +2393,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
             }
         }
     }
+
     @Override
     public IBinder asBinder() {
         // TODO Auto-generated method stub
@@ -2383,7 +2404,7 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
     public void onDecodeComplete(String arg0) throws RemoteException {
         // TODO Auto-generated method stub
         //e1.setText(arg0);
-        Log.d("ScannerData", "Decode Data : "+arg0);
+        Log.d("ScannerData", "Decode Data : " + arg0);
         Toast.makeText(this, "Decode Data " + arg0, Toast.LENGTH_SHORT).show();
     }
 
@@ -2403,31 +2424,63 @@ public class MainActivity extends FlutterActivity implements ReaderCallback {
 
         new EventChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL2)
                 .setStreamHandler(new EventChannel.StreamHandler() {
+
                     @Override
                     public void onListen(Object arguments, EventSink events) {
                         eventSink = events;
-                        registerReceiver(myDataReceiver, new IntentFilter(GeneralString.Intent_PASS_TO_APP),Context.RECEIVER_NOT_EXPORTED);
+                        isScannerActive = true;
+
+                        mReaderManager.SetActive(true); // ✅ ACTIVATE HERE ONLY
+
+                        IntentFilter filter = new IntentFilter();
+                        filter.addAction(GeneralString.Intent_PASS_TO_APP);
+                        filter.addAction(GeneralString.Intent_SOFTTRIGGER_DATA);
+                        filter.addAction(GeneralString.Intent_READERSERVICE_CONNECTED);
+
+                        registerReceiver(myDataReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
                     }
 
                     @Override
                     public void onCancel(Object arguments) {
-                        unregisterReceiver(myDataReceiver);
+                        isScannerActive = false;
                         eventSink = null;
+                        mReaderManager.SetActive(false);
+
+                        try {
+                            unregisterReceiver(myDataReceiver);
+                        } catch (Exception ignored) {
+                        }
                     }
                 });
+
+
+//        new EventChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL2)
+//                .setStreamHandler(new EventChannel.StreamHandler() {
+//                    @Override
+//                    public void onListen(Object arguments, EventSink events) {
+//                        eventSink = events;
+//                        registerReceiver(myDataReceiver, new IntentFilter(GeneralString.Intent_PASS_TO_APP),Context.RECEIVER_NOT_EXPORTED);
+//                    }
+//
+//                    @Override
+//                    public void onCancel(Object arguments) {
+//                        unregisterReceiver(myDataReceiver);
+//                        eventSink = null;
+//                    }
+//                });
     }
+
     private void configureRFID() {
         // Your RFID configuration logic here
         Log.e("Hi", "Configuring ");
-        Log.d("Hell","configureRFID method invoked from Flutter");
+        Log.d("Hell", "configureRFID method invoked from Flutter");
 
-        try{
+        try {
             ExeSampleCode();
         } catch (java.lang.Exception e) {
             Toast.makeText(this, "Error in configureRFID: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.e("Exception", e.getMessage());
-        }
-        finally {
+        } finally {
             Log.e("Hi", "ExeSampleCode has run");
         }
     }
