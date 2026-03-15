@@ -4,16 +4,15 @@ import 'package:scanner/common/enums.dart';
 import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
-import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/api_exception.dart';
 import 'package:scanner/services/auth_service.dart';
 import 'package:scanner/services/pick_list_service.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 
 class PickListItemController extends GetxController {
-  final PickListModel pickListModel;
+  final List<int> pickListIds;
 
-  PickListItemController({required this.pickListModel});
+  PickListItemController({required this.pickListIds});
 
   final pickListItems = <PickListItemDetailModel>[].obs;
   final isLoading = true.obs;
@@ -33,7 +32,7 @@ class PickListItemController extends GetxController {
       final items = await PickListService.getListingItems(
         status: pickListStatusEnum.value == PickListStatusEnum.picked ? 'Y' : 'N',
         search: queryText.value,
-        pickListId: [pickListModel.absEntry],
+        pickListId: pickListIds,
       );
       pickListItems.assignAll(items);
     } on ApiException catch (e) {

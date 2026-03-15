@@ -5,6 +5,7 @@ import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/scanner_service.dart';
+import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
@@ -90,6 +91,9 @@ class _UserOutboundDeliveryWindowState
         },
         child: const Icon(Icons.barcode_reader, color: Colors.white),
       ),
+      bottomNavigationBar: Obx(() => _controller.hasSelection
+          ? _viewItemsButton()
+          : const SizedBox.shrink()),
     );
   }
 
@@ -121,16 +125,15 @@ class _UserOutboundDeliveryWindowState
               return const SizedBox.shrink();
             }
 
-            return InkWell(
-              onTap: () {
-                Get.to(() => PickListItemScreen(
-                      pickListModel: pickListModel,
-                      initialStatus: pickListModel.status == 'P'
-                          ? PickListStatusEnum.picked
-                          : PickListStatusEnum.notPicked,
-                    ));
+            return CheckboxListTile(
+              value: pickListModel.isSelected,
+              onChanged: (_) {
+                final realIndex = _controller.displayedPickList.indexOf(pickListModel);
+                _controller.toggleSelection(realIndex);
               },
-              child: Container(
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: const EdgeInsets.only(left: 8),
+              title: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.rectangle,
@@ -290,6 +293,38 @@ class _UserOutboundDeliveryWindowState
             ),
           )),
         ],
+      ),
+    );
+  }
+
+  Widget _viewItemsButton() {
+    final count = _controller.selectedPickListIds.length;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: appPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: () {
+              Get.to(() => PickListItemScreen(
+                    pickListIds: _controller.selectedPickListIds,
+                  ));
+            },
+            child: getPoppinsText(
+              text: 'View Items ($count selected)',
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ),
       ),
     );
   }

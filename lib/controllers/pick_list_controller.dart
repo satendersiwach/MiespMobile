@@ -69,6 +69,16 @@ class PickListController extends GetxController {
     fetchPickList();
   }
 
+  void toggleSelection(int index) {
+    displayedPickList[index].isSelected = !displayedPickList[index].isSelected;
+    displayedPickList.refresh();
+  }
+
+  List<int> get selectedPickListIds =>
+      pickList.where((p) => p.isSelected).map((p) => p.absEntry).toList();
+
+  bool get hasSelection => pickList.any((p) => p.isSelected);
+
   Future<void> onBarcodeScanned(String barcode) async {
     if (await AuthService.isInternetAvailable()) {
       UserModel userModel = UserModel.getLoginCustomer();

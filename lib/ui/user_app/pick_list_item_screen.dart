@@ -6,7 +6,6 @@ import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
-import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/scanner_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
@@ -16,12 +15,12 @@ import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/element_button.dart';
 
 class PickListItemScreen extends StatefulWidget {
-  final PickListModel pickListModel;
+  final List<int> pickListIds;
   final PickListStatusEnum initialStatus;
 
   const PickListItemScreen({
     super.key,
-    required this.pickListModel,
+    required this.pickListIds,
     this.initialStatus = PickListStatusEnum.notPicked,
   });
 
@@ -38,7 +37,7 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   void initState() {
     super.initState();
     _controller = Get.put(PickListItemController(
-      pickListModel: widget.pickListModel,
+      pickListIds: widget.pickListIds,
     ));
     _controller.pickListStatusEnum.value = widget.initialStatus;
     _controller.fetchItems();
