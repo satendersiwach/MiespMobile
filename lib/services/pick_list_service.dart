@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/models/assign_pick_list_model.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';

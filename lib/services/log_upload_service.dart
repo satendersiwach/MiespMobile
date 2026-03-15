@@ -5,7 +5,7 @@ import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/services/api_config.dart';
 

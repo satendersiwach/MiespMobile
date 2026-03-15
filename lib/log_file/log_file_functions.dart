@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:scanner/common/get_formatted_date.dart';
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/services/api_config.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:share_plus/share_plus.dart';

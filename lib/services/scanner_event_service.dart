@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/log_file/log_file_functions.dart';
 
 class ScannerEventService {
   static final ScannerEventService _instance = ScannerEventService._internal();

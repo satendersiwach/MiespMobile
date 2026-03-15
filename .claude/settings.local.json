@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(cd D:\\\\Development\\\\OWS Development\\\\Miesp Mobile\\\\scanner\\\\lib:*)",
+      "Bash(cd \"D:/Development/OWS Development/Miesp Mobile/scanner\" && flutter analyze 2>&1)",
+      "Bash(adb devices:*)",
+      "Bash(\"$LOCALAPPDATA/Android/Sdk/platform-tools/adb.exe\" logcat:*)",
+      "Bash(/c/Users/saten/AppData/Local/Android/Sdk/platform-tools/adb.exe logcat:*)",
+      "Bash(cd:*)"
+    ]
+  }
+}

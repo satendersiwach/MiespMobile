@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:scanner/local_storage/keys.dart';
+import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/services/api_config.dart';
 import 'package:scanner/services/api_exception.dart';
 import 'package:scanner/translations/custom_locale.dart';

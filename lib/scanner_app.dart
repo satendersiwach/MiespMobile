@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/theme/custom_theme.dart';
 import 'package:scanner/theme/elements_screen.dart';

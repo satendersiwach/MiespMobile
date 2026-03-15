@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/log_file/log_file_functions.dart';
 
 class ScannerService {
   static const platform = MethodChannel('com.example.temp/rfid');

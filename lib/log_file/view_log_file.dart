@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 
 class ViewLogFile extends StatelessWidget {

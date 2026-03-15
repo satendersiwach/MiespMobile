@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';
 import 'package:scanner/services/api_config.dart';

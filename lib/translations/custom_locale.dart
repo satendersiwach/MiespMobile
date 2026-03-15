@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:scanner/local_storage/keys.dart';
+import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/services/auth_service.dart';
 import 'package:flutter/material.dart';

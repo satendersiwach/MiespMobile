@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scanner/LogFile/view_log_file.dart';
+import 'package:scanner/log_file/view_log_file.dart';
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/ui/components/element_common_widget.dart';

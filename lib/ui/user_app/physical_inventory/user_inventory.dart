@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/remove_inventory_model.dart';
 import 'package:scanner/models/update_inventory_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';

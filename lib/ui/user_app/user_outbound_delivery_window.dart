@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
-import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/api_exception.dart';
 import 'package:scanner/services/auth_service.dart';
