@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/common/get_formatted_date.dart';
+import 'package:scanner/controllers/super_admin_controller.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/pick_list_model.dart';
-import 'package:scanner/models/update_pick_list_model.dart';
-import 'package:scanner/services/api_exception.dart';
-import 'package:scanner/services/pick_list_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/ui/components/element_button.dart';
-import 'package:scanner/ui/components/element_common_widget.dart';
 import 'package:scanner/ui/login_screen.dart';
 import 'package:scanner/ui/supervisor/assign_pick_list_to_user_screen.dart';
 
@@ -24,158 +21,85 @@ class SuperAdminDashboard extends StatefulWidget {
 }
 
 class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
-  List<PickListModel> pickList = [];
-  PickListStatusEnumForAdmin pickListStatusEnum = PickListStatusEnumForAdmin.open;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    setData();
-  }
-
-  setData() async {
-    _isLoading = true;
-    pickList.clear();
-    try {
-      final result = await PickListService.getPickListByStatus(
-          status: getPickListStatusFromEnum(
-              pickListStatusEnum: pickListStatusEnum));
-      if (!mounted) return;
-      setState(() {
-        pickList = result;
-        _isLoading = false;
-      });
-    } on ApiException {
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-      });
-      CustomSnackBar.errorSnackBar(e.toString());
-    }
-  }
+  final SuperAdminController _controller = Get.put(SuperAdminController());
 
   @override
   Widget build(BuildContext context) {
     return screenWithAppBar(
         title: 'Scanner App',
-        // drawer: const CustomDrawer(),
         isBackVisible: false,
         actions: [
           IconButton(
-              onPressed: () {
-                List<Widget> titleRowWidgets = [
-                  getPoppinsText(
-                      text: 'Logout',
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ];
-                List<Widget> actions = [
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.center,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // if (!isShowNegative)
-                          const Spacer(),
-
-                          TextButton(
-                            onPressed: () {
-                              LocalStorage.logout();
-                              Get.offAll(() => const LoginPage());
-                            },
-                            child: getPoppinsText(
-                                text: 'Logout',
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: getPoppinsText(
-                                text: 'No',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: appPrimary),
-                          ),
-                          // TextButton(
-                          //   onPressed: () {
-                          //     LocalStorage.logout();
-                          //     Get.offAll(() => const LoginPage());
-                          //   },
-                          //   child: const Text(
-                          //     "Logout",
-                          //     style: TextStyle(
-                          //         color: Colors.red,
-                          //         fontWeight: FontWeight.bold,
-                          //         fontSize: 16),
-                          //   ),
-                          // ),
-                          // TextButton(
-                          //   onPressed: () {
-                          //     Navigator.pop(context);
-                          //   },
-                          //   child: const Text(
-                          //     "No",
-                          //     style: TextStyle(
-                          //         fontWeight: FontWeight.bold, fontSize: 16),
-                          //   ),
-                          // ),
-                        ],
-                      )),
-                ];
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Row(
-                        children: titleRowWidgets,
-                      ),
-                      content: getPoppinsText(
-                          text: 'Are you sure you want to logout?',
-                          textAlign: TextAlign.start,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500),
-                      actions: actions,
-                    );
-                  },
-                );
-              },
-              icon: const Icon(
-                Icons.logout,
-                color: Colors.red,
-              )),
+              onPressed: () => _showLogoutDialog(context),
+              icon: const Icon(Icons.logout, color: Colors.red)),
         ],
         body: SingleChildScrollView(
           child: Column(
             children: [
-              // appVersionWidget(),
-              // getPoppinsText(
-              //     text: 'Welcome, Supervisor',
-              //     fontWeight: FontWeight.w700,
-              //     fontSize: 20),
-              //todo: implement search
               _statusFilterWidget(),
-              if (_isLoading)
-                const Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: CircularProgressIndicator(),
-                )
-              else
-                _list(),
+              Obx(() {
+                if (_controller.isLoading.value) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return _list();
+              }),
             ],
           ),
         ),
-        bottomNavigationBar: _buttonContainer());
+        bottomNavigationBar: Obx(() => _buttonContainer()));
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(children: [
+          getPoppinsText(
+              text: 'Logout',
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
+        ]),
+        content: getPoppinsText(
+            text: 'Are you sure you want to logout?',
+            textAlign: TextAlign.start,
+            fontSize: 15,
+            fontWeight: FontWeight.w500),
+        actions: [
+          Container(
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      LocalStorage.logout();
+                      Get.offAll(() => const LoginPage());
+                    },
+                    child: getPoppinsText(
+                        text: 'Logout',
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: getPoppinsText(
+                        text: 'No',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: appPrimary),
+                  ),
+                ],
+              )),
+        ],
+      ),
+    );
   }
 
   Widget _statusFilterWidget() {
@@ -197,27 +121,21 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
             padding: const EdgeInsets.only(top: 8.0, left: 15, right: 15),
             child: SizedBox(
               width: Get.width / 4,
-              child: DropdownButton<PickListStatusEnumForAdmin>(
-                value: pickListStatusEnum, // Currently selected value
-                onChanged: (newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      pickListStatusEnum =
-                          newValue; // Update the selected value
-                    });
-                    setData();
-                  }
-                },
-                items:
-                    PickListStatusEnumForAdmin.values.map((PickListStatusEnumForAdmin value) {
-                  return DropdownMenuItem<PickListStatusEnumForAdmin>(
-                    value: value,
-                    child: Text(
-                        getEnumLabel(value)), // Display user-friendly label
-                  );
-                }).toList(), // Converts enum values to dropdown items
-                borderRadius: BorderRadius.circular(10),
-              ),
+              child: Obx(() => DropdownButton<PickListStatusEnumForAdmin>(
+                    value: _controller.pickListStatusEnum.value,
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        _controller.updateStatusFilter(newValue);
+                      }
+                    },
+                    items: PickListStatusEnumForAdmin.values
+                        .map((value) => DropdownMenuItem(
+                              value: value,
+                              child: Text(getEnumLabel(value)),
+                            ))
+                        .toList(),
+                    borderRadius: BorderRadius.circular(10),
+                  )),
             ),
           )),
         ],
@@ -226,426 +144,273 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   }
 
   Widget _buttonContainer() {
-    if (pickList.isEmpty ||
-        pickListStatusEnum == PickListStatusEnumForAdmin.closed ||
-        pickListStatusEnum == PickListStatusEnumForAdmin.all) {
-      return const SizedBox(
-        height: 0,
-        width: 0,
-      );
-    } else {
-      return SizedBox(
-        height: Get.height/13,
-        child: Row(
-          children: [
-            if(pickListStatusEnum==PickListStatusEnumForAdmin.assigned)...[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: loadingButton(
-                      isLoading: false,
-                      btnText: 'Remove',
-                      onPress: () {
-                        if (!atLeastOnePickListSelected()) {
-                          CustomSnackBar.errorSnackBar(
-                              'Please select at least one Pick List');
-                        } else {
-                          List<Widget> titleRowWidgets = [
-                            getPoppinsText(
-                                text: 'Remove',
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ];
-                          List<Widget> actions = [
-                            Container(
-                                width: MediaQuery.of(context).size.width,
-                                alignment: Alignment.center,
-                                child: Row(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.center,
-                                  children: [
-                                    // if (!isShowNegative)
-                                    const Spacer(),
-
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.back();
-                                        List<String> selectedPickList = [];
-                                        for (PickListModel pickListModel in pickList) {
-                                          if (pickListModel.isSelected) {
-                                            selectedPickList.add(pickListModel
-                                                .docEntry.toString());
-                                          }
-                                        }
-                                        () async {
-                                          try {
-                                            final responseMap = await PickListService
-                                                .removePickList(l: selectedPickList);
-                                            setData();
-                                            CustomSnackBar.successSnackBar(
-                                                responseMap['Result']);
-                                          } on ApiException catch (e) {
-                                            CustomSnackBar.errorSnackBar(
-                                                e.validationError ?? e.message);
-                                          } catch (e) {
-                                            CustomSnackBar.errorSnackBar(e.toString());
-                                          }
-                                        }();
-                                      },
-                                      child: getPoppinsText(
-                                          text: 'Remove',
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: getPoppinsText(
-                                          text: 'No',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: appPrimary),
-                                    ),
-                                  ],
-                                )),
-                          ];
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Row(
-                                  children: titleRowWidgets,
-                                ),
-                                content: getPoppinsText(
-                                    text:
-                                    'Are you sure you want to remove this picklist?',
-                                    textAlign: TextAlign.start,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
-                                actions: actions,
-                              );
-                            },
-                          );
-
-
-                        }
-                      },
-                      backColor: appPrimary),
-                ),
-              ),
-              const VerticalDivider(
-                color: Colors.grey,
-                thickness: 1,
-              ),
-            ],
-
+    if (_controller.pickList.isEmpty ||
+        _controller.pickListStatusEnum.value ==
+            PickListStatusEnumForAdmin.closed ||
+        _controller.pickListStatusEnum.value ==
+            PickListStatusEnumForAdmin.all) {
+      return const SizedBox(height: 0, width: 0);
+    }
+    return SizedBox(
+      height: Get.height / 13,
+      child: Row(
+        children: [
+          if (_controller.pickListStatusEnum.value ==
+              PickListStatusEnumForAdmin.assigned) ...[
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: loadingButton(
                     isLoading: false,
-                    btnText: pickListStatusEnum == PickListStatusEnumForAdmin.assigned
-                        ? 'Reassign'
-                        : 'Assign',
+                    btnText: 'Remove',
                     onPress: () {
-                      if (!atLeastOnePickListSelected()) {
+                      if (!_controller.atLeastOneSelected()) {
                         CustomSnackBar.errorSnackBar(
                             'Please select at least one Pick List');
                       } else {
-                        List<PickListModel> selectedPickList = [];
-                        for (PickListModel pickListModel in pickList) {
-                          if (pickListModel.isSelected) {
-                            selectedPickList.add(pickListModel);
-                          }
-                        }
-                        Get.to(() => AssignPicklistToUserScreen(
-                              pickList: selectedPickList,
-                              mode: pickListStatusEnum == PickListStatusEnumForAdmin.assigned
-                                  ? Mode.update
-                                  : Mode.add,
-                            ))?.then((onValue) {
-                          setState(() {
-                            setData();
-                          });
-                        });
+                        _showRemoveDialog(
+                          context,
+                          'Are you sure you want to remove this picklist?',
+                          () {
+                            Get.back();
+                            _controller.removeSelectedPickLists();
+                          },
+                        );
                       }
                     },
                     backColor: appPrimary),
               ),
             ),
+            const VerticalDivider(color: Colors.grey, thickness: 1),
           ],
-        ),
-      );
-    }
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: loadingButton(
+                  isLoading: false,
+                  btnText: _controller.pickListStatusEnum.value ==
+                          PickListStatusEnumForAdmin.assigned
+                      ? 'Reassign'
+                      : 'Assign',
+                  onPress: () {
+                    if (!_controller.atLeastOneSelected()) {
+                      CustomSnackBar.errorSnackBar(
+                          'Please select at least one Pick List');
+                    } else {
+                      Get.to(() => AssignPicklistToUserScreen(
+                                pickList: _controller.selectedPickLists,
+                                mode: _controller.pickListStatusEnum.value ==
+                                        PickListStatusEnumForAdmin.assigned
+                                    ? Mode.update
+                                    : Mode.add,
+                              ))
+                          ?.then((_) => _controller.fetchData());
+                    }
+                  },
+                  backColor: appPrimary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRemoveDialog(
+      BuildContext context, String message, VoidCallback onConfirm) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(children: [
+          getPoppinsText(
+              text: 'Remove',
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
+        ]),
+        content: getPoppinsText(
+            text: message,
+            textAlign: TextAlign.start,
+            fontSize: 15,
+            fontWeight: FontWeight.w500),
+        actions: [
+          Container(
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  TextButton(
+                    onPressed: onConfirm,
+                    child: getPoppinsText(
+                        text: 'Remove',
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: getPoppinsText(
+                        text: 'No',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: appPrimary),
+                  ),
+                ],
+              )),
+        ],
+      ),
+    );
   }
 
   Widget _list() {
-    return ListView.separated(
-      itemCount: pickList.length,
-      physics: const ScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        PickListModel pickListModel = pickList[index];
-        String btnTxt = 'Assign';
-        if (pickListModel.status == 'A') {
-          btnTxt = 'Reassign';
-        }
-        return CheckboxListTile(
-          value: pickListModel.isSelected,
-          onChanged: (val) {
-            pickListModel.isSelected = !pickListModel.isSelected;
-
-            setState(() {});
-          },
-          controlAffinity: ListTileControlAffinity.leading,
-          contentPadding: const EdgeInsets.only(left: 8),
-          title: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 4.0,
-                  offset: Offset(2.0, 2.0),
+    return Obx(() => ListView.separated(
+          itemCount: _controller.pickList.length,
+          physics: const ScrollPhysics(),
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            PickListModel pickListModel = _controller.pickList[index];
+            String btnTxt =
+                pickListModel.status == 'A' ? 'Reassign' : 'Assign';
+            return CheckboxListTile(
+              value: pickListModel.isSelected,
+              onChanged: (_) => _controller.toggleSelection(index),
+              controlAffinity: ListTileControlAffinity.leading,
+              contentPadding: const EdgeInsets.only(left: 8),
+              title: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(16.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4.0,
+                      offset: Offset(2.0, 2.0),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            margin: const EdgeInsets.all(15),
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
+                margin: const EdgeInsets.all(15),
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                          child: Column(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'Pick List id'),
                                 getPoppinsTextSpanDetails(
                                     text: pickListModel.absEntry.toString()),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
+                              ])),
+                              Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'SO Id'),
                                 getPoppinsTextSpanDetails(
                                     text: pickListModel.docEntry.toString()),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
+                              ])),
+                              Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'Status'),
                                 getPoppinsTextSpanDetails(
                                     text: pickListModel.status),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                              children: [
+                              ])),
+                            ],
+                          )),
+                          Expanded(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'Total Items'),
                                 getPoppinsTextSpanDetails(
-                                    text: pickListModel.totalItems.toString()),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
+                                    text:
+                                        pickListModel.totalItems.toString()),
+                              ])),
+                              Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'Assigned To'),
                                 getPoppinsTextSpanDetails(
                                     text: pickListModel.uUser),
-                              ],
-                            ),
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
+                              ])),
+                              Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(
                                     text: 'Assigned Date'),
                                 getPoppinsTextSpanDetails(
                                     text: getFormattedDateAndTime(
                                         pickListModel.uAssignDate)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
-                  if (pickListStatusEnum == PickListStatusEnumForAdmin.assigned ||
-                      pickListStatusEnum == PickListStatusEnumForAdmin.open) ...[
-                    const Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                    ),
-                    SizedBox(
-                      height: 28,
-                      child: Row(
-                        children: [
-                          if (pickListStatusEnum ==
-                              PickListStatusEnumForAdmin.assigned) ...[
-                            Expanded(
-                                child: InkWell(
-                              onTap: () {
-                                List<Widget> titleRowWidgets = [
-                                  getPoppinsText(
-                                      text: 'Remove',
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ];
-                                List<Widget> actions = [
-                                  Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      alignment: Alignment.center,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          // if (!isShowNegative)
-                                          const Spacer(),
-
-                                          TextButton(
-                                            onPressed: () {
-                                              Get.back();
-
-                                              () async {
-                                                try {
-                                                  final responseMap = await PickListService
-                                                      .removePickList(
-                                                          l: [pickListModel.absEntry.toString()]);
-                                                  setData();
-                                                  CustomSnackBar.successSnackBar(
-                                                      responseMap['Result']);
-                                                } on ApiException catch (e) {
-                                                  CustomSnackBar.errorSnackBar(
-                                                      e.validationError ?? e.message);
-                                                } catch (e) {
-                                                  CustomSnackBar.errorSnackBar(e.toString());
-                                                }
-                                              }();
-                                            },
-                                            child: getPoppinsText(
-                                                text: 'Remove',
-                                                color: Colors.red,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: getPoppinsText(
-                                                text: 'No',
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: appPrimary),
-                                          ),
-                                        ],
-                                      )),
-                                ];
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Row(
-                                        children: titleRowWidgets,
-                                      ),
-                                      content: getPoppinsText(
-                                          text:
-                                              'Are you sure you want to remove this picklist?',
-                                          textAlign: TextAlign.start,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500),
-                                      actions: actions,
-                                    );
-                                  },
-                                );
-                              },
-                              child: getPoppinsText(
-                                  text: 'Remove',
-                                  color: Colors.red,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                            const VerticalDivider(
-                              color: Colors.grey,
-                              thickness: 1,
-                            ),
-                          ],
-                          Expanded(
-                              child: InkWell(
-                            onTap: () {
-                              Get.to(() => AssignPicklistToUserScreen(
-                                    pickList: [pickListModel],
-                                    mode: pickListStatusEnum ==
-                                            PickListStatusEnumForAdmin.assigned
-                                        ? Mode.update
-                                        : Mode.add,
-                                  ))?.then((onValue) {
-                                setState(() {
-                                  setData();
-                                });
-                              });
-                            },
-                            child: getPoppinsText(
-                                text: btnTxt,
-                                color: appPrimary,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold),
+                              ])),
+                            ],
                           )),
                         ],
                       ),
-                    )
-                  ],
-                ],
+                      if (_controller.pickListStatusEnum.value ==
+                              PickListStatusEnumForAdmin.assigned ||
+                          _controller.pickListStatusEnum.value ==
+                              PickListStatusEnumForAdmin.open) ...[
+                        const Divider(color: Colors.grey, thickness: 1),
+                        SizedBox(
+                          height: 28,
+                          child: Row(
+                            children: [
+                              if (_controller.pickListStatusEnum.value ==
+                                  PickListStatusEnumForAdmin.assigned) ...[
+                                Expanded(
+                                    child: InkWell(
+                                  onTap: () => _showRemoveDialog(
+                                    context,
+                                    'Are you sure you want to remove this picklist?',
+                                    () {
+                                      Get.back();
+                                      _controller
+                                          .removeSinglePickList(pickListModel);
+                                    },
+                                  ),
+                                  child: getPoppinsText(
+                                      text: 'Remove',
+                                      color: Colors.red,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                                const VerticalDivider(
+                                    color: Colors.grey, thickness: 1),
+                              ],
+                              Expanded(
+                                  child: InkWell(
+                                onTap: () {
+                                  Get.to(() => AssignPicklistToUserScreen(
+                                            pickList: [pickListModel],
+                                            mode: _controller
+                                                        .pickListStatusEnum
+                                                        .value ==
+                                                    PickListStatusEnumForAdmin
+                                                        .assigned
+                                                ? Mode.update
+                                                : Mode.add,
+                                          ))
+                                      ?.then((_) => _controller.fetchData());
+                                },
+                                child: getPoppinsText(
+                                    text: btnTxt,
+                                    color: appPrimary,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                            ],
+                          ),
+                        )
+                      ],
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        return const Divider(
-          thickness: 1.5,
-          color: Colors.grey,
-        );
-      },
-    );
-  }
-
-  bool atLeastOnePickListSelected() {
-    bool isSelected = false;
-    for (PickListModel pickListModel in pickList) {
-      if (pickListModel.isSelected) {
-        isSelected = true;
-        break;
-      }
-    }
-    return isSelected;
+            );
+          },
+          separatorBuilder: (context, index) =>
+              const Divider(thickness: 1.5, color: Colors.grey),
+        ));
   }
 }
