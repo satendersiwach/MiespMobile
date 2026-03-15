@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/user_model.dart';
-import 'package:scanner/services/api_config.dart';
-import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/api_client.dart';
 import 'package:scanner/translations/custom_locale.dart';
 
 class AuthService {
@@ -18,19 +14,11 @@ class AuthService {
     required String Username,
     required String Password,
   }) async {
-    var res = await http.post(Uri.parse('${ApiConfig.baseURL}logindetails/login'),
-        headers: ApiConfig.header,
-        body: jsonEncode({"Code": Username, "Password": Password}));
-
-    Map responseMap = jsonDecode(res.body);
-    if (!responseMap['IsError']) {
-      return UserModel.fromJson(responseMap['Result']);
-    } else {
-      throw ApiException(
-        responseMap['Error'] ?? 'Login failed',
-        responseMap: Map<String, dynamic>.from(responseMap),
-      );
-    }
+    final responseMap = await ApiClient.post(
+      'logindetails/login',
+      body: {"Code": Username, "Password": Password},
+    );
+    return UserModel.fromJson(responseMap['Result']);
   }
 
   static void updateCurrentLangCode(String locale) async {
