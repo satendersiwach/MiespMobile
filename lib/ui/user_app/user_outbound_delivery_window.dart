@@ -315,7 +315,7 @@ class _UserOutboundDeliveryWindowState
             onPressed: () {
               Get.to(() => PickListItemScreen(
                     pickListIds: _controller.selectedPickListIds,
-                  ));
+                  ))?.then((_) => _controller.fetchPickList());
             },
             child: getPoppinsText(
               text: 'View Items ($count selected)',
