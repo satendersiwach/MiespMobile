@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/controllers/pick_list_item_controller.dart';
-import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
@@ -290,11 +289,6 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
       height: 30,
       child: InkWell(
         onTap: () async {
-          await writeToLogFile(
-            text: 'Scanning\n-----------------\nCalling scan function',
-            heading: 'Value',
-            fileName: StackTrace.current.toString(),
-          );
           try {
             final scanResult = await ScannerService.scanQRCode();
             if (!mounted) return;

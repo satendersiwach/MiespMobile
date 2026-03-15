@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:scanner/log_file/log_file_functions.dart';
 
 class ScannerEventService {
   static final ScannerEventService _instance = ScannerEventService._internal();
@@ -26,10 +25,6 @@ class ScannerEventService {
   void init() {
     if (_subscription != null) return;
     _subscription = _eventChannel.receiveBroadcastStream().listen((result) {
-      writeToLogFile(
-        text: 'Scanned result on Flutter side through side button : $result',
-        fileName: StackTrace.current.toString(),
-      );
       if (result != null && result != '') {
         String barcode = result.toString();
         if (barcode.contains('\n')) {

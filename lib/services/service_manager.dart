@@ -6,4 +6,3 @@ export 'pick_list_service.dart';
 export 'inventory_service.dart';
 export 'master_data_service.dart';
 export 'scanner_service.dart';
-export 'log_upload_service.dart';

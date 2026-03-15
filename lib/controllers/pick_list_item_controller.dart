@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
-import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/services/api_exception.dart';
@@ -63,11 +62,6 @@ class PickListItemController extends GetxController {
     }
     if (item == null) {
       CustomSnackBar.errorSnackBar('$barCode does not belong to these items');
-      await writeToLogFile(
-        text: '$barCode does not belong to this item',
-        heading: 'Value',
-        fileName: StackTrace.current.toString(),
-      );
       return;
     }
     if (await AuthService.isInternetAvailable()) {

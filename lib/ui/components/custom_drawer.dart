@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:scanner/log_file/view_log_file.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/theme/custom_colors.dart';
@@ -247,41 +246,6 @@ class CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
-          // ListTile(
-          //   title: getPoppinsText(
-          //       text: 'Log File Screen',
-          //       textAlign: TextAlign.start,
-          //       color: Colors.red,
-          //       fontWeight: FontWeight.bold),
-          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-          //   onTap: () {
-          //     Get.to(()=>const LogFileScreen());
-          //   },
-          // ),
-          //
-
-          ListTile(
-            title: getPoppinsText(
-                text: 'View Log File',
-                textAlign: TextAlign.start,
-                color: Colors.red,
-                fontWeight: FontWeight.bold),
-            trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-            onTap: () {
-              Get.to(() => const ViewLogFile());
-            },
-          ),
-          // ListTile(
-          //   title: getPoppinsText(
-          //       text: 'Test Scanner',
-          //       textAlign: TextAlign.start,
-          //       color: Colors.red,
-          //       fontWeight: FontWeight.bold),
-          //   trailing: const Icon(Icons.keyboard_arrow_right, color: appPrimary),
-          //   onTap: () {
-          //     Get.to(() => const ScannerTesting());
-          //   },
-          // ),
           const Divider(
             thickness: 1,
             color: Colors.grey,

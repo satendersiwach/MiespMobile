@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:scanner/log_file/log_file_functions.dart';
 import 'package:scanner/common/app_assets.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/services/api_exception.dart';

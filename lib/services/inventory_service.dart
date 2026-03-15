@@ -49,7 +49,6 @@ class InventoryService {
     return await ApiClient.post(
       'Inventory/AddInventoryCounting',
       body: {"batchNumber": batchNumber, "user": customerModel.userCode},
-      log: true,
     );
   }
 
@@ -59,7 +58,6 @@ class InventoryService {
     return await ApiClient.post(
       'Inventory/UpdateInventoryCounting',
       body: updateInventoryModel.toJson(),
-      log: true,
     );
   }
 
@@ -69,7 +67,6 @@ class InventoryService {
     return await ApiClient.post(
       'Inventory/RemoveInventoryCounting',
       body: removeInventoryModel.toJson(),
-      log: true,
     );
   }
 }

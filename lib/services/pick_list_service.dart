@@ -55,7 +55,6 @@ class PickListService {
     return await ApiClient.post(
       'picklist/UpdatePickList',
       body: l,
-      log: true,
       useCodeCheck: true,
     );
   }
@@ -66,7 +65,6 @@ class PickListService {
     return await ApiClient.post(
       'picklist/RemovePickList',
       body: l,
-      log: true,
     );
   }
 
@@ -77,7 +75,6 @@ class PickListService {
     return await ApiClient.post(
       'picklist/PickByBarcode',
       body: {"barcode": barcode, "user": user},
-      log: true,
     );
   }
 
