@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/inventory_report_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/inventory_service.dart';
+import 'package:scanner/services/master_data_service.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/get_text_field.dart';
 import 'package:scanner/ui/components/element_button.dart';
@@ -39,7 +41,7 @@ class _InventoryReportState extends State<InventoryReport> {
   }
 
   setFilterList() async {
-    itemGroupList = await ServiceManager.getItemGroups();
+    itemGroupList = await MasterDataService.getItemGroups();
     if (itemGroupList.isNotEmpty) {
       selectedItemGroup = itemGroupList[0];
     }
@@ -58,32 +60,38 @@ class _InventoryReportState extends State<InventoryReport> {
       if (currentPage == 1) {
         _isLoading = true;
       }
-      this.inventoryReport = null;
+      inventoryReport = null;
     });
 
-    // UserModel userModel = UserModel.getLoginCustomer();
-    await ServiceManager.getPaginatedInventoryReport(
-      filter: ServiceManager.getInventoryStatus(
-          pickListStatusEnum: _selectedInventoryStatus),
-      pageNum: currentPage,
-      searchTerm: _query.text,
-      pageSize: itemsPerPage,
-      itemGroup: selectedItemGroup?.groupCode ?? 0,
-      onSuccess: (inventoryReport) {
-        setState(() {
-          this.inventoryReport = inventoryReport;
-          data.addAll(inventoryReport.data ?? []);
-          _isLoading = false;
-          _isMoreLoading = false; // reset after successful load
-        });
-      },
-      onError: (Map map) {
-        setState(() {
-          _isLoading = false;
-          _isMoreLoading = false;
-        });
-      },
-    );
+    try {
+      final report = await InventoryService.getPaginatedInventoryReport(
+        filter: getInventoryStatus(
+            pickListStatusEnum: _selectedInventoryStatus),
+        pageNum: currentPage,
+        searchTerm: _query.text,
+        pageSize: itemsPerPage,
+        itemGroup: selectedItemGroup?.groupCode ?? 0,
+      );
+      if (!mounted) return;
+      setState(() {
+        inventoryReport = report;
+        data.addAll(report.data ?? []);
+        _isLoading = false;
+        _isMoreLoading = false;
+      });
+    } on ApiException {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _isMoreLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _isMoreLoading = false;
+      });
+    }
   }
 
   void _onScroll() {
@@ -394,7 +402,7 @@ class _InventoryReportState extends State<InventoryReport> {
                 return DropdownMenuItem<InventoryStatusEnum>(
                   value: value,
                   child: Text(
-                    ServiceManager.getInventoryStatus(
+                    getInventoryStatus(
                       pickListStatusEnum: value,
                     ),
                   ),

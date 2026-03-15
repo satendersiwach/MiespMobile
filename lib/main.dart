@@ -7,7 +7,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
 Future<void> main() async {
-  init();
+  WidgetsFlutterBinding.ensureInitialized();
+  await init();
 
   runApp(GetMaterialApp(
     home: const ScannerApp(),

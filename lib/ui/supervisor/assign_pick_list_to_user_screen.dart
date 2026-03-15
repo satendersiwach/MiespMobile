@@ -5,7 +5,9 @@ import 'package:scanner/models/assign_pick_list_model.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/master_data_service.dart';
+import 'package:scanner/services/pick_list_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -37,7 +39,7 @@ class _AssignPicklistToUserScreenState
                 height: 25,
               ),
               FutureBuilder(
-                  future: ServiceManager.getUserList(),
+                  future: MasterDataService.getUserList(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Container();
@@ -147,13 +149,19 @@ class _AssignPicklistToUserScreenState
                                                       user: userModel.username ?? '',
                                                       docEntry: pickListModel.docEntry,));
                                             }
-                                            print(updatePickList);
                                             showLoaderDialog(
                                                 text: 'Assigning pick lists');
-                                            ServiceManager.assignPickList(
-                                                l: updatePickList,
-                                                onSuccess: onSuccess,
-                                                onError: onError);
+                                            () async {
+                                              try {
+                                                final responseMap = await PickListService
+                                                    .assignPickList(l: updatePickList);
+                                                onSuccess(responseMap);
+                                              } on ApiException catch (e) {
+                                                onError(e.responseMap ?? {'Error': e.message});
+                                              } catch (e) {
+                                                onError({'Error': e.toString()});
+                                              }
+                                            }();
                                           },
                                           child: getPoppinsText(
                                               text: 'Assign',

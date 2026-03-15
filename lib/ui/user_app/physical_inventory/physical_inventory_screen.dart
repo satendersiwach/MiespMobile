@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/models/group_model.dart';
 import 'package:scanner/models/pending_item_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/auth_service.dart';
+import 'package:scanner/services/inventory_service.dart';
+import 'package:scanner/services/master_data_service.dart';
+import 'package:scanner/services/scanner_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -21,7 +24,6 @@ class PhysicalInventoryScreen extends StatefulWidget {
 }
 
 class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
-  static const EventChannel _eventChannel = EventChannel('scannerStream');
   GroupModel? selectedItemGroup;
   List<GroupModel> itemGroupList = [];
   final ScrollController _scrollController = ScrollController();
@@ -35,34 +37,13 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   void initState() {
     super.initState();
 
-    _eventChannel.receiveBroadcastStream().listen((result) {
-      print('Scanned result on Flutter side : $result');
-      writeToLogFile(
-          text: 'Scanned result on Flutter side through side button : $result',
-          fileName: StackTrace.current.toString());
-      if (result != null && result != '') {
-        if (result.contains('\n')) {
-          result = result.split('\n')[0];
-        }
-
-        if (result.contains(':')) {
-          List l = result.split(":");
-          if (l.length >= 2) {
-            result = l[1];
-          }
-        }
-        addInventoryCountry(result);
-      }
-    }, onError: (error) {
-      CustomSnackBar.errorSnackBar('Error: $error');
-    });
-
+    ScannerEventService().pushHandler(addInventoryCountry);
     _scrollController.addListener(_onScroll);
     setFilterList();
   }
 
   setFilterList() async {
-    itemGroupList = await ServiceManager.getItemGroups();
+    itemGroupList = await MasterDataService.getItemGroups();
     itemGroupList.removeWhere((itemGroup) => itemGroup.groupName == 'All');
     if (itemGroupList.isNotEmpty) {
       selectedItemGroup = itemGroupList[0];
@@ -72,6 +53,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
 
   @override
   void dispose() {
+    ScannerEventService().removeHandler(addInventoryCountry);
     _scrollController.dispose();
     super.dispose();
   }
@@ -85,26 +67,33 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
       _pendingItemModel = null;
     });
 
-    // UserModel userModel = UserModel.getLoginCustomer();
-    await ServiceManager.getItemsPendingForInventory(
-      pageNum: currentPage,
-      pageSize: 10,
-      itemGroup: selectedItemGroup?.groupCode ?? 0,
-      onSuccess: (pendingItemModel) {
-        setState(() {
-          _pendingItemModel = pendingItemModel;
-          data.addAll(pendingItemModel.data ?? []);
-          _isLoading = false;
-          _isMoreLoading = false; // reset after successful load
-        });
-      },
-      onError: (Map map) {
-        setState(() {
-          _isLoading = false;
-          _isMoreLoading = false;
-        });
-      },
-    );
+    try {
+      final pendingItemModel = await InventoryService.getItemsPendingForInventory(
+        pageNum: currentPage,
+        pageSize: 10,
+        itemGroup: selectedItemGroup?.groupCode ?? 0,
+      );
+      if (!mounted) return;
+      setState(() {
+        _pendingItemModel = pendingItemModel;
+        data.addAll(pendingItemModel.data ?? []);
+        _isLoading = false;
+        _isMoreLoading = false;
+      });
+    } on ApiException {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _isMoreLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _isMoreLoading = false;
+      });
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
   }
 
   void _onScroll() {
@@ -127,26 +116,27 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   }
 
   addInventoryCountry(String barCode) async {
-    if (await ServiceManager.isInternetAvailable()) {
-      ServiceManager.addInventoryCounting(
-          batchNumber: barCode,
-          onSuccess: (xx) {
-            currentPage = 1;
-            setInventoryReport();
-            CustomSnackBar.successSnackBar(
-                xx['Result'] ?? 'Inventory counting added successfully');
-          },
-          onError: (vv) {
-            currentPage = 1;
-            setInventoryReport();
-            if (vv['ValidationErrors'].length > 0) {
-              CustomSnackBar.errorSnackBar(
-                  vv['ValidationErrors'][0]['ErrorMessage']?.toString() ??
-                      'Something went wrong!');
-            } else {
-              CustomSnackBar.errorSnackBar('Something went wrong!');
-            }
-          });
+    if (await AuthService.isInternetAvailable()) {
+      try {
+        final responseMap = await InventoryService.addInventoryCounting(
+            batchNumber: barCode);
+        if (!mounted) return;
+        currentPage = 1;
+        data.clear();
+        setInventoryReport();
+        CustomSnackBar.successSnackBar(
+            responseMap['Result'] ?? 'Inventory counting added successfully');
+      } on ApiException catch (e) {
+        if (!mounted) return;
+        currentPage = 1;
+        data.clear();
+        setInventoryReport();
+        CustomSnackBar.errorSnackBar(
+            e.validationError ?? 'Something went wrong!');
+      } catch (e) {
+        if (!mounted) return;
+        CustomSnackBar.errorSnackBar(e.toString());
+      }
     }
   }
 
@@ -158,10 +148,6 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
           IconButton(
               onPressed: () {
                 Get.to(() => const UserInventory());
-
-                ///todo: display list via GetInventoryByUser
-                ///RemoveInventoryCounting
-                ////UpdateInventoryCounting
               },
               icon: Icon(
                 MdiIcons.listBoxOutline,
@@ -229,15 +215,18 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
+          onPressed: () async {
+            try {
+              final scanResult = await ScannerService.scanQRCode();
               if (!mounted) return;
-              String barCode = scanResult;
-              if (barCode != '') {
-                print(barCode);
-                addInventoryCountry(barCode);
+              if (scanResult != null && scanResult != '') {
+                addInventoryCountry(scanResult);
+              } else {
+                CustomSnackBar.errorSnackBar('Could not scan');
               }
-            });
+            } catch (e) {
+              CustomSnackBar.errorSnackBar('Error during scan: $e');
+            }
           },
           child: const Icon(
             Icons.barcode_reader,
@@ -249,16 +238,7 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
   /// Extracted list item widget
   Widget _buildItem(Datum dataModel) {
     return InkWell(
-      onTap: () {
-        // if (pickListModel.status == 'P') {
-        //   PickListItemScreen.pickListStatusEnum =
-        //       PickListStatusEnum.picked;
-        // } else {
-        //   PickListItemScreen.pickListStatusEnum =
-        //       PickListStatusEnum.notPicked;
-        // }
-        // Get.to(() => PickListItemScreen(pickListModel: pickListModel));
-      },
+      onTap: () {},
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,

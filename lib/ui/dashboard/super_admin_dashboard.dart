@@ -5,7 +5,8 @@ import 'package:scanner/common/get_formatted_date.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/models/update_pick_list_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/pick_list_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -36,20 +37,27 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
   setData() async {
     _isLoading = true;
     pickList.clear();
-    await ServiceManager.getPickListByStatus(
-        status: ServiceManager.getPickListStatusFromEnum(
-            pickListStatusEnum: pickListStatusEnum),
-        onSuccess: (pickList) {
-          setState(() {
-            this.pickList = pickList;
-            _isLoading = false;
-          });
-        },
-        onError: (Map map) {
-          setState(() {
-            _isLoading = false;
-          });
-        });
+    try {
+      final result = await PickListService.getPickListByStatus(
+          status: getPickListStatusFromEnum(
+              pickListStatusEnum: pickListStatusEnum));
+      if (!mounted) return;
+      setState(() {
+        pickList = result;
+        _isLoading = false;
+      });
+    } on ApiException {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
   }
 
   @override
@@ -270,20 +278,20 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                                 .docEntry.toString());
                                           }
                                         }
-                                        ServiceManager.removePickList(
-                                            l: selectedPickList,
-                                            onSuccess: (Map responseMap) {
-                                              setData();
-                                              CustomSnackBar
-                                                  .successSnackBar(
-                                                  responseMap['Result']);
-                                            },
-                                            onError: (Map responseMap) {
-                                              CustomSnackBar
-                                                  .errorSnackBar(
-                                                  responseMap[
-                                                  'Error']);
-                                            });
+                                        () async {
+                                          try {
+                                            final responseMap = await PickListService
+                                                .removePickList(l: selectedPickList);
+                                            setData();
+                                            CustomSnackBar.successSnackBar(
+                                                responseMap['Result']);
+                                          } on ApiException catch (e) {
+                                            CustomSnackBar.errorSnackBar(
+                                                e.validationError ?? e.message);
+                                          } catch (e) {
+                                            CustomSnackBar.errorSnackBar(e.toString());
+                                          }
+                                        }();
                                       },
                                       child: getPoppinsText(
                                           text: 'Remove',
@@ -526,20 +534,21 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                             onPressed: () {
                                               Get.back();
 
-                                              ServiceManager.removePickList(
-                                                  l: [pickListModel.absEntry.toString()],
-                                                  onSuccess: (Map responseMap) {
-                                                    setData();
-                                                    CustomSnackBar
-                                                        .successSnackBar(
-                                                        responseMap['Result']);
-                                                  },
-                                                  onError: (Map responseMap) {
-                                                    CustomSnackBar
-                                                        .errorSnackBar(
-                                                            responseMap[
-                                                                'Error']);
-                                                  });
+                                              () async {
+                                                try {
+                                                  final responseMap = await PickListService
+                                                      .removePickList(
+                                                          l: [pickListModel.absEntry.toString()]);
+                                                  setData();
+                                                  CustomSnackBar.successSnackBar(
+                                                      responseMap['Result']);
+                                                } on ApiException catch (e) {
+                                                  CustomSnackBar.errorSnackBar(
+                                                      e.validationError ?? e.message);
+                                                } catch (e) {
+                                                  CustomSnackBar.errorSnackBar(e.toString());
+                                                }
+                                              }();
                                             },
                                             child: getPoppinsText(
                                                 text: 'Remove',

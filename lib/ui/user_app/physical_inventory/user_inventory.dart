@@ -3,7 +3,9 @@ import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/remove_inventory_model.dart';
 import 'package:scanner/models/update_inventory_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/inventory_service.dart';
+import 'package:scanner/services/master_data_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -31,7 +33,7 @@ class _UserInventoryState extends State<UserInventory> {
                 height: 25,
               ),
               FutureBuilder(
-                  future: ServiceManager.getUserInventoryList(),
+                  future: MasterDataService.getUserInventoryList(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Container();
@@ -223,22 +225,24 @@ class _UserInventoryState extends State<UserInventory> {
                                                                   userInventoryModel
                                                                       .whsCode,
                                                               mode: 'Manual');
-                                                          ServiceManager
-                                                              .updateInventoryCounting(
-                                                                  updateInventoryModel:
-                                                                      removeInventoryModel,
-                                                                  onSuccess:
-                                                                      (res) {
-                                                                    CustomSnackBar.successSnackBar(
-                                                                        res['Result'] ??
-                                                                            'Inventory Updated');
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    _remark
-                                                                        .clear();
-                                                                  },
-                                                                  onError:
-                                                                      (error) {});
+                                                          () async {
+                                                            try {
+                                                              final res = await InventoryService
+                                                                  .updateInventoryCounting(
+                                                                      updateInventoryModel:
+                                                                          removeInventoryModel);
+                                                              CustomSnackBar.successSnackBar(
+                                                                  res['Result'] ??
+                                                                      'Inventory Updated');
+                                                              if (context.mounted) Navigator.pop(context);
+                                                              _remark.clear();
+                                                            } on ApiException catch (e) {
+                                                              CustomSnackBar.errorSnackBar(
+                                                                  e.validationError ?? e.message);
+                                                            } catch (e) {
+                                                              CustomSnackBar.errorSnackBar(e.toString());
+                                                            }
+                                                          }();
                                                         },
                                                         child: getPoppinsText(
                                                             text: 'Update',
@@ -323,22 +327,24 @@ class _UserInventoryState extends State<UserInventory> {
                                                                   whsCode:
                                                                       userInventoryModel
                                                                           .whsCode);
-                                                          ServiceManager
-                                                              .removeInventoryCounting(
-                                                                  removeInventoryModel:
-                                                                      removeInventoryModel,
-                                                                  onSuccess:
-                                                                      (res) {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    CustomSnackBar.successSnackBar(
-                                                                        res['Result'] ??
-                                                                            'Inventory Removed');
-                                                                    setState(
-                                                                        () {});
-                                                                  },
-                                                                  onError:
-                                                                      (error) {});
+                                                          () async {
+                                                            try {
+                                                              final res = await InventoryService
+                                                                  .removeInventoryCounting(
+                                                                      removeInventoryModel:
+                                                                          removeInventoryModel);
+                                                              if (context.mounted) Navigator.pop(context);
+                                                              CustomSnackBar.successSnackBar(
+                                                                  res['Result'] ??
+                                                                      'Inventory Removed');
+                                                              setState(() {});
+                                                            } on ApiException catch (e) {
+                                                              CustomSnackBar.errorSnackBar(
+                                                                  e.validationError ?? e.message);
+                                                            } catch (e) {
+                                                              CustomSnackBar.errorSnackBar(e.toString());
+                                                            }
+                                                          }();
                                                         },
                                                         child: getPoppinsText(
                                                             text: 'Remove',

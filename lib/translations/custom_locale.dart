@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:scanner/local_storage/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -38,7 +38,7 @@ class CustomLocale extends Translations {
     Locale locale = CustomLocale.toLocale(appLocaleCode); //Added
 
     Get.updateLocale(locale);
-    ServiceManager.updateCurrentLangCode(appLocaleCode);
+    AuthService.updateCurrentLangCode(appLocaleCode);
 
     localizations =
         await loadLocalization("assets/locale/${fromLocale(locale)}.json");

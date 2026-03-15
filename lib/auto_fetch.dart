@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'services/service_manager.dart';
+import 'package:scanner/services/scanner_service.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,8 +20,6 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _eventChannel.receiveBroadcastStream().listen((result) {
       setState(() {
-        print('Scanned result on Flutter side : $result');
-        // _scannedData = "Scanned: $result";
         if (result != null && result != '') {
           if (result.contains('\n')) {
             result = result.split('\n')[0];
@@ -56,13 +55,20 @@ class _MyAppState extends State<MyApp> {
             Text(_scannedData, style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 20),
             MaterialButton(
-              onPressed: () {
-                ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
+              onPressed: () async {
+                try {
+                  final scanResult = await ScannerService.scanQRCode();
                   if (!mounted) return;
-                  print('Scanned result on Flutter side : $scanResult');
-                  _scannedData="Manually Scanned: $scanResult";
+                  if (scanResult != null) {
+                    setState(() {
+                      _scannedData = "Manually Scanned: $scanResult";
+                    });
+                  } else {
+                    CustomSnackBar.errorSnackBar('Could not scan');
                   }
-                );
+                } catch (e) {
+                  CustomSnackBar.errorSnackBar('Error during scan: $e');
+                }
               },
               child: const Text('Scan from flutter software'),
             )

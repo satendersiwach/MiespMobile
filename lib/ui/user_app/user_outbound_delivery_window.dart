@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/auth_service.dart';
+import 'package:scanner/services/pick_list_service.dart';
+import 'package:scanner/services/scanner_service.dart';
+import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
+import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/theme/get_text_field.dart';
+import 'package:scanner/ui/components/custom_drawer.dart';
 import 'package:scanner/ui/components/element_button.dart';
 import 'package:scanner/ui/user_app/pick_list_item_screen.dart';
 
@@ -34,14 +41,42 @@ class _UserOutboundDeliveryWindowState
   @override
   void initState() {
     super.initState();
+
+    ScannerEventService().pushHandler(_onBarcodeScanned);
     _scrollController.addListener(_onScroll);
     setUserData();
   }
 
   @override
   void dispose() {
+    ScannerEventService().removeHandler(_onBarcodeScanned);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _onBarcodeScanned(String barcode) async {
+    if (await AuthService.isInternetAvailable()) {
+      UserModel userModel = UserModel.getLoginCustomer();
+      try {
+        final responseMap = await PickListService.pickByBarcode(
+          barcode: barcode,
+          user: userModel.username ?? "",
+        );
+        if (!mounted) return;
+        CustomSnackBar.successSnackBar(
+            responseMap['Result'] ?? 'Picked successfully');
+        setUserData();
+      } on ApiException catch (e) {
+        if (!mounted) return;
+        CustomSnackBar.errorSnackBar(
+            e.validationError ?? e.message);
+      } catch (e) {
+        if (!mounted) return;
+        CustomSnackBar.errorSnackBar(e.toString());
+      }
+    } else {
+      CustomSnackBar.errorSnackBar('No internet connection');
+    }
   }
 
   Future<void> setUserData() async {
@@ -53,23 +88,29 @@ class _UserOutboundDeliveryWindowState
     });
 
     UserModel userModel = UserModel.getLoginCustomer();
-    await ServiceManager.getPickListByUser(
-      username: userModel.username ?? "",
-      status: ServiceManager.getPickListStatusFromEnum(
-          pickListStatusEnum: pickListStatusEnum),
-      onSuccess: (pickList) {
-        setState(() {
-          this.pickList = pickList;
-          _loadMoreData(); // Load the first batch
-          _isLoading = false;
-        });
-      },
-      onError: (Map map) {
-        setState(() {
-          _isLoading = false;
-        });
-      },
-    );
+    try {
+      final result = await PickListService.getPickListByUser(
+        username: userModel.username ?? "",
+        status: getPickListStatusFromEnum(
+            pickListStatusEnum: pickListStatusEnum),
+      );
+      if (!mounted) return;
+      setState(() {
+        pickList = result;
+        _loadMoreData();
+        _isLoading = false;
+      });
+    } on ApiException {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _onScroll() {
@@ -102,29 +143,50 @@ class _UserOutboundDeliveryWindowState
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : RefreshIndicator(
-            onRefresh: setUserData,
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                _assignCountContainer(),
-                const SizedBox(height: 25),
-                _queryWidget(),
-                const SizedBox(height: 5),
-                _statusFilterWidget(),
-                const SizedBox(height: 5),
-                _list(),
-              ],
+    return screenWithAppBar(
+      title: 'Pick List',
+      drawer: const CustomDrawer(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: setUserData,
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  _assignCountContainer(),
+                  const SizedBox(height: 25),
+                  _queryWidget(),
+                  const SizedBox(height: 5),
+                  _statusFilterWidget(),
+                  const SizedBox(height: 5),
+                  Expanded(child: _list()),
+                ],
+              ),
             ),
-          );
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          try {
+            final scanResult = await ScannerService.scanQRCode();
+            if (!mounted) return;
+            if (scanResult != null && scanResult != '') {
+              _onBarcodeScanned(scanResult);
+            } else {
+              CustomSnackBar.errorSnackBar('Could not scan');
+            }
+          } catch (e) {
+            CustomSnackBar.errorSnackBar('Error during scan: $e');
+          }
+        },
+        child: const Icon(
+          Icons.barcode_reader,
+          color: Colors.white,
+        ),
+      ),
+    );
   }
 
   Widget _list() {
-    return SizedBox(
-      height: Get.height,
-      child: ListView.builder(
+    return ListView.builder(
         controller: _scrollController,
         itemCount: displayedPickList.length + 1,
         itemBuilder: (context, index) {
@@ -292,7 +354,6 @@ class _UserOutboundDeliveryWindowState
             ),
           );
         },
-      ),
     );
   }
 

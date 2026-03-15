@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:scanner/LogFile/log_file_functions.dart';
 import 'package:scanner/LogFile/view_log_file.dart';
 import 'package:scanner/local_storage/local_storage.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/log_upload_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 
@@ -110,7 +110,7 @@ class _LogFileScreenState extends State<LogFileScreen> {
             // ),
             MaterialButton(
               onPressed: () async {
-                await ServiceManager.uploadLogFileToServer();
+                await LogUploadService.uploadLogFileToServer();
               },
               child: const Text('Upload Log File',
               style: TextStyle(

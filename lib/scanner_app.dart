@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:scanner/common/keys.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/models/customer_model.dart';
+import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/theme/custom_theme.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/translations/custom_locale.dart';
@@ -34,6 +35,7 @@ class _ScannerAppState extends State<ScannerApp> {
   void initState() {
     super.initState();
 
+    ScannerEventService().init();
     initLocalStorage();
   }
 
@@ -60,14 +62,10 @@ class _ScannerAppState extends State<ScannerApp> {
   navigate() async {
     String? customer = LocalStorage.getString(key: keyObjUser);
     await Future.delayed(const Duration(seconds: 2));
-    //todo:
-    // FlutterNativeSplash.remove();
     if (!mounted) {
       return;
     }
     if (customer == null || customer == '') {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LoginPage()));
       Get.offAll(() => const LoginPage());
     } else {
       if (UserModel.isUser()) {
@@ -75,22 +73,6 @@ class _ScannerAppState extends State<ScannerApp> {
       } else {
         Get.offAll(() => const SuperAdminDashboard());
       }
-      // CustomerModel customerModel =
-      //     CustomerModel.fromJson(jsonDecode(customer));
-      // if (customerModel.email.isNotEmpty) {
-      //   ServiceManager.loginViaEmail(
-      //       email: customerModel.email,
-      //       onError: (String error) {
-      //         errorSnackBar(error);
-      //         Timer(const Duration(seconds: 1), () {
-      //           logout();
-      //         });
-      //       },
-      //       onSuccess: () {
-      //         Navigator.of(context).push(
-      //             MaterialPageRoute(builder: (context) => const Dashboard()));
-      //       });
-      // }
     }
   }
 

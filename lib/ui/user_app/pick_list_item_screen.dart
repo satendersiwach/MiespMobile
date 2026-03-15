@@ -1,13 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:scanner/LogFile/log_file_functions.dart';
+import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/customer_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
-import 'package:scanner/models/update_picking_qty_model.dart';
-import 'package:scanner/services/service_manager.dart';
+import 'package:scanner/services/api_exception.dart';
+import 'package:scanner/services/auth_service.dart';
+import 'package:scanner/services/pick_list_service.dart';
+import 'package:scanner/services/scanner_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -26,7 +29,6 @@ class PickListItemScreen extends StatefulWidget {
 }
 
 class _PickListItemScreenState extends State<PickListItemScreen> {
-  static const EventChannel _eventChannel = EventChannel('scannerStream');
   List<PickListItemDetailModel> pickListItems = [];
   final TextEditingController query = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -38,25 +40,26 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   @override
   void initState() {
     super.initState();
-    _eventChannel.receiveBroadcastStream().listen((result) {
-      print('Scanned result on Flutter side : $result');
-      if (result != null && result != '') {
-        if (result.contains('\n')) {
-          result = result.split('\n')[0];
-        }
-
-        if (result.contains(':')) {
-          List l = result.split(":");
-          if (l.length >= 2) {
-            result = l[1];
-          }
-        }
-        updatePickingQty(barCode: result);
+    ScannerEventService().pushHandler(_handleBarcode);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getMoreData();
       }
-    }, onError: (error) {
-      CustomSnackBar.errorSnackBar('Error: $error');
     });
     setItemData();
+  }
+
+  void _handleBarcode(String barcode) {
+    updatePickingQty(barCode: barcode);
+  }
+
+  @override
+  void dispose() {
+    ScannerEventService().removeHandler(_handleBarcode);
+    _scrollController.dispose();
+    query.dispose();
+    super.dispose();
   }
 
   _getMoreData() {
@@ -74,36 +77,33 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     setState(() {
       _isLoading = true;
     });
-    ServiceManager.getListingItems(
-        status:
-            PickListItemScreen.pickListStatusEnum == PickListStatusEnum.picked
-                ? 'Y'
-                : 'N',
-        search: query.text,
-        pickListId: [widget.pickListModel.absEntry],
-        onSuccess: onSuccess,
-        onError: onError);
-  }
-
-  onError(Map responseMap) {
-    setState(() {
-      _isLoading = false;
-    });
-    CustomSnackBar.errorSnackBar(responseMap['Error']);
-  }
-
-  onSuccess(List<PickListItemDetailModel> pickListItems) {
-    myList = List.generate(15, (index) => "Item : ${index + 1}");
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        _getMoreData();
-      }
-    });
-    setState(() {
-      _isLoading = false;
-      this.pickListItems = pickListItems;
-    });
+    try {
+      final items = await PickListService.getListingItems(
+          status:
+              PickListItemScreen.pickListStatusEnum == PickListStatusEnum.picked
+                  ? 'Y'
+                  : 'N',
+          search: query.text,
+          pickListId: [widget.pickListModel.absEntry]);
+      if (!mounted) return;
+      myList = List.generate(15, (index) => "Item : ${index + 1}");
+      setState(() {
+        _isLoading = false;
+        pickListItems = items;
+      });
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      CustomSnackBar.errorSnackBar(e.validationError ?? e.message);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+      });
+      CustomSnackBar.errorSnackBar(e.toString());
+    }
   }
 
   Widget _queryWidget() {
@@ -445,22 +445,17 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
           fileName: StackTrace.current.toString());
       return;
     }
-    if (await ServiceManager.isInternetAvailable()) {
-      UpdatePickingModel updatePickingModel = UpdatePickingModel(
-          batchNumber: barCode,
-          itemCode: pickListModel.itemCode,
-          pickQty: pickListModel.relQtty,
-          soId: widget.pickListModel.docEntry,
-          pickListId: widget.pickListModel.absEntry,
-          user: UserModel.getLoginCustomer().userCode ?? '');
-      ServiceManager.updatePickingQuantity(
-          l: [updatePickingModel],
-          onSuccess: (Map map) {
-            setItemData();
-          },
-          onError: (Map map) {
-            print(map);
-          });
+    if (await AuthService.isInternetAvailable()) {
+      try {
+        await PickListService.pickByBarcode(
+            barcode: barCode,
+            user: UserModel.getLoginCustomer().userCode ?? '');
+        setItemData();
+      } on ApiException catch (e) {
+        debugPrint('pickByBarcode error: ${e.message}');
+      } catch (e) {
+        CustomSnackBar.errorSnackBar(e.toString());
+      }
     }
   }
 
@@ -478,27 +473,21 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
               text: text,
               heading: 'Value',
               fileName: StackTrace.current.toString());
-          ServiceManager.scanQRCode(onSuccess: (String scanResult) async {
+          try {
+            final scanResult = await ScannerService.scanQRCode();
             if (!mounted) return;
-            updatePickingQty(barCode: scanResult);
-          });
+            if (scanResult != null) {
+              updatePickingQty(barCode: scanResult);
+            } else {
+              CustomSnackBar.errorSnackBar('Could not scan');
+            }
+          } catch (e) {
+            CustomSnackBar.errorSnackBar('Error during scan: $e');
+          }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Expanded(
-            //     child: InkWell(
-            //       onTap: () {},
-            //       child: getPoppinsText(
-            //           text: 'Manual',
-            //           color: appPrimary,
-            //           fontSize: 13,
-            //           fontWeight: FontWeight.bold),
-            //     )),
-            // const VerticalDivider(
-            //   color: Colors.grey,
-            //   thickness: 1,
-            // ),
             Icon(
               MdiIcons.barcode,
               color: appPrimary,

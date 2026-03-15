@@ -72,6 +72,9 @@ class UserModel {
   static bool isUser() {
     String customer =
         LocalStorage.getInstance()?.localStorage?.getString(keyObjUser) ?? '';
+    if (customer.isEmpty) {
+      return true;
+    }
     UserModel userModel = UserModel.fromJson(jsonDecode(customer));
     return !userModel.isSupervisor;
   }

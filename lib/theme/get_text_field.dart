@@ -241,10 +241,6 @@ Widget getDateTextField(
                         ? getDateFromString(controller.text)
                         : null,
                     onDatePicked: (String pickedDate) async {
-                      // localCurrController.text = await getLocalDate(
-                      //     getDateFromString(pickedDate)!);
-                      // print(pickedDate);
-
                       if (onChanged != null) {
                         onChanged(pickedDate);
                       }

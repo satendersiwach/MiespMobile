@@ -102,18 +102,7 @@ TextSpan getPoppinsTextSpanHeading(
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
-    //style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
   );
-  // return Text(
-  //   text,
-  //   textAlign: textAlign,
-  //   maxLines: maxLines,
-  //   style: GoogleFonts.poppins(
-  //     fontSize: fontSize,
-  //     fontWeight: fontWeight,
-  //     color: color,
-  //   ),
-  // );
 }
 
 TextSpan getPoppinsTextSpanDetails(
@@ -130,18 +119,7 @@ TextSpan getPoppinsTextSpanDetails(
       fontWeight: fontWeight,
       color: color,
     ),
-    //style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
   );
-  // return Text(
-  //   text,
-  //   textAlign: textAlign,
-  //   maxLines: maxLines,
-  //   style: GoogleFonts.poppins(
-  //     fontSize: fontSize,
-  //     fontWeight: fontWeight,
-  //     color: color,
-  //   ),
-  // );
 }
 
 Text getCustomTextRich({

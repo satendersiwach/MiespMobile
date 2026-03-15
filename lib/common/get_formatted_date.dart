@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 
 String dateFormat = 'yyyy-M-d';
-// String dateFormat = 'M/d/yyyy';
 
 String getFormattedDateAndTimeForLog(DateTime? now) {
   DateFormat formatter = DateFormat('$dateFormat HH:mm:ss a');
@@ -49,7 +48,6 @@ DateTime getTimeFromString(String? time) {
     return DateTime.parse("1900-01-01");
   }
   DateTime date = DateFormat('HH:mm').parse(time);
-  print(date.toIso8601String());
   return date;
 }
 
@@ -58,6 +56,5 @@ String getStringFromTime(DateTime? time) {
     return '';
   }
   String formattedTime = DateFormat.Hm().format(time);
-  print(formattedTime);
   return formattedTime;
 }

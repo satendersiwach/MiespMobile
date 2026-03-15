@@ -1,38 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scanner/theme/elements_screen.dart';
-import 'package:scanner/ui/components/custom_drawer.dart';
 import 'package:scanner/ui/user_app/user_outbound_delivery_window.dart';
 
-class UserDashboard extends StatefulWidget {
+class UserDashboard extends StatelessWidget {
   const UserDashboard({super.key});
 
   @override
-  State<UserDashboard> createState() => _UserDashboardState();
-}
-
-class _UserDashboardState extends State<UserDashboard> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return screenWithAppBar(
-      title: 'Pick List',
-      drawer: const CustomDrawer(),
-      body: const SingleChildScrollView(
-        child: Column(
-          children: [
-            // appVersionWidget(),
-            // getPoppinsText(
-            //     text: 'Welcome, ${UserModel.getLoginCustomer().username}',
-            //     fontWeight: FontWeight.w700,
-            //     fontSize: 20),
-            UserOutboundDeliveryWindow(),
-          ],
-        ),
-      ),
-    );
+    return const UserOutboundDeliveryWindow();
   }
 }
