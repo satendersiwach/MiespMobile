@@ -3,9 +3,7 @@ import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
 import 'package:scanner/services/api_exception.dart';
-import 'package:scanner/services/auth_service.dart';
 import 'package:scanner/services/pick_list_service.dart';
-import 'package:scanner/theme/custom_snack_bar.dart';
 
 class PickListController extends GetxController {
   final pickList = <PickListModel>[].obs;
@@ -72,6 +70,7 @@ class PickListController extends GetxController {
   void toggleSelection(int index) {
     displayedPickList[index].isSelected = !displayedPickList[index].isSelected;
     displayedPickList.refresh();
+    pickList.refresh();
   }
 
   List<int> get selectedPickListIds =>
@@ -79,24 +78,4 @@ class PickListController extends GetxController {
 
   bool get hasSelection => pickList.any((p) => p.isSelected);
 
-  Future<void> onBarcodeScanned(String barcode) async {
-    if (await AuthService.isInternetAvailable()) {
-      UserModel userModel = UserModel.getLoginCustomer();
-      try {
-        final responseMap = await PickListService.pickByBarcode(
-          barcode: barcode,
-          user: userModel.username ?? "",
-        );
-        CustomSnackBar.successSnackBar(
-            responseMap['Result'] ?? 'Picked successfully');
-        fetchPickList();
-      } on ApiException catch (e) {
-        CustomSnackBar.errorSnackBar(e.validationError ?? e.message);
-      } catch (e) {
-        CustomSnackBar.errorSnackBar(e.toString());
-      }
-    } else {
-      CustomSnackBar.errorSnackBar('No internet connection');
-    }
-  }
 }

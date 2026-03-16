@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scanner/controllers/pick_list_controller.dart';
-import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/pick_list_model.dart';
-import 'package:scanner/services/scanner_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
-import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
 import 'package:scanner/theme/elements_screen.dart';
 import 'package:scanner/theme/get_text_field.dart';
@@ -31,19 +28,13 @@ class _UserOutboundDeliveryWindowState
   @override
   void initState() {
     super.initState();
-    ScannerEventService().pushHandler(_onBarcodeScanned);
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    ScannerEventService().removeHandler(_onBarcodeScanned);
     _scrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _onBarcodeScanned(String barcode) async {
-    await _controller.onBarcodeScanned(barcode);
   }
 
   void _onScroll() {
@@ -75,22 +66,6 @@ class _UserOutboundDeliveryWindowState
                 ],
               ),
             )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            final scanResult = await ScannerService.scanQRCode();
-            if (!mounted) return;
-            if (scanResult != null && scanResult != '') {
-              _onBarcodeScanned(scanResult);
-            } else {
-              CustomSnackBar.errorSnackBar('Could not scan');
-            }
-          } catch (e) {
-            CustomSnackBar.errorSnackBar('Error during scan: $e');
-          }
-        },
-        child: const Icon(Icons.barcode_reader, color: Colors.white),
-      ),
       bottomNavigationBar: Obx(() => _controller.hasSelection
           ? _viewItemsButton()
           : const SizedBox.shrink()),

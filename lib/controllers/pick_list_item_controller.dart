@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
+import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/services/api_exception.dart';
 import 'package:scanner/services/auth_service.dart';
 import 'package:scanner/services/pick_list_service.dart';
@@ -65,17 +65,24 @@ class PickListItemController extends GetxController {
       return;
     }
     if (await AuthService.isInternetAvailable()) {
+      final user = UserModel.getLoginCustomer();
       try {
-        await PickListService.pickByBarcode(
-          barcode: barCode,
-          user: UserModel.getLoginCustomer().userCode ?? '',
+        final updateModel = UpdatePickListModel(
+          pickListId: item.absEntry,
+          soId: item.docEntry,
+          user: user.username ?? '',
+          mode: 'pick',
         );
+        await PickListService.updatePickList(l: [updateModel]);
+        CustomSnackBar.successSnackBar('Picked successfully');
         fetchItems();
       } on ApiException catch (e) {
-        debugPrint('pickByBarcode error: ${e.message}');
+        CustomSnackBar.errorSnackBar(e.validationError ?? e.message);
       } catch (e) {
         CustomSnackBar.errorSnackBar(e.toString());
       }
+    } else {
+      CustomSnackBar.errorSnackBar('No internet connection');
     }
   }
 }

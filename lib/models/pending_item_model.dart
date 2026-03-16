@@ -48,12 +48,14 @@ class Datum {
   String? itemName;
   String? whsName;
   int? itmsGrpCod;
+  String? batchNum;
 
   Datum({
     this.itemCode,
     this.itemName,
     this.whsName,
     this.itmsGrpCod,
+    this.batchNum,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
@@ -61,6 +63,7 @@ class Datum {
         itemName: json["ItemName"],
         whsName: json["WhsName"],
         itmsGrpCod: int.tryParse(json["ItmsGrpCod"].toString()) ?? 0,
+        batchNum: json["BatchNum"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -68,5 +71,6 @@ class Datum {
         "ItemName": itemName,
         "WhsName": whsName,
         "ItmsGrpCod": itmsGrpCod,
+        "BatchNum": batchNum,
       };
 }

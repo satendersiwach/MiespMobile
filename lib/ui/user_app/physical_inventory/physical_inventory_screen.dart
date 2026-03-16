@@ -156,46 +156,26 @@ class _PhysicalInventoryScreenState extends State<PhysicalInventoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text.rich(TextSpan(children: [
-                        getPoppinsTextSpanHeading(text: 'Item'),
-                        getPoppinsTextSpanDetails(
-                            text: dataModel.itemCode?.toString() ?? ''),
-                      ])),
-                      Text.rich(TextSpan(children: [
-                        getPoppinsTextSpanHeading(text: 'Name'),
-                        getPoppinsTextSpanDetails(
-                            text: dataModel.itemName?.toString() ?? ''),
-                      ])),
-                    ],
-                  )),
-                  Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text.rich(TextSpan(children: [
-                          getPoppinsTextSpanHeading(text: 'Group Code'),
-                          getPoppinsTextSpanDetails(
-                              text: dataModel.itmsGrpCod?.toString() ?? ''),
-                        ])),
-                        Text.rich(TextSpan(children: [
-                          getPoppinsTextSpanHeading(text: 'Warehouse'),
-                          getPoppinsTextSpanDetails(
-                              text: dataModel.whsName?.toString() ?? ''),
-                        ])),
-                      ],
-                    ),
-                  )),
-                ],
-              ),
+              Text.rich(TextSpan(children: [
+                getPoppinsTextSpanHeading(text: 'Item'),
+                getPoppinsTextSpanDetails(
+                    text: dataModel.itemCode?.toString() ?? ''),
+              ])),
+              Text.rich(TextSpan(children: [
+                getPoppinsTextSpanHeading(text: 'Name'),
+                getPoppinsTextSpanDetails(
+                    text: dataModel.itemName?.toString() ?? ''),
+              ])),
+              Text.rich(TextSpan(children: [
+                getPoppinsTextSpanHeading(text: 'Warehouse'),
+                getPoppinsTextSpanDetails(
+                    text: dataModel.whsName?.toString() ?? ''),
+              ])),
+              Text.rich(TextSpan(children: [
+                getPoppinsTextSpanHeading(text: 'Barcode'),
+                getPoppinsTextSpanDetails(
+                    text: dataModel.batchNum?.toString() ?? ''),
+              ])),
             ],
           ),
         ),
