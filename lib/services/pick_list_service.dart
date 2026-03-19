@@ -2,7 +2,6 @@ import 'package:scanner/models/assign_pick_list_model.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
 import 'package:scanner/models/pick_list_model.dart';
-import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/services/api_client.dart';
 
 class PickListService {
@@ -49,16 +48,6 @@ class PickListService {
         .toList();
   }
 
-  static Future<Map> updatePickList({
-    required List<UpdatePickListModel> l,
-  }) async {
-    return await ApiClient.post(
-      'picklist/UpdatePickingQuantity',
-      body: l,
-      useCodeCheck: false,
-    );
-  }
-
   static Future<Map> removePickList({
     required List<String> l,
   }) async {
@@ -69,12 +58,12 @@ class PickListService {
   }
 
   static Future<Map> pickByBarcode({
-    required String batchNumber,
+    required String barcode,
     required String user,
   }) async {
     return await ApiClient.post(
       'picklist/PickByBarcode',
-      body: {"batchNumber": batchNumber, "user": user},
+      body: {"barcode": barcode, "user": user},
     );
   }
 

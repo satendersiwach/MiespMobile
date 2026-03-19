@@ -56,7 +56,7 @@ class PickListItemController extends GetxController {
       final user = UserModel.getLoginCustomer();
       try {
         await PickListService.pickByBarcode(
-          batchNumber: barCode,
+          barcode: barCode,
           user: user.username ?? '',
         );
         CustomSnackBar.successSnackBar('Picked successfully');
