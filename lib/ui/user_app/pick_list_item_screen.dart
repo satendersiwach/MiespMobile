@@ -35,6 +35,10 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   @override
   void initState() {
     super.initState();
+    // Ensure any stale controller is removed before creating a fresh one
+    if (Get.isRegistered<PickListItemController>()) {
+      Get.delete<PickListItemController>(force: true);
+    }
     _controller = Get.put(PickListItemController(
       pickListIds: widget.pickListIds,
     ));

@@ -20,7 +20,7 @@ class PickListItemController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchItems();
+    // fetchItems() is called from the screen's initState after setting the status filter.
   }
 
   Future<void> fetchItems() async {
@@ -56,7 +56,7 @@ class PickListItemController extends GetxController {
       final user = UserModel.getLoginCustomer();
       try {
         await PickListService.pickByBarcode(
-          barcode: barCode,
+          batchNumber: barCode,
           user: user.username ?? '',
         );
         CustomSnackBar.successSnackBar('Picked successfully');

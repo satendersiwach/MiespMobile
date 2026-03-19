@@ -53,9 +53,9 @@ class PickListService {
     required List<UpdatePickListModel> l,
   }) async {
     return await ApiClient.post(
-      'picklist/UpdatePickList',
+      'picklist/UpdatePickingQuantity',
       body: l,
-      useCodeCheck: true,
+      useCodeCheck: false,
     );
   }
 
@@ -69,12 +69,12 @@ class PickListService {
   }
 
   static Future<Map> pickByBarcode({
-    required String barcode,
+    required String batchNumber,
     required String user,
   }) async {
     return await ApiClient.post(
       'picklist/PickByBarcode',
-      body: {"barcode": barcode, "user": user},
+      body: {"batchNumber": batchNumber, "user": user},
     );
   }
 
