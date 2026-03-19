@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
-import 'package:scanner/models/update_pick_list_model.dart';
 import 'package:scanner/services/api_exception.dart';
 import 'package:scanner/services/auth_service.dart';
 import 'package:scanner/services/pick_list_service.dart';
@@ -53,27 +52,13 @@ class PickListItemController extends GetxController {
   }
 
   Future<void> pickByBarcode(String barCode) async {
-    PickListItemDetailModel? item;
-    for (var i in pickListItems) {
-      if (barCode == i.distNumber) {
-        item = i;
-        break;
-      }
-    }
-    if (item == null) {
-      CustomSnackBar.errorSnackBar('$barCode does not belong to these items');
-      return;
-    }
     if (await AuthService.isInternetAvailable()) {
       final user = UserModel.getLoginCustomer();
       try {
-        final updateModel = UpdatePickListModel(
-          pickListId: item.absEntry,
-          soId: item.docEntry,
+        await PickListService.pickByBarcode(
+          barcode: barCode,
           user: user.username ?? '',
-          mode: 'pick',
         );
-        await PickListService.updatePickList(l: [updateModel]);
         CustomSnackBar.successSnackBar('Picked successfully');
         fetchItems();
       } on ApiException catch (e) {

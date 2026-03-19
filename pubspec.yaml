@@ -62,7 +62,7 @@ dependencies:
   #  mapsforge_flutter: ^2.0.2
   #  pie_chart: ^5.3.2
   #  fl_chart: ^0.61.0
-  intl: ^0.20.2
+  intl: ^0.19.0
   #  workmanager: ^0.5.1
   #  synchronized: ^3.0.0+3
   #  device_info_plus: ^7.0.0
