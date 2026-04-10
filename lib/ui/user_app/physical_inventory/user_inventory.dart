@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scanner/models/user_model.dart';
 import 'package:scanner/models/remove_inventory_model.dart';
 import 'package:scanner/models/update_inventory_model.dart';
 import 'package:scanner/models/user_inventory_model.dart';
@@ -206,25 +205,11 @@ class _UserInventoryState extends State<UserInventory> {
                                                       TextButton(
                                                         onPressed: () {
                                                           UpdateInventoryModel removeInventoryModel = UpdateInventoryModel(
-                                                              batchNumber:
+                                                              code:
                                                                   userInventoryModel
-                                                                      .name,
-                                                              itemCode:
-                                                                  userInventoryModel
-                                                                      .itemCode,
-                                                              quantity:
-                                                                  userInventoryModel
-                                                                      .quantity,
+                                                                      .code,
                                                               remark:
-                                                                  _remark.text,
-                                                              user: UserModel
-                                                                      .getLoginCustomer()
-                                                                  .userCode,
-                                                              isManEntry: 'Y',
-                                                              whsCode:
-                                                                  userInventoryModel
-                                                                      .whsCode,
-                                                              mode: 'Manual');
+                                                                  _remark.text);
                                                           () async {
                                                             try {
                                                               final res = await InventoryService
@@ -318,15 +303,9 @@ class _UserInventoryState extends State<UserInventory> {
                                                           RemoveInventoryModel
                                                               removeInventoryModel =
                                                               RemoveInventoryModel(
-                                                                  batchNumber:
+                                                                  code:
                                                                       userInventoryModel
-                                                                          .name,
-                                                                  itemCode:
-                                                                      userInventoryModel
-                                                                          .itemCode,
-                                                                  whsCode:
-                                                                      userInventoryModel
-                                                                          .whsCode);
+                                                                          .code);
                                                           () async {
                                                             try {
                                                               final res = await InventoryService

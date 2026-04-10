@@ -26,14 +26,17 @@ class ScannerEventService {
     if (_subscription != null) return;
     _subscription = _eventChannel.receiveBroadcastStream().listen((result) {
       if (result != null && result != '') {
-        String barcode = result.toString();
+        String barcode = result.toString().trim();
         if (barcode.contains('\n')) {
-          barcode = barcode.split('\n')[0];
+          barcode = barcode.split('\n')[0].trim();
         }
         if (barcode.contains(':')) {
           List<String> parts = barcode.split(':');
-          if (parts.length >= 2) {
-            barcode = parts[1];
+          if (parts.length >= 3) {
+            // Format: "symbology:data:length" — extract only the data part
+            barcode = parts.sublist(1, parts.length - 1).join(':').trim();
+          } else if (parts.length == 2) {
+            barcode = parts[1].trim();
           }
         }
         if (_handlerStack.isNotEmpty) {

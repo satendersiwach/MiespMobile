@@ -7,46 +7,22 @@ String updateInventoryModelToJson(UpdateInventoryModel data) =>
     json.encode(data.toJson());
 
 class UpdateInventoryModel {
-  String? batchNumber;
-  String? whsCode;
-  String? itemCode;
-  int? quantity;
-  String? user;
-  String? isManEntry;
+  String? code;
   String? remark;
-  String? mode;
 
   UpdateInventoryModel({
-    this.batchNumber,
-    this.whsCode,
-    this.itemCode,
-    this.quantity,
-    this.user,
-    this.isManEntry,
+    this.code,
     this.remark,
-    this.mode,
   });
 
   factory UpdateInventoryModel.fromJson(Map<String, dynamic> json) =>
       UpdateInventoryModel(
-        batchNumber: json["BatchNumber"],
-        whsCode: json["WhsCode"],
-        itemCode: json["ItemCode"],
-        quantity: json["Quantity"],
-        user: json["User"],
-        isManEntry: json["IsManEntry"],
+        code: json["Code"],
         remark: json["Remark"],
-        mode: json["Mode"],
       );
 
   Map<String, dynamic> toJson() => {
-        "BatchNumber": batchNumber,
-        "WhsCode": whsCode,
-        "ItemCode": itemCode,
-        "Quantity": quantity,
-        "User": user,
-        "IsManEntry": isManEntry,
+        "Code": code,
         "Remark": remark,
-        "Mode": mode,
       };
 }

@@ -1,24 +1,18 @@
-// import 'dart:convert';
-//
-// List<UpdatePickListModel> pickListModelFromJson(String str) =>
-//     List<UpdatePickListModel>.from(
-//         json.decode(str).map((x) => UpdatePickListModel.fromJson(x)));
-//
-// String pickListModelToJson(List<UpdatePickListModel> data) =>
-//     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class UpdatePickListModel {
   int pickListId;
   int soId;
   String user;
-
-  String mode;
+  String itemCode;
+  String batchNumber;
+  int pickQty;
 
   UpdatePickListModel({
     required this.pickListId,
     required this.soId,
     required this.user,
-    required this.mode,
+    required this.itemCode,
+    required this.batchNumber,
+    required this.pickQty,
   });
 
   factory UpdatePickListModel.fromJson(Map<String, dynamic> json) =>
@@ -26,13 +20,17 @@ class UpdatePickListModel {
         pickListId: int.tryParse(json["PickListId"]?.toString() ?? '') ?? 0,
         soId: int.tryParse(json["SOId"]?.toString() ?? '') ?? 0,
         user: json["User"]?.toString() ?? '',
-        mode: json["Mode"]?.toString() ?? '',
+        itemCode: json["ItemCode"]?.toString() ?? '',
+        batchNumber: json["BatchNumber"]?.toString() ?? '',
+        pickQty: int.tryParse(json["PickQty"]?.toString() ?? '') ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
         "PickListId": pickListId,
         "SOId": soId,
         "User": user,
-        "Mode": mode,
+        "ItemCode": itemCode,
+        "BatchNumber": batchNumber,
+        "PickQty": pickQty,
       };
 }

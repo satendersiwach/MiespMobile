@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/user_model.dart';
@@ -54,6 +55,7 @@ class PickListItemController extends GetxController {
   Future<void> pickByBarcode(String barCode) async {
     if (await AuthService.isInternetAvailable()) {
       final user = UserModel.getLoginCustomer();
+      debugPrint('pickByBarcode => barcode: "$barCode", user: "${user.username}"');
       try {
         await PickListService.pickByBarcode(
           barcode: barCode,

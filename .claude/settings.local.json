@@ -8,7 +8,18 @@
       "Bash(\"$LOCALAPPDATA/Android/Sdk/platform-tools/adb.exe\" logcat:*)",
       "Bash(/c/Users/saten/AppData/Local/Android/Sdk/platform-tools/adb.exe logcat:*)",
       "Bash(cd:*)",
-      "Bash(flutter run:*)"
+      "Bash(flutter run:*)",
+      "Bash(grep:*)",
+      "Bash(socat - TCP:127.0.0.1:51507)",
+      "Bash(adb -s GA12380000333 logcat -d -t 100 --pid=13135)",
+      "Bash(\"/c/Users/saten/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s GA12380000333 logcat -c)",
+      "Bash(flutter build:*)",
+      "Bash(\"/c/Users/saten/AppData/Local/Android/Sdk/platform-tools/adb.exe\" -s GA12380000333 install -r build/app/outputs/flutter-apk/app-debug.apk)",
+      "Bash(flutter devices:*)",
+      "Bash(flutter attach:*)",
+      "Read(//d/Development/OWS Development/Miesp Mobile/scanner/$LOCALAPPDATA/Android/Sdk/platform-tools/**)",
+      "Read(//d/Development/OWS Development/Miesp Mobile/scanner/$HOME/AppData/Local/Android/Sdk/platform-tools/**)",
+      "Read(//c/Users/**)"
     ]
   }
 }

@@ -1,3 +1,4 @@
+import 'package:google_fonts/google_fonts.dart';
 import 'package:scanner/local_storage/local_storage.dart';
 import 'package:scanner/scanner_app.dart';
 import 'package:scanner/theme/custom_theme.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  GoogleFonts.config.allowRuntimeFetching = false;
   await init();
 
   runApp(GetMaterialApp(

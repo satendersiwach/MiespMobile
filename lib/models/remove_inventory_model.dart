@@ -7,26 +7,18 @@ String removeInventoryModelToJson(RemoveInventoryModel data) =>
     json.encode(data.toJson());
 
 class RemoveInventoryModel {
-  String? batchNumber;
-  String? whsCode;
-  String? itemCode;
+  String? code;
 
   RemoveInventoryModel({
-    this.batchNumber,
-    this.whsCode,
-    this.itemCode,
+    this.code,
   });
 
   factory RemoveInventoryModel.fromJson(Map<String, dynamic> json) =>
       RemoveInventoryModel(
-        batchNumber: json["BatchNumber"],
-        whsCode: json["WhsCode"],
-        itemCode: json["ItemCode"],
+        code: json["Code"],
       );
 
   Map<String, dynamic> toJson() => {
-        "BatchNumber": batchNumber,
-        "WhsCode": whsCode,
-        "ItemCode": itemCode,
+        "Code": code,
       };
 }

@@ -11,14 +11,18 @@ class ScannerService {
       debugPrint("RFID_sample is configured $result");
 
       if (result != null && result != '') {
+        result = result.trim();
         if (result.contains('\n')) {
-          result = result.split('\n')[0];
+          result = result.split('\n')[0].trim();
         }
 
         if (result.contains(':')) {
           List l = result.split(":");
-          if (l.length >= 2) {
-            return l[1];
+          if (l.length >= 3) {
+            // Format: "symbology:data:length" — extract only the data part
+            return l.sublist(1, l.length - 1).join(':').trim();
+          } else if (l.length == 2) {
+            return l[1].trim();
           }
         } else {
           return result;
