@@ -5,7 +5,6 @@ import 'package:scanner/controllers/pick_list_item_controller.dart';
 import 'package:scanner/services/scanner_event_service.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/pick_list_item_detail_model.dart';
-import 'package:scanner/services/scanner_service.dart';
 import 'package:scanner/theme/custom_colors.dart';
 import 'package:scanner/theme/custom_snack_bar.dart';
 import 'package:scanner/theme/custom_text_widgets.dart';
@@ -48,7 +47,15 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
   }
 
   void _handleBarcode(String barcode) {
-    _controller.pickByBarcode(barcode);
+    final scanned = barcode.trim().toLowerCase();
+    final item = _controller.pickListItems.firstWhereOrNull(
+      (x) => x.distNumber.trim().toLowerCase() == scanned,
+    );
+    if (item == null) {
+      CustomSnackBar.errorSnackBar('Item not found for this barcode');
+      return;
+    }
+    _controller.updatePickingQuantity(item);
   }
 
   @override
@@ -264,14 +271,6 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
                             )),
                           ],
                         ),
-                        if (pickListModel.picked == 'N') ...[
-                          const SizedBox(height: 10),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12.0),
-                            child: Divider(thickness: 1, color: Colors.grey),
-                          ),
-                          _buttonContainer(),
-                        ],
                       ],
                     ),
                   ),
@@ -288,36 +287,4 @@ class _PickListItemScreenState extends State<PickListItemScreen> {
     });
   }
 
-  Widget _buttonContainer() {
-    return SizedBox(
-      height: 30,
-      child: InkWell(
-        onTap: () async {
-          try {
-            final scanResult = await ScannerService.scanQRCode();
-            if (!mounted) return;
-            if (scanResult != null) {
-              _controller.pickByBarcode(scanResult);
-            } else {
-              CustomSnackBar.errorSnackBar('Could not scan');
-            }
-          } catch (e) {
-            CustomSnackBar.errorSnackBar('Error during scan: $e');
-          }
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(MdiIcons.barcode, color: appPrimary),
-            const SizedBox(width: 10),
-            getPoppinsText(
-                text: 'Scan',
-                color: appPrimary,
-                fontSize: 13,
-                fontWeight: FontWeight.bold),
-          ],
-        ),
-      ),
-    );
-  }
 }

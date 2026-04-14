@@ -57,13 +57,24 @@ class PickListService {
     );
   }
 
-  static Future<Map> pickByBarcode({
-    required String barcode,
+  static Future<Map> updatePickingQuantity({
+    required int pickListId,
+    required int soId,
+    required String itemCode,
     required String user,
+    required double pickQty,
+    required String batchNumber,
   }) async {
     return await ApiClient.post(
-      'picklist/PickByBarcode',
-      body: {"barcode": barcode, "user": user},
+      'picklist/UpdatePickingQuantity',
+      body: {
+        "PickListId": pickListId,
+        "SOId": soId,
+        "ItemCode": itemCode,
+        "User": user,
+        "PickQty": pickQty,
+        "BatchNumber": batchNumber,
+      },
     );
   }
 

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:scanner/common/enums.dart';
 import 'package:scanner/models/user_model.dart';
@@ -52,16 +51,19 @@ class PickListItemController extends GetxController {
     queryText.value = query;
   }
 
-  Future<void> pickByBarcode(String barCode) async {
+  Future<void> updatePickingQuantity(PickListItemDetailModel item) async {
     if (await AuthService.isInternetAvailable()) {
       final user = UserModel.getLoginCustomer();
-      debugPrint('pickByBarcode => barcode: "$barCode", user: "${user.username}"');
       try {
-        await PickListService.pickByBarcode(
-          barcode: barCode,
+        await PickListService.updatePickingQuantity(
+          pickListId: item.absEntry,
+          soId: item.docEntry,
+          itemCode: item.itemCode,
           user: user.username ?? '',
+          pickQty: item.quantity.toDouble(),
+          batchNumber: item.distNumber,
         );
-        CustomSnackBar.successSnackBar('Picked successfully');
+        CustomSnackBar.successSnackBar('Item ${item.distNumber} picked successfully');
         fetchItems();
       } on ApiException catch (e) {
         CustomSnackBar.errorSnackBar(e.validationError ?? e.message);
