@@ -75,24 +75,26 @@ class PhysicalInventoryController extends GetxController {
   }
 
   Future<void> addInventoryCounting(String barCode) async {
-    if (await AuthService.isInternetAvailable()) {
-      try {
-        final responseMap =
-            await InventoryService.addInventoryCounting(batchNumber: barCode);
-        currentPage = 1;
-        data.clear();
-        fetchInventory();
-        CustomSnackBar.successSnackBar(
-            responseMap['Result'] ?? 'Inventory counting added successfully');
-      } on ApiException catch (e) {
-        currentPage = 1;
-        data.clear();
-        fetchInventory();
-        CustomSnackBar.errorSnackBar(
-            e.validationError ?? 'Something went wrong!');
-      } catch (e) {
-        CustomSnackBar.errorSnackBar(e.toString());
-      }
+    if (!await AuthService.isInternetAvailable()) {
+      CustomSnackBar.errorSnackBar('No internet connection');
+      return;
+    }
+    try {
+      final responseMap =
+          await InventoryService.addInventoryCounting(batchNumber: barCode);
+      currentPage = 1;
+      data.clear();
+      fetchInventory();
+      CustomSnackBar.successSnackBar(
+          responseMap['Result'] ?? 'Counted: $barCode');
+    } on ApiException catch (e) {
+      currentPage = 1;
+      data.clear();
+      fetchInventory();
+      CustomSnackBar.errorSnackBar(
+          '${e.validationError ?? e.message} [$barCode]');
+    } catch (e) {
+      CustomSnackBar.errorSnackBar(e.toString());
     }
   }
 }

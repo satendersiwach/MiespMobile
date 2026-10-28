@@ -83,7 +83,7 @@ String parseBarcode(String raw) {
     // Guard: need at least 3 parts for the symbology:data:length pattern.
     if (parts.length >= 3) {
       final prefix = parts.first.toUpperCase().replaceAll(RegExp(r'\s+'), '');
-      final suffix = parts.last;
+      final suffix = parts.last.trim();
       final suffixIsNumeric = RegExp(r'^\d+$').hasMatch(suffix);
 
       if (_knownSymbologies.contains(prefix) && suffixIsNumeric) {
