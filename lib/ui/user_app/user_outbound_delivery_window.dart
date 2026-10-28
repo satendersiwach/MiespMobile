@@ -19,8 +19,8 @@ class UserOutboundDeliveryWindow extends StatefulWidget {
       _UserOutboundDeliveryWindowState();
 }
 
-class _UserOutboundDeliveryWindowState
-    extends State<UserOutboundDeliveryWindow> {
+class _UserOutboundDeliveryWindowState extends State<UserOutboundDeliveryWindow>
+    with WidgetsBindingObserver {
   final PickListController _controller = Get.put(PickListController());
   final TextEditingController _query = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -28,13 +28,27 @@ class _UserOutboundDeliveryWindowState
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  // Reload when the app comes back to the foreground, so picklists assigned
+  // while the app was in the background show up. Skipped when another screen
+  // is on top; that screen refreshes this list when it is popped.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed &&
+        (ModalRoute.of(context)?.isCurrent ?? false) &&
+        !_controller.isLoading.value) {
+      _controller.fetchPickList();
+    }
   }
 
   void _onScroll() {
@@ -49,6 +63,13 @@ class _UserOutboundDeliveryWindowState
     return screenWithAppBar(
       title: 'Pick List',
       drawer: const CustomDrawer(),
+      actions: [
+        IconButton(
+            onPressed: () {
+              if (!_controller.isLoading.value) _controller.fetchPickList();
+            },
+            icon: const Icon(Icons.refresh, color: Colors.white)),
+      ],
       body: Obx(() => _controller.isLoading.value
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -75,6 +96,8 @@ class _UserOutboundDeliveryWindowState
   Widget _list() {
     return Obx(() => ListView.builder(
           controller: _scrollController,
+          // Lets pull-to-refresh work even when the list is short or empty.
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: _controller.displayedPickList.length + 1,
           itemBuilder: (context, index) {
             if (index == _controller.displayedPickList.length) {
@@ -103,7 +126,8 @@ class _UserOutboundDeliveryWindowState
             return CheckboxListTile(
               value: pickListModel.isSelected,
               onChanged: (_) {
-                final realIndex = _controller.displayedPickList.indexOf(pickListModel);
+                final realIndex =
+                    _controller.displayedPickList.indexOf(pickListModel);
                 _controller.toggleSelection(realIndex);
               },
               controlAffinity: ListTileControlAffinity.leading,
@@ -161,7 +185,8 @@ class _UserOutboundDeliveryWindowState
                                           : 'Assigned'),
                                 ])),
                                 Text.rich(TextSpan(children: [
-                                  getPoppinsTextSpanHeading(text: 'Total Items'),
+                                  getPoppinsTextSpanHeading(
+                                      text: 'Total Items'),
                                   getPoppinsTextSpanDetails(
                                       text:
                                           pickListModel.totalItems.toString()),
@@ -225,8 +250,7 @@ class _UserOutboundDeliveryWindowState
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Obx(() => getPoppinsText(
-            text:
-                'You have ${_controller.pickList.length} Pick List assigned',
+            text: 'You have ${_controller.pickList.length} Pick List assigned',
             decoration: TextDecoration.underline,
             color: Colors.red,
             fontWeight: FontWeight.bold,

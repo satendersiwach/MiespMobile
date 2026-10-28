@@ -20,8 +20,33 @@ class SuperAdminDashboard extends StatefulWidget {
   State<SuperAdminDashboard> createState() => _SuperAdminDashboardState();
 }
 
-class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
+class _SuperAdminDashboardState extends State<SuperAdminDashboard>
+    with WidgetsBindingObserver {
   final SuperAdminController _controller = Get.put(SuperAdminController());
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  // Reload when the app comes back to the foreground, so newly generated
+  // picklists show up. Skipped when the assign screen is on top; it refreshes
+  // this list when it is popped.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed &&
+        (ModalRoute.of(context)?.isCurrent ?? false) &&
+        !_controller.isLoading.value) {
+      _controller.fetchData();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +55,33 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
         isBackVisible: false,
         actions: [
           IconButton(
+              onPressed: () {
+                if (!_controller.isLoading.value) _controller.fetchData();
+              },
+              icon: const Icon(Icons.refresh, color: Colors.white)),
+          IconButton(
               onPressed: () => _showLogoutDialog(context),
               icon: const Icon(Icons.logout, color: Colors.red)),
         ],
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _statusFilterWidget(),
-              Obx(() {
-                if (_controller.isLoading.value) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return _list();
-              }),
-            ],
+        body: RefreshIndicator(
+          onRefresh: _controller.fetchData,
+          child: SingleChildScrollView(
+            // Lets pull-to-refresh work even when the list is short or empty.
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                _statusFilterWidget(),
+                Obx(() {
+                  if (_controller.isLoading.value) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return _list();
+                }),
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: Obx(() => _buttonContainer()));
@@ -198,13 +233,12 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                           'Please select at least one Pick List');
                     } else {
                       Get.to(() => AssignPicklistToUserScreen(
-                                pickList: _controller.selectedPickLists,
-                                mode: _controller.pickListStatusEnum.value ==
-                                        PickListStatusEnumForAdmin.assigned
-                                    ? Mode.update
-                                    : Mode.add,
-                              ))
-                          ?.then((_) => _controller.fetchData());
+                            pickList: _controller.selectedPickLists,
+                            mode: _controller.pickListStatusEnum.value ==
+                                    PickListStatusEnumForAdmin.assigned
+                                ? Mode.update
+                                : Mode.add,
+                          ))?.then((_) => _controller.fetchData());
                     }
                   },
                   backColor: appPrimary),
@@ -270,8 +304,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
           shrinkWrap: true,
           itemBuilder: (context, index) {
             PickListModel pickListModel = _controller.pickList[index];
-            String btnTxt =
-                pickListModel.status == 'A' ? 'Reassign' : 'Assign';
+            String btnTxt = pickListModel.status == 'A' ? 'Reassign' : 'Assign';
             return CheckboxListTile(
               value: pickListModel.isSelected,
               onChanged: (_) => _controller.toggleSelection(index),
@@ -328,8 +361,7 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                               Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'Total Items'),
                                 getPoppinsTextSpanDetails(
-                                    text:
-                                        pickListModel.totalItems.toString()),
+                                    text: pickListModel.totalItems.toString()),
                               ])),
                               Text.rich(TextSpan(children: [
                                 getPoppinsTextSpanHeading(text: 'Assigned To'),
@@ -382,16 +414,14 @@ class _SuperAdminDashboardState extends State<SuperAdminDashboard> {
                                   child: InkWell(
                                 onTap: () {
                                   Get.to(() => AssignPicklistToUserScreen(
-                                            pickList: [pickListModel],
-                                            mode: _controller
-                                                        .pickListStatusEnum
-                                                        .value ==
-                                                    PickListStatusEnumForAdmin
-                                                        .assigned
-                                                ? Mode.update
-                                                : Mode.add,
-                                          ))
-                                      ?.then((_) => _controller.fetchData());
+                                        pickList: [pickListModel],
+                                        mode: _controller
+                                                    .pickListStatusEnum.value ==
+                                                PickListStatusEnumForAdmin
+                                                    .assigned
+                                            ? Mode.update
+                                            : Mode.add,
+                                      ))?.then((_) => _controller.fetchData());
                                 },
                                 child: getPoppinsText(
                                     text: btnTxt,
